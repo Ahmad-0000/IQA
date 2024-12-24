@@ -1,0 +1,230 @@
+:root {
+    --blue: #0075ff;
+    --blue-alt: #0d69d5;
+    --orange: #f59e0b;
+    --red: #f44336;
+    --gray: #888;
+    --light-gray: #ddd;
+}
+
+/* Start Global Rules */
+
+.page {
+    position: relative;
+    background-color: #f1f5f9;
+    min-height: 100vh;
+}
+
+.page::after {
+    content: "";
+    display: block;
+    height: 124px;
+}
+
+@media (min-width: 767px) {
+    .page::after {
+        height: 161px;
+    }
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+*:focus {
+    outline: none;
+}
+
+ul {
+    list-style-type: none;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: white;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--blue);
+}
+
+/* End Global Rules */
+
+/* Start d-Box */
+.d-grid {
+    display: grid;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.d-block {
+    display: block;
+}
+/* End d-Box */
+
+/* Strat Positions */
+.p-relative {
+    position: relative;
+}
+
+.p-abs {
+    position: absolute;
+}
+
+/* End Positions */
+/* Start Width, Padding, Border and Margin*/
+.w-full {
+    width: 100%;
+}
+
+.w-fit {
+    width: 100%;
+}
+
+.p-10 {
+    padding: 10px;
+}
+
+.p-20 {
+    padding: 20px;
+}
+
+.p-24 {
+    padding: 24px;
+}
+
+.rad-6 {
+    border-radius: 6px;
+}
+
+.rad-10 {
+    border-radius: 10px;
+}
+
+.rad-half {
+    border-radius: 50%;
+}
+
+.m-10 {
+    margin: 10px;
+}
+
+.m-20 {
+    margin: 20px;
+}
+
+.mt-0 {
+    margin-top: 0px;
+}
+
+.mb-0 {
+    margin-bottom: 0px;
+}
+.mr-0 {
+    margin-right: 0px;
+}
+
+.ml-0 {
+    margin-left: 0px;
+}
+/* End Width, Padding, Border and Margin*/
+
+/* Start Colors */
+.bg-white {
+    background-color: white;
+}
+
+.bg-gray {
+    background-color: var(--gray);
+}
+
+.bg-light-gray {
+    background-color: var(--light-gray);
+}
+
+.c-white {
+    color: white;
+}
+
+.c-gray {
+    color: var(--gray);
+}
+
+.c-blue {
+    color: var(--blue);
+}
+
+.c-alt-blue {
+    color: var(--blue-alt);
+}
+
+/* End Colors */
+
+/* Start Fonts and Texts */
+.fs-14 {
+    font-size: 14px;
+}
+
+.fs-16 {
+    font-size: 16px;
+}
+
+.fs-18 {
+    font-size: 18px;
+}
+
+.fs-20 {
+    font-size: 20px;
+}
+
+.txt-c {
+    text-align: center;
+}
+
+.txt-bold {
+    font-weight: bold;
+}
+
+@media (max-width: 767px) {
+    .txt-c-mobile {
+        text-align: center;
+    }
+}
+
+/* End Fonts and Texts */
+
+/* Start Components */
+.center-align-flex {
+    display: flex;
+    align-items: center;
+}
+
+.top-right-corner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    border-radius: 50%;
+}
+
+.top-right-corner:hover {
+    color: white;
+    background-color: var(--blue-alt);
+    cursor: pointer;
+}
+
+/* End Components */
