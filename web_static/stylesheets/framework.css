@@ -7,7 +7,7 @@
     --light-gray: #ddd;
 }
 
-/* Start d-Box */
+/* Start Box Display */
 .d-grid {
     display: grid;
 }
@@ -23,7 +23,7 @@
 .d-block {
     display: block;
 }
-/* End d-Box */
+/* End Box Display */
 
 /* Strat Positions */
 .p-relative {
@@ -35,6 +35,7 @@
 }
 
 /* End Positions */
+
 /* Start Width, Padding, Border and Margin*/
 .w-full {
     width: 100%;
@@ -83,6 +84,7 @@
 .mb-0 {
     margin-bottom: 0px;
 }
+
 .mr-0 {
     margin-right: 0px;
 }
@@ -90,7 +92,7 @@
 .ml-0 {
     margin-left: 0px;
 }
-/* End Width, Padding, Border and Margin*/
+/* End Width, Padding, Border and Margin */
 
 /* Start Colors */
 .bg-white {
