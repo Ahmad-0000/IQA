@@ -42,7 +42,7 @@
 }
 
 .w-fit {
-    width: 100%;
+    width: fit-content;
 }
 
 .p-10 {
