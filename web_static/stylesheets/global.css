@@ -16,6 +16,11 @@
     transition: 0.3s;
 }
 
+*::before,
+*::after {
+    transition: 0.3s;
+}
+
 *:focus {
     outline: none;
 }
