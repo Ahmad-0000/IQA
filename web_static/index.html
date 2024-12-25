@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="stylesheets/framework.css">
     <link rel="stylesheet" href="stylesheets/global.css">
     <link rel="stylesheet" href="stylesheets/header.css">
+    <link rel="stylesheet" href="stylesheets/index.css">
     <link rel="stylesheet" href="stylesheets/footer.css">
     <!-- End Local Stylesheets -->
     <!-- Start Font Awesome Library -->
@@ -15,6 +16,7 @@
     <!-- End Font Awesome Library -->
     <!-- Start Scripts -->
     <script src="scripts/header.js" defer></script>
+    <script src="scripts/index.js" defer></script>
     <!-- End Scripts -->
     <title>IQA</title>
 </head>
@@ -38,6 +40,39 @@
                 </div>
             </header>
             <!-- End Header -->
+            <!-- Start Search Bar -->
+            <div class="search p-relative center-align-flex w-fit">
+                <i class="fa-solid fa-magnifying-glass p-abs c-gray" id="lens"></i>
+                <input id="search" class="bg-white c-gray p-relative border fs-16" type="search" placeholder="Search">
+                <div class="modifiers p-relative c-gray txt-bold p-10 border" id="search-modifiers">
+                    Modifiers
+                </div>
+                <div class="popover p-abs bg-white rad-10 p-20 w-full" id="modifiers-popover">
+                    <i class="top-right-corner" id="modifiers-closer"><i class="fa-solid fa-xmark"></i></i>
+                    <span>Hard</span>
+                    <span>Easy</span>
+                    <span>Medium</span>
+                    <span>Formal</span>
+                    <span>Formal</span>
+                    <span>Informal</span>
+                </div>
+                <div class="categories p-relative c-gray txt-bold border p-10" id="search-categories">
+                    Categories
+                </div>
+                <div class="popover p-abs bg-white rad-10 p-20 w-full" id="categories-popover">
+                    <i class="top-right-corner" id="categories-closer"><i class="fa-solid fa-xmark"></i></i>
+                    <span>Medicine</span>
+                    <span>Physics</span>
+                    <span>Math</span>
+                    <span>Geography</span>
+                    <span>History</span>
+                    <span>Computer Science</span>
+                    <span>Culture</span>
+                    <span>Food</span>
+                    <span>Design</span>
+                </div>
+            </div>
+            <!-- End Search Bar -->
             <!-- Start Footer -->
             <footer class="p-abs w-full">
                 <div class="container">
