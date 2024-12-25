@@ -3,7 +3,6 @@ header {
 }
 
 header .container {
-    padding: 10px;
     justify-content: center;
 }
 
@@ -30,11 +29,9 @@ header .container {
 #burger-icon {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: flex-end;
     width: 20px;
     height: 20px;
-    position: absolute;
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
@@ -95,7 +92,6 @@ header .container {
     
 
     #navigation-bar a {
-        width: 100%;
         padding: 30px;
     }
 
