@@ -182,7 +182,7 @@
 
 .top-right-corner:hover {
     color: white;
-    background-color: var(--blue-alt);
+    background-color: var(--red);
     cursor: pointer;
 }
 
