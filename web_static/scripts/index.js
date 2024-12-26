@@ -47,3 +47,22 @@ categoriesCloser.addEventListener('click', () => {
         categoriesPopover.style.display = "none";
     }, 300);
 });
+
+// Categories Icons container and children
+const catsHolder = document.querySelector("#categories");
+const cats = Array.from(catsHolder.children);
+
+// Stop the animation when hovering over an icon, resume otherwise
+cats.forEach((hoveredCat) => {
+    hoveredCat.addEventListener('mouseenter', () => {
+        cats.forEach((cat) => {
+            cat.style.animationPlayState = "paused";
+        }); 
+    });
+
+    hoveredCat.addEventListener('mouseleave', () => {
+        cats.forEach((cat) => {
+            cat.style.animationPlayState = "running";
+        });
+    });
+});
