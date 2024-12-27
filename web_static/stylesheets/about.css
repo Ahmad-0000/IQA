@@ -1,0 +1,58 @@
+main {
+    box-shadow: 0 0 5px #aaa9a9;
+    min-height: calc(100vh - 209px);
+}
+
+section {
+    margin: 15px 0px;
+}
+
+@media (min-width: 992px) {
+    main {
+        width: 970px;
+    }
+
+    section {
+        max-width: 80%;
+    }
+}
+
+@media (min-width: 1200px) {
+    main {
+        width: 1170px;
+    }
+}
+
+main h2 {
+    font-size: 30px;
+    text-align: center;
+    margin: 30px 0px;
+}
+
+section h3 {
+    color: #888;
+    margin-bottom: 10px;
+    font-size: 24px;
+    position: relative;
+    margin-left: 25px;
+}
+
+section h3 i {
+    line-height: 20px;
+    position: absolute;
+    top: calc(50% - 10px);
+    left: -25px;
+}
+
+section p {
+    height: 0px;
+    padding: 0px 15px;
+    text-indent: 15px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    background-color: var(--main-color);
+    box-shadow: inset 0 0 5px var(--gray);
+    font-size: 18px;
+    line-height: 1.4;
+    overflow: hidden;
+}
