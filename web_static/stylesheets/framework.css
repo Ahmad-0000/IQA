@@ -1,12 +1,3 @@
-:root {
-    --blue: #0075ff;
-    --blue-alt: #0d69d5;
-    --orange: #f59e0b;
-    --red: #f44336;
-    --gray: #888;
-    --light-gray: #ddd;
-}
-
 /* Start Box Display */
 .d-grid {
     display: grid;
