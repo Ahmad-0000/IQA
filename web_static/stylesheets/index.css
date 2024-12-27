@@ -505,7 +505,7 @@
     top: 1px;
 }
 
-#quiz-details button {
+#quiz-details .button {
     background-color: white;
     font-size: 16px;
     border: none;
@@ -518,12 +518,12 @@
 }
 
 @media (min-width: 768px) {
-    #quiz-details button {
+    #quiz-details .button {
         font-size: 20px;
     }
 }
 
-#quiz-details button:hover {
+#quiz-details .button:hover {
     color: white;
     background-color: var(--red);
 }
