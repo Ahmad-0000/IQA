@@ -4,6 +4,12 @@
     height: 129px;
 }
 
+@media (min-width: 576px) {
+    .page::after {
+        height: 141px;
+    }
+}
+
 @media (min-width: 768px) {
     .page::after {
         height: 171px;
