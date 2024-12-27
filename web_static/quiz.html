@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Start Local Stylesheets -->
+    <link rel="stylesheet" href="stylesheets/framework.css">
+    <link rel="stylesheet" href="stylesheets/global.css">
+    <link rel="stylesheet" href="stylesheets/header.css">
+    <link rel="stylesheet" href="stylesheets/quiz.css">
+    <link rel="stylesheet" href="stylesheets/footer.css">
+    <!-- End Local Stylesheets -->
+    <!-- Start Font Awesome Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <!-- End Font Awesome Library -->
+    <!-- Start Scripts -->
+    <script src="scripts/header.js" defer></script>
+    <script src="scripts/quiz.js" defer></script>
+    <!-- End Scripts -->
+    <title>Quiz</title>
+</head>
+    <body>
+        <div class="page">
+            <!-- Start Header -->
+            <header class="bg-white p-relative">
+                <div class="container center-align-flex p-10 p-relative space-between">
+                    <a href="#" class="logo rad-half c-white txt-c"><h1 class="fs-20">IQA</h1></a>
+                    <div class="navigation-bar d-flex txt-c" id="navigation-bar">
+                        <a href="index.html" class="c-gray rad-6">Home</a>
+                        <a href="#" class="c-gray rad-6">About</a>
+                        <a href="#" class="c-gray rad-6">Dashboard</a>
+                        <a href="#" class="c-gray rad-6"><i class="fa-solid fa-circle-user"></i></a>
+                    </div>
+                    <span id="burger-icon" class="p-abs space-between">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </div>
+            </header>
+            <!-- End Header -->
+            <!-- Start Main Section -->
+            <main class="container bg-white p-20 rad-6">
+                <div class="img w-full rad-10"></div>
+                <div id="introduction">
+                    <h2>Description:</h2>
+                    <p>
+                        The description is intended to be here
+                    </p>
+                    <h2>Instructions:</h2>  
+                    <ul>
+                        <li>Do this</li>
+                        <li>Do that</li>
+                        <li>Don't do "b", but you can do "a"</li>
+                        <li>Do neither "a" nor "b"</li>
+                    </ul>
+                    <button class="rad-6" id="start">Start</button>
+                </div>
+                <div id="question-template">
+                    <div class="question-content d-flex">
+                        <div class="main-body">
+                            <p><span>1 . </span>Question: the question is intendet to be here</p>
+                            <div class="choices">
+                                <div class="answer">
+                                    <input type="radio" name="answer-1" id="1"> <label for="1">Answer - 1</label>
+                                </div>
+                                <div class="answer">
+                                    <input type="radio" name="answer-2" id="2"> <label for="2">Answer - 2</label>
+                                </div>
+                                <div class="answer">
+                                    <input type="radio" name="answer-3" id="3"> <label for="3">Answer - 3</label>
+                                </div>
+                                <div class="answer">
+                                    <input type="radio" name="answer-4" id="4"> <label for="4">Answer - 4</label>
+                                </div>
+                                <div class="answer">
+                                    <input type="radio" name="answer-5" id="5"> <label for="5">Answer - 5</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="optional-img bg-gray rad-6"></div>
+                    </div>
+                    <div class="progress p-relative rad-10 bg-gray"></div>
+                    <div class="movement">
+                        <button>Skip</button>
+                        <button>Next</button>
+                    </div>
+                </div>
+            </main>
+            <!-- End Main Section -->
+            <!-- Start Footer -->
+            <footer class="p-abs w-full">
+                <div class="container">
+                    <div class="main d-flex space-between">
+                        <a href="#" class="logo rad-half c-white txt-c fs-20"><div>IQA</div></a>
+                        <div class="links">
+                            <a href="index.html">Home</a>
+                            <a href="#">About</a>
+                            <a href="#">Dashboard</a>
+                        </div>
+                        <div class="links">
+                            <a href="#">Terms of Service</a>
+                            <a href="#">Privicy Policiy</a>
+                        </div>
+                        <div class="contact fs-14">
+                            Contact me at:
+                            <br>
+                            <a href="#"><i class="fa-brands fa-github"></i></a>
+                            <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                            <a href="#"><i class="fa-solid fa-envelope"></i></a>
+                        </div>
+                    </div>
+                    <div class="owner fs-14 txt-c">Developed By: <i class="txt-bold">Ahmad Basheer</i></div>
+                </div>
+            </footer>
+            <!-- End Footer -->
+        </div>
+    </body>
+</html>
