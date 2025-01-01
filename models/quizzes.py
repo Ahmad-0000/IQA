@@ -2,8 +2,10 @@
 """
 import enum
 from sqlalchemy import Column, Integer, String, Enum, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped
 from models.base_model import Base, BaseModel
+from models.users import quizzes_likes
+from typing import List
 
 
 class QuizDifficulty(enum.Enum):
@@ -38,3 +40,4 @@ class Quiz(BaseModel, Base):
                 cascade='all, delete, delete-orphan',
                 back_populates='quiz'
             )
+    fan_user: Mapped[List['User']] = relationship(secondary=quizzes_likes, back_populates='liked_quizzes')

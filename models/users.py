@@ -1,8 +1,16 @@
 """User model class
 """
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, Date
-from sqlalchemy.orm import relationship
+from sqlalchemy import Table, Column, String, Date, ForeignKey
+from sqlalchemy.orm import relationship, Mapped
+from typing import List
+
+
+quizzes_likes = Table(
+                'quizzes_likes', Base.metadata,
+                Column('user_id', String(36), ForeignKey('users.id'), primary_key=True),
+                Column('quiz_id', String(36), ForeignKey('quizzes.id'), primary_key=True)
+            )
 
 
 class User(BaseModel, Base):
@@ -28,4 +36,4 @@ class User(BaseModel, Base):
                     cascade='all, delete, delete-orphan',
                     back_populates='user'
     )
-
+    liked_quizzes: Mapped[List['Quiz']] = relationship(secondary=quizzes_likes, back_populates='fan_user')
