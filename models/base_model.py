@@ -12,11 +12,11 @@ Base = declarative_base()
 class BaseModel():
     """Main model that others will inherit from
     """
-    # 3 important attributes most of the objects will have
+    # 3 important attributes all the objects will have
     id = Column(String(36), primary_key=True)
     added_at = Column(DateTime, nullable=False, default=datetime.utcnow())
     updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
-
+    
     def __init__(self, *args, **kwargs):
         """Intialize an object
         """
@@ -51,7 +51,22 @@ class BaseModel():
         """
         dict_repr = {}
         for k in self.__dict__:
-            if k == 'sa_instance_':
+            if k == '_sa_instance_state':
                 pass
-            dict_repr[k] = self.__dict__[k]
+            else:
+                dict_repr[k] = self.__dict__[k]
         return dict_repr
+
+    def save(self):
+        """Save the current object in the session
+        """
+        from models import storage
+        storage.add(self)
+        storage.save()
+
+    def delete(self):
+        """Remove the current object from the session
+        """
+        from models import storage
+        storage.delete(self)
+        storage.save()
