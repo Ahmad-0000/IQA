@@ -50,8 +50,8 @@ class TestStorageEngine(unittest.TestCase):
         """
         self.cursor.execute('SHOW TABLES;')
         tables_num = self.cursor.rowcount
-        self.assertEqual(tables_num, 3)
-
+        self.assertEqual(tables_num, 5)
+    
     def test_add_and_save(self):
         """Test 'add' and 'save' methods
         """
@@ -96,7 +96,7 @@ class TestStorageEngine(unittest.TestCase):
         self.cursor.execute('SELECT id FROM users LIMIT 1;')
         id = self.cursor.fetchone()[0]
         self.assertEqual(id, storage.get(User, id).id)
-
+    
     def test_method_delete(self):
         """Test "delete" method
         """
