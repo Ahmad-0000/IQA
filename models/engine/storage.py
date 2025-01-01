@@ -6,7 +6,9 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from models.base_model import Base
 from models.users import User
 from models.quizzes import Quiz
+from models.questions import Question
 from models.answers import Answer
+from models.feedbacks import FeedBack
 
 
 class Storage():
@@ -14,7 +16,7 @@ class Storage():
     """
     __engine = None
     __session = None
-    classes = [User, Quiz, Answer]
+    classes = [User, Quiz, Question, Answer, FeedBack]
 
     def __init__(self):
         """Initialize storage object
