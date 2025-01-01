@@ -2,6 +2,7 @@
 """
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Date
+from sqlalchemy.orm import relationship
 
 
 class User(BaseModel, Base):
@@ -16,3 +17,9 @@ class User(BaseModel, Base):
     password = Column(String(100), nullable=False)
     image_path = Column(String(256), nullable=True)
     bio = Column(String(300), nullable=True)
+
+    quizzes = relationship(
+                    'Quiz', 
+                    cascade='all, delete, delete-orphan',
+                    back_populates='user'
+    )
