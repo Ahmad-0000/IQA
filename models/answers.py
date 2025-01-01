@@ -11,3 +11,5 @@ class Answer(BaseModel, Base):
     __tablename__ = 'answers'
     body = Column(String(100), nullable=False)
     is_true = Column(Boolean, nullable=False)
+
+    quiz = relationship('Quiz', back_populates='answers')

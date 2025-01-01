@@ -11,3 +11,9 @@ class Questions(BaseModel, Base):
     __tablename__ = 'questions'
     body = Column(Text, nullable=False)
     image_path = Column(String(256), nullalbe=True, defualt=None)
+
+    answers = relationship(
+                'Answer',
+                cascade='all, delete, delete-orphan',
+                back_populates='questions'
+            )
