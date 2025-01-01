@@ -81,6 +81,15 @@ class TestStorageEngine(unittest.TestCase):
         new_rows_num = self.cursor.fetchone()[0]
         self.assertEqual(rows_num + 1, new_rows_num)
 
+    def test_get_all(self):
+        """Test "get_all" method
+        """
+        objects = storage.get_all(User)
+        is_none = storage.get_all(int)
+        are_similar = filter(lambda obj: isinstance(obj, User), objects)
+        self.assertTrue(are_similar)
+        self.assertIsNone(is_none)
+
     def test_get(self):
         """Test "get" method
         """
