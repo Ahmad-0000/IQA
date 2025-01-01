@@ -38,7 +38,7 @@ class BaseModel():
                 self.password = bytes(self.password, "utf-8")
                 self.password = bcrypt.hashpw(self.password, bcrypt.gensalt())
                 self.password = self.password.decode('utf-8')
-            if "image_path" in kwargs:
+            if "image_path" in kwargs and kwargs['image_path']:
                 self.image_path = f'/data/iqa/profile_images/{self.id}'
         
     def __str__(self):
