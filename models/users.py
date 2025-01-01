@@ -23,3 +23,9 @@ class User(BaseModel, Base):
                     cascade='all, delete, delete-orphan',
                     back_populates='user'
     )
+    feedbacks = relationship(
+                    'FeedBack', 
+                    cascade='all, delete, delete-orphan',
+                    back_populates='user'
+    )
+

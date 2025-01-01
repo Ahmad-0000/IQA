@@ -28,3 +28,13 @@ class Quiz(BaseModel, Base):
     category = Column(String(20), nullable=False)
     user_id = Column(String(36), ForeignKey('users.id'))
     user = relationship('User', back_populates='quizzes')
+    questions = relationship(
+                'Question',
+                cascade='all, delete, delete-orphan',
+                back_populates='quiz'
+            )
+    feedbacks = relationship(
+                'FeedBack',
+                cascade='all, delete, delete-orphan',
+                back_populates='quiz'
+            )
