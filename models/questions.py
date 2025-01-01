@@ -11,7 +11,7 @@ class Questions(BaseModel, Base):
     __tablename__ = 'questions'
     body = Column(Text, nullable=False)
     image_path = Column(String(256), nullalbe=True, defualt=None)
-
+    quiz_id = Column(String(36), ForeignKey('quizzes.id'))
     answers = relationship(
                 'Answer',
                 cascade='all, delete, delete-orphan',
