@@ -5,6 +5,7 @@ from sqlalchemy import  create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from models.base_model import Base
 from models.users import User
+from models.quizzes import Quiz
 
 
 class Storage():
@@ -12,7 +13,7 @@ class Storage():
     """
     __engine = None
     __session = None
-    classes = [User]
+    classes = [User, Quiz]
 
     def __init__(self):
         """Initialize storage object
