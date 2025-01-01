@@ -1,5 +1,6 @@
 """Contain BaseModel class
 """
+import bcrypt
 from datetime import datetime
 from uuid import uuid4
 from sqlalchemy import Column, String, DateTime
@@ -33,6 +34,12 @@ class BaseModel():
                 self.updated_at = self.added_at
             if 'updated_at' not in kwargs:
                 self.added_at = datetime.utcnow()
+            if "password" in self.__dict__:
+                self.password = bytes(self.password, "utf-8")
+                self.password = bcrypt.hashpw(self.password, bcrypt.gensalt())
+                self.password = self.password.decode('utf-8')
+            if "image_path" in kwargs:
+                self.image_path = f'/data/iqa/profile_images/{self.id}'
         
     def __str__(self):
         """Customize __str__ output
