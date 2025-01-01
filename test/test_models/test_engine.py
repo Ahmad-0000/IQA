@@ -6,6 +6,8 @@ from os import getenv
 from datetime import date
 from models.engine.storage import Storage
 from models.users import User
+from models.quizzes import Quiz
+
 
 user = getenv('IQA_DB_USER')
 pawd = getenv('IQA_DB_PAWD')
@@ -48,7 +50,7 @@ class TestStorageEngine(unittest.TestCase):
         """
         self.cursor.execute('SHOW TABLES;')
         tables_num = self.cursor.rowcount
-        self.assertEqual(tables_num, 1)
+        self.assertEqual(tables_num, 2)
 
     def test_add_and_save(self):
         """Test 'add' and 'save' methods
