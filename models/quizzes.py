@@ -27,7 +27,7 @@ class Quiz(BaseModel, Base):
     duration = Column(Integer, nullable=False, default=5)
     image_path = Column(String(256), nullable=True, default=None)
     difficulty = Column(Enum(QuizDifficulty), nullable=False)
-    category = Column(String(20), nullable=False)
+    category_id = Column(String(36), ForeignKey('categories.id'), nullable=True)
     user_id = Column(String(36), ForeignKey('users.id'))
     user = relationship('User', back_populates='quizzes')
     questions = relationship(
@@ -37,6 +37,11 @@ class Quiz(BaseModel, Base):
             )
     feedbacks = relationship(
                 'FeedBack',
+                cascade='all, delete, delete-orphan',
+                back_populates='quiz'
+            )
+    scores = relationship(
+                'Score',
                 cascade='all, delete, delete-orphan',
                 back_populates='quiz'
             )
