@@ -9,6 +9,7 @@ from models.quizzes import Quiz
 from models.questions import Question
 from models.answers import Answer
 from models.feedbacks import FeedBack
+from models.scores import Score
 
 
 class Storage():
@@ -16,7 +17,7 @@ class Storage():
     """
     __engine = None
     __session = None
-    classes = [User, Quiz, Question, Answer, FeedBack]
+    classes = [User, Quiz, Question, Answer, FeedBack, Score]
 
     def __init__(self):
         """Initialize storage object
