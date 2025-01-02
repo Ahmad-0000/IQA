@@ -10,3 +10,4 @@ class Category(BaseModel, Base):
     """
     __tablename__ = 'categories'
     name = Column(String(20), nullable=False)
+    quizzes = relationship('Quiz', back_populates='category')

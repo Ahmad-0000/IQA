@@ -46,3 +46,4 @@ class Quiz(BaseModel, Base):
                 back_populates='quiz'
             )
     fan_user: Mapped[List['User']] = relationship(secondary=quizzes_likes, back_populates='liked_quizzes')
+    category = relationship('Category', back_populates='quizzes')
