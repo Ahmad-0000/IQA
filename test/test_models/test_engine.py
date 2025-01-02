@@ -47,7 +47,7 @@ class TestStorageEngine(unittest.TestCase):
         """
         self.__class__.cursor.execute('SHOW TABLES;')
         tables_num = self.__class__.cursor.rowcount
-        self.assertEqual(tables_num, 7)
+        self.assertEqual(tables_num, 8)
     
     def test_add_and_save(self):
         """Test 'add' and 'save' methods
