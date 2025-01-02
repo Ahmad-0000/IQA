@@ -36,4 +36,9 @@ class User(BaseModel, Base):
                     cascade='all, delete, delete-orphan',
                     back_populates='user'
     )
+    scores = relationship(
+            'Score',
+            cascade='all, delete, delete-orphan',
+            back_populates='user'
+    )
     liked_quizzes: Mapped[List['Quiz']] = relationship(secondary=quizzes_likes, back_populates='fan_user')
