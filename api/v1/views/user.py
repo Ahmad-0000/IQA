@@ -83,3 +83,13 @@ def update_account(user_id):
     except DataError:
         abort(400, "Abide to data constraints")
     return make_response(jsonify(user.to_dict()), 200)
+
+@app_views.route("/users/<user_id>", methods=['DELETE'], strict_slashes=False)
+def delete_account(user_id):
+    """DELETE /users/<user_id> => Deletes a user account
+    """
+    user = storage.get(User, user_id)
+    if not user:
+        abort(404)
+    user.delete()
+    return make_response(jsonify({}), 204)
