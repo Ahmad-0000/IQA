@@ -90,3 +90,13 @@ class TestAPI(unittest.TestCase):
         self.assertEqual(new_res.status_code, 200)
         self.assertEqual(new_res.json['first_name'], 'A new name')
         self.assertGreater(new_res.json['updated_at'], old_update_date)
+
+    def test_delete_account(self):
+        """Test "DELETE /api/v1/users/<user_id>"
+        """
+        res = self.__class__.client.get("/api/v1/users");
+        id = res.json[0]['id']
+        res = self.__class__.client.delete(f"/api/v1/users/{id}")
+        self.assertEqual(res.status_code, 204)
+        res = self.__class__.client.delete(f"/api/v1/users/{id}")
+        self.assertEqual(res.status_code, 404)
