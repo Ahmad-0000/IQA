@@ -84,13 +84,13 @@ class TestStorageEngine(unittest.TestCase):
         self.__class__.cursor.execute('SELECT id FROM users LIMIT 1;')
         id = self.__class__.cursor.fetchone()[0]
         self.assertEqual(id, storage.get(User, id).id)
-  
+
     def test_method_delete(self):
         """Test "delete" method
         """
         self.__class__.cursor.execute('SELECT COUNT(*) FROM users;')
         rows_num = self.__class__.cursor.fetchone()[0]
-        self.__class__.cursor.execute('SELECT id FROM users LIMIT 1;')
+        self.__class__.cursor.execute('SELECT id FROM users ORDER BY added_at DESC LIMIT 1;')
         id = self.__class__.cursor.fetchone()[0]
         u = storage.get(User, id)
         u.delete()
