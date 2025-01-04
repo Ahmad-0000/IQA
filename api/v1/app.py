@@ -23,6 +23,12 @@ def error404(error):
     """
     return make_response(jsonify({"error" : "Not found"}), 404)
 
+@app.errorhandler(404)
+def error400(error):
+    """Handle status code 400
+    """
+    return make_response(jsonify({"error": error}), 400)
+
 if __name__ == "__main__":
     host = getenv("IQA_API_HOST")
     port = getenv("IQA_API_PORT")
