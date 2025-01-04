@@ -2,8 +2,12 @@
 """
 import bcrypt
 import unittest
-from datetime import date
+from uuid import uuid4
+from datetime import date, timedelta
+from sqlalchemy.exc import DataError
+from models import storage
 from models.users import User
+from models.exc import DOBError
 
 
 class TestUser(unittest.TestCase):
@@ -13,11 +17,12 @@ class TestUser(unittest.TestCase):
     def setUpClass(cls):
         """Execute for class initalization
         """
+        cls.user_email = f"{str(uuid4())}@fake.fake"
         cls.user = User(first_name="Ahmad",
                          middle_name="Husain",
                          last_name="Basheer",
                          dob=date(2005, 3, 5),
-                         email="ahmad.new.m.v@gmail.com",
+                         email=cls.user_email,
                          password="fakepassword",
                          image_path="invalid",
                          bio="A person seeking to be a software engineer")
@@ -37,8 +42,22 @@ class TestUser(unittest.TestCase):
         self.assertEqual(self.__class__.user.middle_name, "Husain")
         self.assertEqual(self.__class__.user.last_name, "Basheer")
         self.assertEqual(self.__class__.user.dob, date(2005, 3, 5))
-        self.assertEqual(self.__class__.user.email, "ahmad.new.m.v@gmail.com")
+        self.assertEqual(self.__class__.user.email, self.__class__.user_email)
         self.assertTrue(bcrypt.checkpw(bytes('fakepassword', 'utf-8'),
                         bytes(self.__class__.user.password, 'utf-8')))
         self.assertEqual(self.__class__.user.image_path, expected_path)
         self.assertEqual(self.__class__.user.bio, expected_bio)
+
+    def test_dob_raises(self):
+        """Test users ages
+        """
+        with self.assertRaises(DOBError):
+            new_user = User(
+                        first_name="Unknown",
+                        middle_name="Unknown",
+                        last_name="Unknown",
+                        dob=date.today(),
+                        email=f"{str(uuid4())}@fake.fake",
+                        password="fake"
+                    )
+            new_user.save()
