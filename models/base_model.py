@@ -51,7 +51,7 @@ class BaseModel():
         """
         dict_repr = {}
         for k in self.__dict__:
-            if k == '_sa_instance_state':
+            if k == '_sa_instance_state' or k == 'password':
                 pass
             else:
                 dict_repr[k] = self.__dict__[k]
