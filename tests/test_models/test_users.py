@@ -1,0 +1,44 @@
+"""Test "User" class behavior
+"""
+import bcrypt
+import unittest
+from datetime import date
+from models.users import User
+
+
+class TestUser(unittest.TestCase):
+    """Main test class
+    """
+    @classmethod
+    def setUpClass(cls):
+        """Execute for class initalization
+        """
+        cls.user = User(first_name="Ahmad",
+                         middle_name="Husain",
+                         last_name="Basheer",
+                         dob=date(2005, 3, 5),
+                         email="ahmad.new.m.v@gmail.com",
+                         password="fakepassword",
+                         image_path="invalid",
+                         bio="A person seeking to be a software engineer")
+
+    @classmethod
+    def tearDownClass(cls):
+        """Execute for class clean up
+        """
+        del cls.user
+
+    def test_attributes(self):
+        """Test normal initialization
+        """
+        expected_path = f"/data/iqa/profile_images/{self.__class__.user.id}"
+        expected_bio = "A person seeking to be a software engineer"
+        self.assertEqual(self.__class__.user.first_name, "Ahmad")
+        self.assertEqual(self.__class__.user.middle_name, "Husain")
+        self.assertEqual(self.__class__.user.last_name, "Basheer")
+        self.assertEqual(self.__class__.user.dob, date(2005, 3, 5))
+        self.assertEqual(self.__class__.user.email, "ahmad.new.m.v@gmail.com")
+        self.assertTrue(bcrypt.checkpw(bytes('fakepassword', 'utf-8'),
+                        bytes(self.__class__.user.password, 'utf-8')))
+        self.assertEqual(self.__class__.user.image_path, expected_path)
+        self.assertEqual(self.__class__.user.bio, expected_bio)
