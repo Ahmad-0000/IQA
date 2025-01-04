@@ -18,7 +18,7 @@ class Storage():
     """
     __engine = None
     __session = None
-    classes = [User, Quiz, Question, Answer, FeedBack, Score, Category]
+    classes = [User, Quiz, Question, Answer, FeedBack, Category, Score]
 
     def __init__(self):
         """Initialize storage object
@@ -72,3 +72,38 @@ class Storage():
             return None
         obj = Storage.__session.query(cls).filter_by(id=id).one_or_none()
         return obj
+
+    def get_filtered(self, cls, filters: dict):
+        """Getting filtered data
+        """
+        allowed_filters = {
+                "Common": ["added_at", "updated_at"],
+                "User": [
+                            "first_name",
+                            "middle_name",
+                            "last_name",
+                            "email"
+                        ],
+                "Quiz": [
+                            "times_taken",
+                            "likes_num",
+                            "duration",
+                            "difficulty",
+                            "category_id",
+                            "user_id"
+                        ],
+                "Question": ["quiz_id"],
+                "Answer": ["is_true", "question_id"],
+                "Category": ["name"],
+                "FeedBack": ["user_id", "quiz_id"]
+            }
+        if cls not in Storage.classes[:-1]:
+            return []
+        q = Storage.__session.query(cls)
+        for k, v in filters.items():
+            if k not in allowed_filters["Common"] and k not in allowed_filters[cls.__name__]:
+                pass
+            else:
+                q = q.filter_by(**{k: v})
+        result = q.all()
+        return result
