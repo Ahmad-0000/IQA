@@ -53,6 +53,8 @@ class BaseModel():
         for k in self.__dict__:
             if k == '_sa_instance_state' or k == 'password':
                 pass
+            elif k == "added_at" or k == "updated_at" or k == "dob":
+                dict_repr[k] = str(self.__dict__[k])
             else:
                 dict_repr[k] = self.__dict__[k]
         return dict_repr
