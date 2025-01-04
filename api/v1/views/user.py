@@ -58,3 +58,28 @@ def new_account():
     except DOBError:
         abort(400, "Users with age less than 10 years are not allowed")
     return make_response(jsonify(new_user.to_dict()), 201)
+
+
+@app_views.route("/users/<user_id>", methods=["PUT"], strict_slashes=False)
+def update_account(user_id):
+    """PUT /users/<user_id> => update a user account
+    """
+    user = storage.get(User, user_id)
+    if not user:
+        abourt(404)
+    if not request.json:
+        abort(400, "Not JSON")
+    allowed = ["first_name", "bio", "image", "password"]
+    to_update = {}
+    for k, v in request.json.items():
+        if k not in allowed:
+            pass
+        else:
+            to_update.update({k: v})
+    if not to_update:
+        abort(400, "Provide attribute names to update")
+    try:
+        user.update(**to_update)
+    except DataError:
+        abort(400, "Abide to data constraints")
+    return make_response(jsonify(user.to_dict()), 200)
