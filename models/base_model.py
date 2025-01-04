@@ -79,3 +79,12 @@ class BaseModel():
         from models import storage
         storage.delete(self)
         storage.save()
+
+    def update(self, **kwargs):
+        """Update object attributes
+        """
+        from models import storage
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+        self.updated_at = datetime.utcnow()
+        storage.save()
