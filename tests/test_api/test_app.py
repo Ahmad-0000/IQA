@@ -7,6 +7,9 @@ from models.users import User
 from uuid import uuid4
 
 
+unittest.TestLoader.sortTestMethodUsing = None
+
+
 class TestAPI(unittest.TestCase):
     """Main test class
     """
@@ -60,9 +63,30 @@ class TestAPI(unittest.TestCase):
         self.assertIs(type(res.json), list)
 
     def test_user(self):
-        """Test "GET /api/v1/user/<uuid>"
+        """Test "GET /api/v1/users/<uuid_id>"
         """
         user = storage.get_all(User)[0]
         res = self.__class__.client.get(f"/api/v1/users/{user.id}")
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.json, user.to_dict())
+
+    def test_account_update(self):
+        """Test "PUT /api/v1/users/<user_id>"
+        """
+        old_res = self.__class__.client.post("/api/v1/users", json={
+                "first_name": "ahmad",
+                "middle_name": "husain",
+                "last_name": "basheer",
+                "dob": "2005-03-05",
+                "email": f"{str(uuid4())}@fake.fake",
+                "password": "fakepass"
+            })
+        id = old_res.json['id']
+        old_first_name = old_res.json['first_name']
+        old_update_date = old_res.json['updated_at']
+        new_res = self.__class__.client.put(f"/api/v1/users/{id}", json={
+                "first_name": "A new name"
+            })
+        self.assertEqual(new_res.status_code, 200)
+        self.assertEqual(new_res.json['first_name'], 'A new name')
+        self.assertGreater(new_res.json['updated_at'], old_update_date)
