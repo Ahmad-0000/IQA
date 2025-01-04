@@ -72,9 +72,12 @@ class TestStorageEngine(unittest.TestCase):
     def test_get_all(self):
         """Test "get_all" method
         """
+        self.__class__.cursor.execute('SELECT COUNT(*) FROM users;')
+        row_nums = self.__class__.cursor.fetchone()[0]
         objects = storage.get_all(User)
         is_none = storage.get_all(int)
         are_similar = filter(lambda obj: isinstance(obj, User), objects)
+        self.assertEqual(row_nums, len(objects))
         self.assertTrue(are_similar)
         self.assertIsNone(is_none)
 
