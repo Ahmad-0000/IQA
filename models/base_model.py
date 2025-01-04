@@ -26,7 +26,7 @@ class BaseModel():
         """
         if not kwargs:
             self.id = str(uuid4())
-            self.added_at = datetime.utcnow().isoformat()
+            self.added_at = datetime.utcnow()
             self.updated_at = self.added_at
         else:
             for k in kwargs:
@@ -58,7 +58,7 @@ class BaseModel():
             if k == '_sa_instance_state' or k == 'password':
                 pass
             elif k == "added_at" or k == "updated_at" or k == "dob":
-                dict_repr[k] = str(self.__dict__[k])
+                dict_repr[k] = self.__dict__[k].isoformat()
             else:
                 dict_repr[k] = self.__dict__[k]
         return dict_repr
