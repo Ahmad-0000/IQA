@@ -2,7 +2,7 @@
 Test BaseModel class and instances behavior
 """
 import unittest
-from datetime import datetime
+from datetime import datetime, date
 from uuid import uuid4
 from models.base_model import BaseModel
 
@@ -52,3 +52,22 @@ class TestBaseModel(unittest.TestCase):
                 'updated_at': self.bm.updated_at.isoformat()
             }
         self.assertEqual(self.bm.to_dict(), expected_dict)
+
+    def test_update_method(self):
+        """Test update method
+        """
+        from models.users import User
+        user = User(
+                        first_name="Unknown",
+                        middle_name="Unknown",
+                        last_name="Unknown",
+                        dob=date(2005, 3, 5),
+                        email=f"{str(uuid4())}@fake.fake",
+                        password="fake"
+                )
+        original_updated_at = user.updated_at
+        user.update(first_name="Ahmad")
+        user.save()
+        new_updated_at = user.updated_at
+        self.assertEqual(user.first_name, "Ahmad")
+        self.assertGreater(new_updated_at, original_updated_at)
