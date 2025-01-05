@@ -1,19 +1,10 @@
 """Quiz model class
 """
-import enum
 from sqlalchemy import Column, Integer, String, Enum, ForeignKey
 from sqlalchemy.orm import relationship, Mapped
 from models.base_model import Base, BaseModel
 from models.users import quizzes_likes
 from typing import List
-
-
-class QuizDifficulty(enum.Enum):
-    """Represents quiz difficulty levels
-    """
-    easy = 'Easy'
-    medium = 'Medium'
-    hard = 'Hard'
 
 
 class Quiz(BaseModel, Base):
@@ -26,9 +17,9 @@ class Quiz(BaseModel, Base):
     likes_num = Column(Integer, nullable=False, default=0)
     duration = Column(Integer, nullable=False, default=5)
     image_path = Column(String(256), nullable=True, default=None)
-    difficulty = Column(Enum(QuizDifficulty), nullable=False)
+    difficulty = Column(Enum('easy', 'medium', 'hard'), nullable=False)
     category_id = Column(String(36), ForeignKey('categories.id'), nullable=True)
-    user_id = Column(String(36), ForeignKey('users.id'))
+    user_id = Column(String(36), ForeignKey('users.id'), nullable=False)
     user = relationship('User', back_populates='quizzes')
     questions = relationship(
                 'Question',
@@ -45,5 +36,5 @@ class Quiz(BaseModel, Base):
                 cascade='all, delete, delete-orphan',
                 back_populates='quiz'
             )
-    fan_user: Mapped[List['User']] = relationship(secondary=quizzes_likes, back_populates='liked_quizzes')
+    fan_users: Mapped[List['User']] = relationship(secondary=quizzes_likes, back_populates='liked_quizzes')
     category = relationship('Category', back_populates='quizzes')
