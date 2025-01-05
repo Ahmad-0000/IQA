@@ -10,7 +10,7 @@ class FeedBack(BaseModel, Base):
     """
     __tablename__ = 'feedbacks'
     body = Column(String(512), nullable=False)
-    user_id = Column(String(36), ForeignKey('users.id'))
-    quiz_id = Column(String(36), ForeignKey('quizzes.id'))
+    user_id = Column(String(36), ForeignKey('users.id'), nullable=False)
+    quiz_id = Column(String(36), ForeignKey('quizzes.id'), nullable=False)
     user = relationship('User', back_populates='feedbacks')
     quiz = relationship('Quiz', back_populates='feedbacks')
