@@ -36,5 +36,5 @@ class Quiz(BaseModel, Base):
                 cascade='all, delete, delete-orphan',
                 back_populates='quiz'
             )
-    fan_users: Mapped[List['User']] = relationship(secondary=quizzes_likes, back_populates='liked_quizzes')
+    fans_users: Mapped[List['User']] = relationship(secondary=quizzes_likes, back_populates='liked_quizzes')
     category = relationship('Category', back_populates='quizzes')
