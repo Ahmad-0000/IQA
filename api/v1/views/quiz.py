@@ -1,0 +1,135 @@
+"""Quiz view
+"""
+from sqlalchemy.exc import DataError, IntegrityError
+from flask import make_response, jsonify, abort, request
+from api.v1.views import app_views
+from models import storage
+from models.users import User
+from models.quizzes import Quiz
+from models.questions import Question
+from models.answers import Answer
+
+
+@app_views.route("/users/<user_id>/quizzes", methods=['POST'], strict_slashes=False)
+def create_quiz(user_id):
+    """POST /api/v1/users/<user_id>/quizzes => Creates a quiz
+    """
+    user = storage.get(User, user_id)
+    if not user:
+        abort(404)
+    if not request.json:
+        abort(404, "Not JSON")
+    required_data = ["title", "description", "difficulty", "questions_collection"]
+    for data in required_data:
+        if data not in request.json:
+            abort(400, f"Missing {data}")
+    questions = request.json['questions_collection']
+    if type(questions) is not list:
+        abort(400, "Abide to data constraints")
+    if not questions:
+        abort(400, "At least one question is required")
+    for question in questions:
+        try:
+            if "body" in question and "answers_collection" in question\
+                and type(question['body']) is str and len(question['body']) > 0\
+                and type(question['answers_collection']) is list and len(question['answers_collection']) > 1:
+                break
+        except TypeError:
+            abort(400, "Abide to data constraints")
+    else:
+        abort(400, "Abide to data constraints")
+    quiz = Quiz(user_id=user.id, **(request.json))
+    try:
+        quiz.save()
+    except (DataError, IntegrityError):
+        abort(400, "Abide to data constraints")
+    added_questions = []
+    for question in questions:
+        try:
+            new_question = Question(**question, quiz_id=quiz.id)
+            new_question.save()
+            saved_answers = []
+            for answer in question['answers_collection']:
+                if "body" not in answer or "is_true" not in answer:
+                    pass
+                else:
+                    answer_object = Answer(**answer, question_id=new_question.id)
+                    answer_object.save()
+                    saved_answers.append(answer_object)
+            if len(saved_answers) > 1:
+                first_answer_state = saved_answers[0].is_true
+                different_answers = filter(lambda x: x.is_true != first_answer_state, saved_answers)
+                for different in different_answers:
+                    new_question.answers.extend(saved_answers)
+                    new_question.save()
+                    added_questions.append(new_question)
+                    break
+                else:
+                    new_question.delete()
+        except (DataError, IntegrityError):
+            pass
+    if not added_questions:
+        quiz.delete()
+        abort(400, "Abide to data constraints")
+    quiz.questions.extend(added_questions)
+    quiz.save()
+    quiz_dict = quiz.to_dict()
+    quiz_dict['questions'] = quiz_dict['questions_collection']
+    quiz_dict.pop("questions_collection")
+    return make_response(jsonify(quiz_dict), 201)
+
+@app_views.route("/quizzes", methods=['GET'], strict_slashes=False)
+def get_quizzes():
+    """GET /api/v1/quizzes => Returns the quizzes
+    """
+    quizzes = storage.get_all(Quiz)
+    return make_response(jsonify([quiz.to_dict() for quiz in quizzes]), 200)
+
+@app_views.route("/quizzes/<quiz_id>", methods=['GET'], strict_slashes=False)
+def get_quiz(quiz_id):
+    """GET /api/v1/quizzes/<quiz_id> => get the quiz with id "quiz_id"
+    """
+    quiz = storage.get(Quiz, quiz_id)
+    if not quiz:
+        abort(404)
+    return make_response(jsonify(quiz.to_dict()), 200)
+
+@app_views.route("/users/<user_id>/quizzes/<quiz_id>", methods=['PUT'], strict_slashes=False)
+def update_a_quiz(user_id, quiz_id):
+    """PUT /users/<user_id>/quizzes/<quiz_id> => Updates the quiz with id
+                                                 "quiz_id" of user with id
+                                                 "user_id"
+    """
+    user = storage.get(User, user_id)
+    if not user:
+        abort(404)
+    quiz = storage.get(Quiz, quiz_id)
+    if not quiz:
+        abort(404)
+    if quiz.user_id != user.id:
+        abort(401)
+    if not request.json:
+        abort(400, "Not JSON")
+    allowed = ['title', 'description', 'duration', 'category_id', 'image_path', 'difficulty']
+    updated = 0
+    filtered_attributes = {}
+    for k, v in request.json.items():
+        if k in allowed:
+            filtered_attributes[k] = v
+    if not filtered_attributes:
+        abort(400, "Provide at least one attribute to update")
+    try:
+        quiz.update(**filtered_attributes)
+    except (DataError, IntegrityError):
+        abort(400, "Abide to data constraints")
+    return make_response(jsonify(quiz.to_dict()), 200)
+
+@app_views.route("/quizzes/<quiz_id>", methods=['DELETE'], strict_slashes=False)
+def delete_quiz(quiz_id):
+    """DELETE /quizzes/<quiz_is> => deletes a quiz
+    """
+    quiz = storage.get(Quiz, quiz_id)
+    if not quiz:
+        abort(404)
+    quiz.delete()
+    return make_response(jsonify({}), 204)
