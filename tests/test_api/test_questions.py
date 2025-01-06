@@ -11,7 +11,7 @@ from uuid import uuid4
 unittest.TestLoader.sortTestMethodUsing = None
 
 
-class TestQuiz(unittest.TestCase):
+class TestQuestion(unittest.TestCase):
     """Main test class
     """
     @classmethod
