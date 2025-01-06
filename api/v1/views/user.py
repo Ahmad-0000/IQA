@@ -1,6 +1,7 @@
 """User view
 """
-from datetime import date
+from os import getenv
+from datetime import datetime, date, timedelta
 from sqlalchemy.exc import DataError
 from flask import make_response, jsonify, abort, request
 from api.v1.views import app_views
@@ -34,8 +35,8 @@ def show_user(user_id):
 def new_account():
     """POST /users => Creates a new user account
     """
-    if not request.json:
-        abort(404, "Not a JSON")
+    if not request.is_json:
+        abort(400, "Not a JSON")
     required_data = [
                 "first_name", "middle_name", "last_name",
                 "dob", "email", "password"
@@ -57,18 +58,21 @@ def new_account():
         abort(400, "Abide to data constraints")
     except DOBError:
         abort(400, "Users with age less than 10 years are not allowed")
-    return make_response(jsonify(new_user.to_dict()), 201)
+    from api.v1.app import auth
+    session_id = auth.create_session(new_user.id)
+    res = make_response(jsonify(new_user.to_dict()), 201)
+    cookie_name = getenv("SESSION_COOKIE_NAME")
+    res.set_cookie(cookie_name, session_id, expires=datetime.utcnow() + timedelta(10))
+    return res
 
 
-@app_views.route("/users/<user_id>", methods=["PUT"], strict_slashes=False)
-def update_account(user_id):
-    """PUT /users/<user_id> => update a user account
+@app_views.route("/users", methods=["PUT"], strict_slashes=False)
+def update_account():
+    """PUT /users => update the current user's account
     """
-    user = storage.get(User, user_id)
-    if not user:
-        abourt(404)
-    if not request.json:
+    if not request.is_json:
         abort(400, "Not JSON")
+    user = request.current_user
     allowed = ["first_name", "bio", "image", "password"]
     to_update = {}
     for k, v in request.json.items():
@@ -84,12 +88,13 @@ def update_account(user_id):
         abort(400, "Abide to data constraints")
     return make_response(jsonify(user.to_dict()), 200)
 
-@app_views.route("/users/<user_id>", methods=['DELETE'], strict_slashes=False)
-def delete_account(user_id):
-    """DELETE /users/<user_id> => Deletes a user account
+@app_views.route("/users", methods=['DELETE'], strict_slashes=False)
+def delete_account():
+    """DELETE /users => Deletes the current user's account
     """
-    user = storage.get(User, user_id)
-    if not user:
-        abort(404)
-    user.delete()
-    return make_response(jsonify({}), 204)
+    request.current_user.delete()
+    response = jsonify({})
+    response.status_code = 204
+    cookie_name = getenv("SESSION_COOKIE_NAME")
+    response.set_cookie(cookie_name, "", expires=datetime.utcnow() - timedelta(1))
+    return response

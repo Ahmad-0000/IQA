@@ -10,15 +10,13 @@ from models.questions import Question
 from models.answers import Answer
 
 
-@app_views.route("/users/<user_id>/quizzes", methods=['POST'], strict_slashes=False)
-def create_quiz(user_id):
-    """POST /api/v1/users/<user_id>/quizzes => Creates a quiz
+@app_views.route("/quizzes", methods=['POST'], strict_slashes=False)
+def create_quiz():
+    """POST /api/v1/quizzes => Creates a quiz
     """
-    user = storage.get(User, user_id)
-    if not user:
-        abort(404)
-    if not request.json:
-        abort(404, "Not JSON")
+    if not request.is_json:
+        abort(400, "Not JSON")
+    user = request.current_user
     required_data = ["title", "description", "difficulty", "questions_collection"]
     for data in required_data:
         if data not in request.json:
@@ -58,12 +56,11 @@ def create_quiz(user_id):
                     saved_answers.append(answer_object)
             if len(saved_answers) > 1:
                 first_answer_state = saved_answers[0].is_true
-                different_answers = filter(lambda x: x.is_true != first_answer_state, saved_answers)
-                for different in different_answers:
+                different_answers = list(filter(lambda x: x.is_true != first_answer_state, saved_answers))
+                if different_answers:
                     new_question.answers.extend(saved_answers)
                     new_question.save()
                     added_questions.append(new_question)
-                    break
                 else:
                     new_question.delete()
         except (DataError, IntegrityError):
@@ -94,22 +91,20 @@ def get_quiz(quiz_id):
         abort(404)
     return make_response(jsonify(quiz.to_dict()), 200)
 
-@app_views.route("/users/<user_id>/quizzes/<quiz_id>", methods=['PUT'], strict_slashes=False)
-def update_a_quiz(user_id, quiz_id):
-    """PUT /users/<user_id>/quizzes/<quiz_id> => Updates the quiz with id
+@app_views.route("/quizzes/<quiz_id>", methods=['PUT'], strict_slashes=False)
+def update_a_quiz(quiz_id):
+    """PUT /quizzes/<quiz_id> => Updates the quiz with id
                                                  "quiz_id" of user with id
                                                  "user_id"
     """
-    user = storage.get(User, user_id)
-    if not user:
-        abort(404)
+    if not request.is_json:
+        abort(400, "Not JSON")
+    user = request.current_user
     quiz = storage.get(Quiz, quiz_id)
     if not quiz:
         abort(404)
     if quiz.user_id != user.id:
         abort(401)
-    if not request.json:
-        abort(400, "Not JSON")
     allowed = ['title', 'description', 'duration', 'category_id', 'image_path', 'difficulty']
     updated = 0
     filtered_attributes = {}
@@ -126,10 +121,12 @@ def update_a_quiz(user_id, quiz_id):
 
 @app_views.route("/quizzes/<quiz_id>", methods=['DELETE'], strict_slashes=False)
 def delete_quiz(quiz_id):
-    """DELETE /quizzes/<quiz_is> => deletes a quiz
+    """DELETE /quizzes/<quiz_id> => deletes a quiz
     """
     quiz = storage.get(Quiz, quiz_id)
     if not quiz:
         abort(404)
+    if quiz.user_id != request.current_user.id:
+        abort(401)
     quiz.delete()
     return make_response(jsonify({}), 204)
