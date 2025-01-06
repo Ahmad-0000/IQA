@@ -127,6 +127,6 @@ def delete_quiz(quiz_id):
     if not quiz:
         abort(404)
     if quiz.user_id != request.current_user.id:
-        abort(401)
+        abort(403)
     quiz.delete()
     return make_response(jsonify({}), 204)
