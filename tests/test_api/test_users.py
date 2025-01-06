@@ -10,7 +10,7 @@ from uuid import uuid4
 unittest.TestLoader.sortTestMethodUsing = None
 
 
-class TestQuiz(unittest.TestCase):
+class TestUser(unittest.TestCase):
     """Main test class
     """
     @classmethod
@@ -19,6 +19,7 @@ class TestQuiz(unittest.TestCase):
         """
         app.config.update({"TESTING": True})
         cls.client = app.test_client()
+        cls.session_id = None
 
     @classmethod
     def tearDownClass(cls):
@@ -43,6 +44,7 @@ class TestQuiz(unittest.TestCase):
                 "email": f"{str(uuid4())}@fake.fake",
                 "password": "fakepass"
             });
+        self.__class__.session_id = res.headers['Set-Cookie'].split(';')[0].split("=")[1]
         self.assertEqual(res.status_code, 201)
         user_email = res.json['email']
         res = self.__class__.client.post("/api/v1/users", json={
@@ -80,13 +82,13 @@ class TestQuiz(unittest.TestCase):
                 "dob": "2005-03-05",
                 "email": f"{str(uuid4())}@fake.fake",
                 "password": "fakepass"
-            })
-        id = old_res.json['id']
+            });
+        session_id = old_res.headers['Set-Cookie'].split(";")[0].split("=")[1]
         old_first_name = old_res.json['first_name']
         old_update_date = old_res.json['updated_at']
-        new_res = self.__class__.client.put(f"/api/v1/users/{id}", json={
+        new_res = self.__class__.client.put(f"/api/v1/users", json={
                 "first_name": "A new name"
-            })
+                }, headers={"Cookie": f"login_session={session_id}"})
         self.assertEqual(new_res.status_code, 200)
         self.assertEqual(new_res.json['first_name'], 'A new name')
         self.assertGreater(new_res.json['updated_at'], old_update_date)
@@ -94,9 +96,18 @@ class TestQuiz(unittest.TestCase):
     def test_delete_account(self):
         """Test "DELETE /api/v1/users/<user_id>"
         """
-        res = self.__class__.client.get("/api/v1/users");
-        id = res.json[0]['id']
-        res = self.__class__.client.delete(f"/api/v1/users/{id}")
+        old_res = self.__class__.client.post("/api/v1/users", json={
+                "first_name": "ahmad",
+                "middle_name": "husain",
+                "last_name": "basheer",
+                "dob": "2005-03-05",
+                "email": f"{str(uuid4())}@fake.fake",
+                "password": "fakepass"
+            });
+        session_id = old_res.headers['Set-Cookie'].split(";")[0].split("=")[1]
+        res = self.__class__.client.delete(
+                f"/api/v1/users", headers={"Cookie": f"login_session={session_id}"}
+            )
         self.assertEqual(res.status_code, 204)
-        res = self.__class__.client.delete(f"/api/v1/users/{id}")
-        self.assertEqual(res.status_code, 404)
+        res = self.__class__.client.delete(f"/api/v1/users")
+        self.assertEqual(res.status_code, 401)
