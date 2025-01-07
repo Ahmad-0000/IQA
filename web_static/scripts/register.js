@@ -19,14 +19,16 @@ registerBtn.addEventListener('click', () => {
     "agree": agree.checked
   }
   fetch("http://localhost:5001/api/v1/users", {
-    cretentials: "include",
+    credentials: "include",
     method: 'POST',
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify(data)
   }, (res) => {
     console.log(res);
     if (res.ok) {
-      window.location = "/profile.html";
+      document.location = "/profile.html";
+    } else {
+      console.log(res.json());
     }
   });
 });
