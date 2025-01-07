@@ -23,7 +23,7 @@ registerBtn.addEventListener('click', () => {
     method: 'POST',
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify(data)
-  }),then((res) => {
+  }).then((res) => {
     console.log(res);
     if (res.ok) {
       document.location = "/profile.html";
