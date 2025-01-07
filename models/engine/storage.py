@@ -1,6 +1,7 @@
 """Declare a class to handle DB storage
 """
 from os import getenv
+from datetime import datetime
 from sqlalchemy import  create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from models.base_model import Base
@@ -65,6 +66,33 @@ class Storage():
             return None
         return Storage.__session.query(cls).all()
 
+    def get_paged(self, cls, order_by, order_type, after):
+        """Get paged members for api
+        """
+        if cls is not Quiz:
+            return None
+        if order_by not in ["added_at", "likes_num", "times_taken"]:
+            return None
+        if order_by == "added_at" and after:
+            try:
+                after = datetime.fromisoformat(after)
+            except ValueError:
+                return None
+        elif after:
+            try:
+                after = int(after)
+            except ValueError:
+                return None
+        if order_type not in ["desc", "asc"]:
+            order_type = "desc"
+        if after:
+            if order_type == "asc":
+                return Storage.__session.query(cls).filter(cls.__dict__[order_by] > after).limit(20)
+            else:
+                return Storage.__session.query(cls).filter(cls.__dict__[order_by] < after).limit(20)
+        else:
+            return Storage.__session.query(cls).order_by(cls.__dict__[order_by]).limit(20)
+        
     def get(self, cls, id):
         """Return the object belonging to "cls" with id "id"
         """

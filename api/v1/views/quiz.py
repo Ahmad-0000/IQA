@@ -79,8 +79,17 @@ def create_quiz():
 def get_quizzes():
     """GET /api/v1/quizzes => Returns the quizzes
     """
-    quizzes = storage.get_all(Quiz)
-    return make_response(jsonify([quiz.to_dict() for quiz in quizzes]), 200)
+    order_by = request.args.get("order_by")
+    order_type = request.args.get("order_type")
+    after = request.args.get("after")
+    if not order_by:
+        return make_response(jsonify([quiz.to_dict() for quiz in storage.get_all(Quiz)]), 200)
+    result = storage.get_paged(Quiz, order_by, order_type, after)
+    if result is None:
+        return make_response(jsonify([]), 204)
+    if type(result) is Quiz:
+        result = [result]
+    return make_response(jsonify([r.to_dict() for r in result]), 200)
 
 @app_views.route("/quizzes/<quiz_id>", methods=['GET'], strict_slashes=False)
 def get_quiz(quiz_id):
