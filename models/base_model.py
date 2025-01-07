@@ -6,6 +6,7 @@ from uuid import uuid4
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.exc import DataError
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm.collections import InstrumentedList
 from models.exc import DOBError
 
 
@@ -56,6 +57,8 @@ class BaseModel():
         dict_repr = {}
         for k in self.__dict__:
             if k == '_sa_instance_state' or k == 'password':
+                pass
+            elif type(self.__dict__[k]) is InstrumentedList:
                 pass
             elif k == "added_at" or k == "updated_at" or k == "dob":
                 dict_repr[k] = self.__dict__[k].isoformat()
