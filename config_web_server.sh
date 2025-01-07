@@ -15,9 +15,7 @@ cp nginx.config /etc/nginx/sites-available/iqa
 echo
 echo "Create nginx symlink"
 echo ===============================
-echo
 ln -fs /etc/nginx/sites-available/iqa /etc/nginx/sites-enabled/iqa
-echo ===============================
 echo
 echo "Restart nginx"
 echo ===============================
