@@ -27,7 +27,6 @@ def add_answer(question_id):
         abort(400, "Abide to data constraints")
     question = storage.get(Question, question_id)
     if not question:
-        print("Here")
         abort(404)
     quiz = storage.get(Quiz, question.quiz_id)
     if quiz.user_id != request.current_user.id:
