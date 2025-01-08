@@ -25,13 +25,14 @@ myForm.addEventListener('submit', (event) => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data),
       credentials: 'include',
-    }).then((res) => {
-      if (res.ok && res.status === 201) {
-        document.location = "/profile.html";
-      } else {
-        return res.json();
-	}
-      }
-    }).then(error => console.log(error));
+    })
+       .then((res) => {
+          if (res.status === 201) {
+            document.location = "/profile.html";
+          } else {
+            return res.json();
+	  }
+      })
+       .then(error => console.log(error));
   }
 });
