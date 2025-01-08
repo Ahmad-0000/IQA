@@ -21,8 +21,8 @@ registerBtn.addEventListener('click', () => {
   fetch("http://localhost:5001/api/v1/users", {
     method: 'POST',
     headers: {"Content-Type": "application/json"},
-    body: JSON.stringify(data)
-    credentials: "include",
+    body: JSON.stringify(data),
+    credentials: "include"
   }).then((res) => {
     console.log(res);
     if (res.ok) {
