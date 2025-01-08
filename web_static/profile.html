@@ -23,6 +23,10 @@
 </head>
     <body>
         <!-- Edit personal info -->
+        <div id="first_name">
+            <input type="text" class="border rad-10 p-10 fs-18" required maxlength="20">
+            <button class="rad-6 c-white border fs-16 txt-bold">Update</button>
+        </div>
         <div id="bio">
             <textarea class="border rad-10 p-10 fs-18 required"></textarea>
             <button class="rad-6 c-white border fs-16 txt-bold">Update</button>
@@ -83,7 +87,9 @@
             <!-- End Header -->
             <!-- Start Main Section -->
             <main class="container bg-white p-20 rad-6">
-                <div class="img rad-half broder"></div>
+                <div class="img rad-half broder p-relative">
+                    <i class="fa-solid fa-plus c-blue rad-half bg-white p-abs border"></i>
+                </div>
                 <div class="personal-info w-fit fs-20 txt-c">
                     <p>Ahmad Husain Basheer</p>
                     <p>Birth Date: <span>2005/3/5</span></p>

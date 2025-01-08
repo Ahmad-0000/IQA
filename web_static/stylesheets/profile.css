@@ -6,6 +6,25 @@ main .img {
     box-shadow: 0 0 7px var(--blue);
 }
 
+main .img i {
+    top: 75%;
+    right: 15px;
+    transform: translate();
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    text-align: center;
+    line-height: 35px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+main .img i:hover {
+    cursor: pointer;
+    background-color: var(--blue);
+    color: white;
+}
+
 main .personal-info {
     margin: 10px auto;
 }
@@ -79,7 +98,8 @@ h3 {
 }
 
 /* Edit personal info */
-#bio {
+#bio,
+#first_name {
     display: none;
     flex-direction: column;
     justify-content: center;
@@ -100,23 +120,32 @@ h3 {
     margin-bottom: 20px;
 }
 
+#first_name input {
+    width: 300px;
+    margin-bottom: 20px;
+}
+
 @media (min-width: 768px) {
-    #bio textarea {
+    #bio textarea,
+    #first_name input {
         width: 500px;
     }
 }
 
-#bio textarea:focus {
+#bio textarea:focus,
+#first_name input:focus {
     box-shadow: 0 0 5px var(--blue);
 }
 
-#bio button {
+#bio button,
+#first_name button {
     padding: 7px 10px;
     color: var(--blue);
     cursor: pointer;
 }
 
-#bio button:hover {
+#bio button:hover,
+#first_name button:hover {
     color: white;
     background-color: var(--blue);
 }
