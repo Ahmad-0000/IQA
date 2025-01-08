@@ -25,7 +25,11 @@ def show_user(user_id):
                                user with id equal to
                                "user_id"
     """
-    user_account = storage.get(User, user_id)
+    current_user = request.__dict__.get('current_user')
+    if user_id == 'me' and current_user:
+        user_account = storage.get(User, current_user.id)
+    else:
+        user_account = storage.get(User, user_id)
     if not user_account:
         abort(404)
     return make_response(jsonify(user_account.to_dict()), 200)
