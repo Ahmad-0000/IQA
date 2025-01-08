@@ -5,9 +5,9 @@ const errorMessage = document.querySelector("#error p:first-of-type");
 const url = new URL(location.href);
 const userId = url.searchParams.get("user_id");
 const namePlace = document.querySelector(".personal-info p:first-of-type");
-const dob = document.querySelector(".personal-info p:nth-child(2)");
-const joinDate = document.querySelector(".personal-info p:nth-child(3)");
-const quizzesNumber = document.querySelector(".personal-info p:last-of-type");
+const dob = document.querySelector(".personal-info p:nth-child(2) span");
+const joinDate = document.querySelector(".personal-info p:nth-child(3) span");
+const quizzesNumber = document.querySelector(".personal-info p:last-of-type span");
 const bio = document.querySelector(".personal-info textarea");
 
 if (userId === null || userId === "me") {
@@ -19,10 +19,10 @@ if (userId === null || userId === "me") {
         }
     })
       .then((data) => {
-        namePlace.textContent += `${data.first_name} ${data.middle_name} ${data.last_name}`;
-        dob.textContent += data.dob;
-        joinDate = data.added_at;
-        quizzesNumber = "To be implemented";
+        namePlace.textContent = `${data.first_name} ${data.middle_name} ${data.last_name}`;
+        dob.textContent = data.dob;
+        joinDate.textContent = data.added_at;
+        quizzesNumber.textContent = "To be implemented";
       });
 } else {
     fetch(`http://localhost:5001/api/v1/users/${userId}`).then((res) => {
@@ -33,10 +33,10 @@ if (userId === null || userId === "me") {
         }
     })
       .then((data) => {
-        namePlace.textContent += `${data.first_name} ${data.middle_name} ${data.last_name}`;
-        dob.textContent += data.dob;
-        joinDate = data.added_at;
-        quizzesNumber = "To be implemented"; 
+        namePlace.textContent = `${data.first_name} ${data.middle_name} ${data.last_name}`;
+        dob.textContent = data.dob;
+        joinDate.textContent = data.added_at;
+        quizzesNumber.textContent = "To be implemented";
     })
 }
 
