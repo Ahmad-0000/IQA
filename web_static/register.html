@@ -15,7 +15,7 @@
     <!-- End scripts -->
 </head>
 <body>
-    <form class="p-20 border rad-10">
+    <form class="p-20 border rad-10" action="http://localhost:5001/api/v1/users">
         <div class="logo rad-half txt-bold">IQA</div>
         <div class="info">
             <label for="f-name">
@@ -45,7 +45,7 @@
             <label for="agree">
                 <input type="checkbox" name="terms" id="agree" required> I agree to the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a>
             </label>
-    	    <button id="submit">Register</button>
+    	    <input type="submit" id="submit" value="Register"></input>
         </div>
     </form>
 </body>
