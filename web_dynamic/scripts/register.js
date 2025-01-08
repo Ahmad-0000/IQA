@@ -19,7 +19,7 @@ myForm.addEventListener('submit', (event) => {
     formData.forEach((name, value) => {
       data[name] = value;
     });
-    data['agree'] = true;
+    // data['agree'] = true;
     fetch("http://localhost:5001/api/v1/users", {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
