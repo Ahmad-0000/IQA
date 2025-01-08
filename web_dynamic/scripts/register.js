@@ -7,15 +7,15 @@ const email = document.querySelector("#email")
 const password = document.querySelector("#password")
 const dob = document.querySelector("#dob")
 const myForm = document.querySelector("form")
+const formData = new FormData(myForm);
+const data = {};
 
 myForm.addEventListener('submit', (event) => {
 
   // Prevent the default action of form submission
   event.preventDefault();
-  const data = {};
 
   if (myForm.checkValidity()) {
-    const formData = new FormData(myForm);
     formData.forEach((name, value) => {
       data[name] = value;
     });
