@@ -29,12 +29,9 @@ myForm.addEventListener('submit', (event) => {
       if (res.ok && res.status === 201) {
         document.location = "/profile.html";
       } else {
-        if (res.status === 409) {
-          conosle.log(`${data.email} was taken`);
-	} else if (res.status === 400) {
-          console.log("Abide to data constraints");
+        return res.json();
 	}
       }
-    });
+    }).then(error => console.log(error));
   }
 });
