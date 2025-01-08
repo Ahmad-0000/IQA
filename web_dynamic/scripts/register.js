@@ -7,7 +7,6 @@ const email = document.querySelector("#email")
 const password = document.querySelector("#password")
 const dob = document.querySelector("#dob")
 const myForm = document.querySelector("form")
-const formData = new FormData(myForm);
 const data = {};
 
 myForm.addEventListener('submit', (event) => {
@@ -16,9 +15,10 @@ myForm.addEventListener('submit', (event) => {
   event.preventDefault();
 
   if (myForm.checkValidity()) {
-    formData.forEach((name, value) => {
-      data[name] = value;
-    });
+    const formData = new FormData(myForm);
+    for (const pair of formData.entries()) {
+      data[pair[0]] = pair[1];
+    }
     data['agree'] = true;
     fetch("http://localhost:5001/api/v1/users", {
       method: 'POST',
