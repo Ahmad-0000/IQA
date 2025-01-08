@@ -59,12 +59,3 @@ def error403(error):
     """Handles status code 403
     """
     return make_response(jsonify({"error": "forbidden"}), 403)
-
-
-if __name__ == "__main__":
-    host = getenv("IQA_API_HOST")
-    port = getenv("IQA_API_PORT")
-    if not (host and port):
-        host = "0.0.0.0"
-        port = "5000"
-    app.run(host=host, port=port, threaded=True)
