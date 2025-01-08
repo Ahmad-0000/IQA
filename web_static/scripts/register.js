@@ -30,5 +30,5 @@ registerBtn.addEventListener('click', () => {
     } else {
       res.json();
     }
-  }).then((data) = > {console.log(data)});
+  }).then((data) => {console.log(data)});
 });
