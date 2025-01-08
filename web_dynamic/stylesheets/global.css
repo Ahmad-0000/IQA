@@ -71,3 +71,40 @@ ul {
 ::-webkit-scrollbar-thumb {
     background-color: var(--blue);
 }
+
+#error {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: white;
+}
+
+#error div {
+    margin-bottom: 20%;
+}
+
+#error p {
+    margin: 5px auto;
+    font-size: 20px;
+}
+
+
+#error h1 span {
+    color: var(--blue);
+}
+
+#error a {
+    color: var(--blue);
+}
+
+@media (min-width: 768px) {
+    #error h1 {
+        font-size: 40px;
+    }
+}
