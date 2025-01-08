@@ -12,14 +12,14 @@ myForm.addEventListener('submit', (event) => {
 
   // Prevent the default action of form submission
   event.preventDefault();
+  const data = {};
 
   if (myForm.checkValidity()) {
     const formData = new FormData(myForm);
-    const data = {};
     formData.forEach((name, value) => {
       data[name] = value;
     });
-    // data['agree'] = true;
+    data['agree'] = true;
     fetch("http://localhost:5001/api/v1/users", {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
