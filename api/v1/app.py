@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.register_blueprint(app_views, url_prefix="/api/v1")
 auth = SessionAuth()
 
-CORS(app, supportes_credentials=True, origins="http://localhost:8080")
+CORS(app, supports_credentials=True, origins="http://localhost:8080")
 
 @app.before_request
 def handle_credentials():
