@@ -135,3 +135,41 @@ class Storage():
                 q = q.filter_by(**{k: v})
         result = q.all()
         return result
+
+    def get_filtered_quizzes(self, cats: list, after, options) -> list:
+        """Get filtered quizzes for the main wrapper
+        """
+        for cat in cats:
+            if type(cat) is not str:
+                return None
+        result = []
+        for_cat = 20 // len(cats)
+        order_attribute = options.get("order_attribute")
+        order_type = options.get("order_type")
+        if not order_attribute or order_attribute not in ["added_at", "times_taken"]:
+            order_attribute = "added_at"
+        if order_attribute == "added_at":
+            try:
+                after = datetime.fromisoformat(after)
+            except (ValueError, TypeError):
+                return None
+        elif order_attribute == "times_taken":
+            if type(after) is not int:
+                return None
+        if not order_type or order_type not in ["asc", "desc"]:
+            order_type = "desc"
+        prev = 0
+        for cat in cats:
+            if order_type == "asc":
+                sub_result = Storage.__session.query(Quiz)\
+                            .filter(Quiz.__dict__[order_attribute] > after)\
+                            .filter(Quiz.category_id == cat)\
+                            .limit(for_cat + prev)
+            else:
+                sub_result = Storage.__session.query(Quiz)\
+                            .filter(Quiz.__dict__[order_attribute] < after)\
+                            .filter(Quiz.category_id == cat)\
+                            .limit(for_cat + prev)
+            prev = for_cat - len(sub_result.all())
+            result.extend(sub_result.all())
+        return result
