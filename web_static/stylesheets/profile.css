@@ -77,3 +77,47 @@ h3 {
     background-color: var(--blue-alt);
     color: white;
 }
+
+/* Edit personal info */
+#bio {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    background-color: white;
+}
+
+#bio textarea {
+    text-indent: 10px;
+    min-width: 300px;
+    min-height: 150px;
+    margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+    #bio textarea {
+        width: 500px;
+    }
+}
+
+#bio textarea:focus {
+    box-shadow: 0 0 5px var(--blue);
+}
+
+#bio button {
+    padding: 7px 10px;
+    color: var(--blue);
+    cursor: pointer;
+}
+
+#bio button:hover {
+    color: white;
+    background-color: var(--blue);
+}
+/* End personal info edition */
