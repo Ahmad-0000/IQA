@@ -24,6 +24,20 @@ if (userId === null || userId === "me") {
         joinDate = data.added_at;
         quizzesNumber = "To be implemented";
       });
+} else {
+    fetch(`http://localhost:5001/api/v1/users/${userId}`).then((res) => {
+        if (res.status === 200) {
+            return res.json();
+        } else {
+            showErrorPage(res);
+        }
+    })
+      .then((data) => {
+        namePlace.textContent += `${data.first_name} ${data.middle_name} ${data.last_name}`;
+        dob.textContent += data.dob;
+        joinDate = data.added_at;
+        quizzesNumber = "To be implemented"; 
+    })
 }
 
 async function showErrorPage(response) {
