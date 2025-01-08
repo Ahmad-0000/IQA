@@ -64,7 +64,7 @@ class Storage():
         """
         if cls not in Storage.classes:
             return None
-        return Storage.__session.query(cls).all()
+        return Storage.__session.query(cls).order_by(cls.added_at.desc()).all()
 
     def get_paged(self, cls, order_by, order_type, after):
         """Get paged members for api
@@ -136,7 +136,7 @@ class Storage():
         result = q.all()
         return result
 
-    def get_filtered_quizzes(self, cats: list, after, options) -> list:
+    def get_quizzes_with_cats(self, cats: list, after, options) -> list:
         """Get filtered quizzes for the main wrapper
         """
         for cat in cats:
