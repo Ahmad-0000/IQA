@@ -1,5 +1,8 @@
 // Handle registeration
 
+const errorPage = document.querySelector("#error");
+const errorCode = document.querySelector("#error h1 span");
+const errorMessage = document.querySelector("#error p:first-of-type");
 const fName = document.querySelector("#f-name")
 const mName = document.querySelector("#m-name")
 const lName = document.querySelector("#l-name")
@@ -20,7 +23,7 @@ myForm.addEventListener('submit', (event) => {
       data[pair[0]] = pair[1];
     }
     data['agree'] = true;
-    fetch("http://localhost:5001/api/v1/users", {
+    fetch("http://localhost:5001/api/v1/users?user_id=me", {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data),
@@ -28,11 +31,18 @@ myForm.addEventListener('submit', (event) => {
     })
        .then((res) => {
           if (res.status === 201) {
-            document.location = "/profile.html";
+            document.location = "/profile.html?user_id=me";
           } else {
-            return res.json();
-	  }
+            showErrorPage(res);
+          }
       })
-       .then(error => console.log(error));
   }
 });
+
+async function showErrorPage(response) {
+  // Show the error page
+  errorPage.style.display = "flex";
+  const data = await response.json();
+  errorCode.textContent = data.status;
+  errorMessage.textContent = data.body;
+}
