@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Start Local Stylesheets -->
+    <link rel="stylesheet" href="stylesheets/framework.css">
+    <link rel="stylesheet" href="stylesheets/global.css">
+    <link rel="stylesheet" href="stylesheets/header.css">
+    <link rel="stylesheet" href="stylesheets/quizCard.css">
+    <link rel="stylesheet" href="stylesheets/profile.css">
+    <link rel="stylesheet" href="stylesheets/footer.css">
+    <!-- End Local Stylesheets -->
+    <!-- Start Font Awesome Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <!-- End Font Awesome Library -->
+    <!-- Start Scripts -->
+    <script src="scripts/header.js" defer></script>
+    <script src="scripts/quizCard.js" defer></script>
+    <!-- End Scripts -->
+    <title>Ahmad Basheer</title>
+</head>
+    <body>
+        <!-- Start Effects -->
+        <div id="quiz-overlay"></div>
+        <div id="quiz-details" class="bg-white p-20 p-relative border">
+            <i class="top-right-corner" id="quiz-details-closer"><i class="fa-solid fa-xmark"></i></i>
+            <h2 class="c-gray txt-c">Title</h2>
+            <div class="content d-flex">
+                <div class="img rad-6 bg-gray"></div>
+                <div class="details p-relative">
+                    <p class="description">
+                       Some Description
+                    </p>
+                    <div class="upload-info d-flex">
+                        <div>
+                            <p>By: <span>Ahmad Husain</span></p>
+                            <p>Created at: <span>2024-12-17</span></p>
+                            <p>Updated at: <span>-hasen't been updated-</span></p>
+                        </div>
+                        <div>
+                            <p>Difficulty: <span>Easy</span></p>
+                            <p>Speciality: <span>General</span></p>
+                            <p>Formal: <i class="fa-solid fa-xmark"></i></p>
+                        </div>
+                    </div>
+                    <div class="stats">
+                        <div class="likes"><i class="fa-regular fa-heart"></i> Likes: 10</div>
+                        <div class="times-taken"><i class="fa-solid fa-repeat"></i> Times Taken: 10</div>
+                        <div class="duration"><i class="fa-regular fa-clock"></i> Duration: 10 Minutes</div>
+                    </div>
+                    <a href="quiz.html" class="button d-block rad-6 p-abs">Start</a>
+                </div>
+            </div>
+            <a href="#" class="effect-logo rad-half c-gray txt-c d-block"><h1 class="fs-20">IQA</h1></a>
+        </div>
+        <!-- End Effects -->
+        <div class="page">
+            <!-- Start Header -->
+            <header class="bg-white p-relative">
+                <div class="container center-align-flex p-10 p-relative space-between">
+                    <a href="#" class="logo rad-half c-white txt-c"><h1 class="fs-20">IQA</h1></a>
+                    <div class="navigation-bar d-flex txt-c" id="navigation-bar">
+                        <a href="index.html" class="c-gray rad-6">Home</a>
+                        <a href="about.html" class="c-gray rad-6">About</a>
+                        <a href="#" class="c-gray rad-6">Dashboard</a>
+                        <a href="#" class="c-gray rad-6"><i class="fa-solid fa-circle-user"></i></a>
+                    </div>
+                    <span id="burger-icon" class="p-abs space-between">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </div>
+            </header>
+            <!-- End Header -->
+            <!-- Start Main Section -->
+            <main class="container bg-white p-20 rad-6">
+                <div class="img rad-half broder"></div>
+                <div class="personal-info w-fit fs-20 txt-c">
+                    <p>Ahmad Husain Basheer</p>
+                    <p>Birth Date: <span>2005/3/5</span></p>
+                    <p>Member since: <span>The beginning</span></p>
+                    <p>Number of quizzes: <span>number</span></p>
+                    <label class="d-block">Bio:</label>
+                    <textarea class="border rad-10 p-10"></textarea>
+                </div>
+                <div class="quizzes-info d-grid">
+                    <div>
+                        <h2 class="txt-c c-gray">Taken</h2>
+                        <div class="taken border rad-10">
+                            <div class="quiz">
+                                <h3>Title</h3>
+                                <p>Lastly taken at: <span>Date</span></p>
+                            </div>
+                            <div class="quiz">
+                                <h3>Title</h3>
+                                <p>Lastly taken at: <span>Date</span></p>
+                            </div>
+                            <div class="quiz">
+                                <h3>Title</h3>
+                                <p>Lastly taken at: <span>Date</span></p>
+                            </div>
+                            <div class="quiz">
+                                <h3>Title</h3>
+                                <p>Lastly taken at: <span>Date</span></p>
+                            </div>
+                            <div class="quiz">
+                                <h3>Title</h3>
+                                <p>Lastly taken at: <span>Date</span></p>
+                            </div>
+                            <div class="quiz">
+                                <h3>Title</h3>
+                                <p>Lastly taken at: <span>Date</span></p>
+                            </div>
+                            <div class="quiz">
+                                <h3>Title</h3>
+                                <p>Lastly taken at: <span>Date</span></p>
+                            </div>
+                            <div class="quiz">
+                                <h3>Title</h3>
+                                <p>Lastly taken at: <span>Date</span></p>
+                            </div>
+                            <div class="quiz">
+                                <h3>Title</h3>
+                                <p>Lastly taken at: <span>Date</span></p>
+                            </div>
+                            <button class="c-blue fs-16 border rad-6">More</button>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="txt-c c-gray">Uploaded</h2>
+                        <div class="uploaded border rad-10"> 
+                            <div class="quiz">
+                                <h3>Title</h3>
+                                <p>Last update at: <span>Date</span></p>
+                            </div>
+                            <div class="quiz">
+                                <h3>Title</h3>
+                                <p>Last update at: <span>Date</span></p>
+                            </div>
+                            <div class="quiz">
+                                <h3>Title</h3>
+                                <p>Last update at: <span>Date</span></p>
+                            </div>
+                            <div class="quiz">
+                                <h3>Title</h3>
+                                <p>Last update at: <span>Date</span></p>
+                            </div>
+                            <div class="quiz">
+                                <h3>Title</h3>
+                                <p>Last update at: <span>Date</span></p>
+                            </div>
+                            <div class="quiz">
+                                <h3>Title</h3>
+                                <p>Last update at: <span>Date</span></p>
+                            </div>
+                            <div class="quiz">
+                                <h3>Title</h3>
+                                <p>Last update at: <span>Date</span></p>
+                            </div>
+                            <div class="quiz">
+                                <h3>Title</h3>
+                                <p>Last update at: <span>Date</span></p>
+                            </div>
+                            <div class="quiz">
+                                <h3>Title</h3>
+                                <p>Last update at: <span>Date</span></p>
+                            </div>
+                            <button class="c-blue fs-16 border rad-6">More</button>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="txt-c c-gray">Favorites</h2>
+                        <div class="favorites border rad-10">
+                        <div class="quiz">
+                            <h3>Title</h3>
+                            <p>Lastly taken at: <span>Date</span></p>
+                        </div>
+                        <div class="quiz">
+                            <h3>Title</h3>
+                            <p>Lastly taken at: <span>Date</span></p>
+                        </div>
+                        <div class="quiz">
+                            <h3>Title</h3>
+                            <p>Lastly taken at: <span>Date</span></p>
+                        </div>
+                        <div class="quiz">
+                            <h3>Title</h3>
+                            <p>Lastly taken at: <span>Date</span></p>
+                        </div>
+                        <div class="quiz">
+                            <h3>Title</h3>
+                            <p>Lastly taken at: <span>Date</span></p>
+                        </div>
+                        <div class="quiz">
+                            <h3>Title</h3>
+                            <p>Lastly taken at: <span>Date</span></p>
+                        </div>
+                        <div class="quiz">
+                            <h3>Title</h3>
+                            <p>Lastly taken at: <span>Date</span></p>
+                        </div>
+                        <div class="quiz">
+                            <h3>Title</h3>
+                            <p>Lastly taken at: <span>Date</span></p>
+                        </div>
+                        <div class="quiz">
+                            <h3>Title</h3>
+                            <p>Lastly taken at: <span>Date</span></p>
+                        </div>
+                        <button class="c-blue fs-16 border rad-6">More</button>
+                    </div>
+                    </div>
+                </div>
+            </main>
+            <!-- End Main Section -->
+            <!-- Start Footer -->
+            <footer class="p-abs w-full">
+                <div class="container">
+                    <div class="main d-flex space-between">
+                        <a href="#" class="logo rad-half c-white txt-c fs-20"><div>IQA</div></a>
+                        <div class="links">
+                            <a href="index.html">Home</a>
+                            <a href="about.html">About</a>
+                            <a href="#">Dashboard</a>
+                        </div>
+                        <div class="links">
+                            <a href="terms.html">Terms of Service</a>
+                            <a href="privacy.html">Privicy Policiy</a>
+                        </div>
+                        <div class="contact fs-14">
+                            Contact me at:
+                            <br>
+                            <a href="#"><i class="fa-brands fa-github"></i></a>
+                            <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                            <a href="#"><i class="fa-solid fa-envelope"></i></a>
+                        </div>
+                    </div>
+                    <div class="owner fs-14 txt-c">Developed By: <i class="txt-bold">Ahmad Basheer</i></div>
+                </div>
+            </footer>
+            <!-- End Footer -->
+        </div>
+    </body>
+</html>
