@@ -74,6 +74,15 @@ const page = document.querySelector(".page");
 const overlayLayer = document.getElementById("quiz-overlay");
 const quizDetails = document.getElementById("quiz-details");
 const quizDetailsCloser = document.getElementById('quiz-details-closer');
+const quizTitle = document.getElementById("title");
+const quizDescription = document.getElementById("description");
+const quizUser = document.getElementById("user");
+const quizAddTime = document.getElementById("added_at");
+const quizUpdateTime = document.getElementById("update_at");
+const quizDifficulty = document.getElementById("difficluty");
+const quizLikes = document.getElementById("likes");
+const quizRepeats = document.getElementById("times_taken");
+const quizDuration = document.getElementById("duration");
 const originalQuizDetailsClasses = quizDetails.className;
 const originalOverlayClasses = overlayLayer.className;
 let quizBoxes;
@@ -189,7 +198,7 @@ filterTrigger.addEventListener('click', () => {
 
 	    quizBox.addEventListener('click', () => {
 		const [me] = quizzesCache.filter((quiz) => quiz.id === quizBox.getAttribute("data-id"));
-		quizDetails.children[1].textContent = me.title;
+		quizTitle.textContent = me.title;
 	        quizDetails.style.display = "flex";
 	        setTimeout(() => {
 	            quizDetails.style.transform = "translate(-50%, -50%)";

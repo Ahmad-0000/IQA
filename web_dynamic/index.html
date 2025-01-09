@@ -26,29 +26,27 @@
         <div id="quiz-overlay"></div>
         <div id="quiz-details" class="bg-white p-20 p-relative border">
             <i class="top-right-corner" id="quiz-details-closer"><i class="fa-solid fa-xmark"></i></i>
-            <h2 class="c-gray txt-c">Title</h2>
+            <h2 class="c-gray txt-c" id="title">Title</h2>
             <div class="content d-flex">
                 <div class="img rad-6 bg-gray"></div>
                 <div class="details p-relative">
-                    <p class="description">
+                    <p class="description" id="description">
                        Some Description
                     </p>
                     <div class="upload-info d-flex">
                         <div>
-                            <p>By: <span>Ahmad Husain</span></p>
-                            <p>Created at: <span>2024-12-17</span></p>
-                            <p>Updated at: <span>-hasen't been updated-</span></p>
+                            <p>By: <span id="user">Ahmad Husain</span></p>
+                            <p>Created at: <span id="added_at">2024-12-17</span></p>
+                            <p>Updated at: <span id="updated_at">-hasen't been updated-</span></p>
                         </div>
                         <div>
-                            <p>Difficulty: <span>Easy</span></p>
-                            <p>Speciality: <span>General</span></p>
-                            <p>Formal: <i class="fa-solid fa-xmark"></i></p>
+                            <p>Difficulty: <span id="difficulty">Easy</span></p>
                         </div>
                     </div>
                     <div class="stats">
-                        <div class="likes"><i class="fa-regular fa-heart"></i> Likes: 10</div>
-                        <div class="times-taken"><i class="fa-solid fa-repeat"></i> Times Taken: 10</div>
-                        <div class="duration"><i class="fa-regular fa-clock"></i> Duration: 10 Minutes</div>
+                        <div class="likes" id="likes"><i class="fa-regular fa-heart"></i> Likes: </div>
+                        <div class="times-taken" id="times_taken"><i class="fa-solid fa-repeat"></i> Times Taken: </div>
+                        <div class="duration" id="duration"><i class="fa-regular fa-clock"></i> Duration: </div>
                     </div>
                     <a href="quiz.html" class="button d-block rad-6 p-abs">Start</a>
                 </div>
@@ -161,4 +159,6 @@
         </div>
     </body>
 </html>
+
+
 
