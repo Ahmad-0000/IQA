@@ -100,7 +100,8 @@ let orderAttribute = "";
 dateFilter.addEventListener('click', () => {
     if (dateFilter.hasAttribute("checked")) {
         dateFilter.removeAttribute("checked");
-        orderAttribute = ""
+        orderAttribute = "";
+	after = "initial";
     } else {
         if (popularityFilter.hasAttribute("checked")) {
             popularityFilter.removeAttribute("checked")
@@ -117,12 +118,16 @@ popularityFilter.addEventListener('click', () => {
     if (popularityFilter.hasAttribute("checked")) {
         popularityFilter.removeAttribute("checked");
         orderAttribute = ""
+	after = "initial";
     } else {
         if (dateFilter.hasAttribute("checked")) {
             dateFilter.removeAttribute("checked");
         }
         popularityFilter.setAttribute("checked", true);
         orderAttribute = "times_taken";
+	if (quizzesCache[quizzesCache.length - 1]) {
+	  after = quizzesCache[quizzesCache.length - 1].times_taken;
+	}
     }
 });
 
@@ -158,20 +163,19 @@ filterTrigger.addEventListener('click', () => {
         orderType = "desc";
     }
     if (filterCats.length === 0) {
-        url = `http://localhost:5001/api/v1/quizzes?order_attribute=${orderAttribute}&order_type=${orderType}`;
+        url = `http://localhost:5001/api/v1/quizzes?order_attribute=${orderAttribute}&order_type=${orderType}&after=${after}`;
     } else {
-        url = `http://localhost:5001/api/v1/quizzes?cats=${filterCats.join(',')}&order_attribute=${orderAttribute}&order_type=${orderType}`;
+        url = `http://localhost:5001/api/v1/quizzes?cats=${filterCats.join(',')}&order_attribute=${orderAttribute}&order_type=${orderType}&after=${after}`;
     }
     fetch(url).then((res) => {
         if (res.ok) {
             return res.json();
-            quizzesCache = [];
         } else {
-            // Show error page
-            console.log(res);
+           showErrorPage(res); 
         }
     }).then((quizzes) => {
 	quizzesWrapper.innerHTML = "";
+        quizzesCache = [];
 	if (quizzes.length === 0) {
 		quizzesWrapper.innerHTML = `<p id="empty-result">No result<p>`;
 	}
@@ -234,3 +238,10 @@ filterTrigger.addEventListener('click', () => {
 });
 
 
+async function showErrorPage(response) {
+  // Show the error page
+  errorPage.style.display = "flex";
+  const data = await response.json();
+  errorCode.textContent = data.status;
+  errorMessage.textContent = data.body;
+}
