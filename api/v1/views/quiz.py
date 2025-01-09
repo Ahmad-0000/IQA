@@ -84,8 +84,11 @@ def get_quizzes():
     order_attribute = request.args.get("order_attribute")
     order_type = request.args.get("order_type")
     after = request.args.get("after")
+    if not after:
+        abort(400, "Abide to data constraints")
     if cats:
         result = storage.get_quizzes_with_cats(cats.split(','), after, {"order_attribute": order_attribute, "order_type": order_type})
+        print(result)
         if result is None:
             abort(400, "Abide to data constraints")
         return jsonify([r.to_dict() for r in result])
