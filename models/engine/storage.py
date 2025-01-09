@@ -155,7 +155,10 @@ class Storage():
                 return None
         elif order_attribute == "times_taken":
             if type(after) is not int:
-                return None
+                try:
+                    after = int(after)
+                except ValueError:
+                    return None
         if not order_type or order_type not in ["asc", "desc"]:
             order_type = "desc"
         prev = 0
