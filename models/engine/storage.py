@@ -90,8 +90,10 @@ class Storage():
                 return Storage.__session.query(cls).filter(cls.__dict__[order_by] > after).limit(20)
             else:
                 return Storage.__session.query(cls).filter(cls.__dict__[order_by] < after).limit(20)
-        else:
-            return Storage.__session.query(cls).order_by(cls.__dict__[order_by]).limit(20)
+        else if order_type == "asc":
+            return Storage.__session.query(cls).order_by(cls.__dict__[order_by].asc()).limit(20)
+        else if order_type == "desc":
+            return Storage.__session.query(cls).order_by(cls.__dict__[order_by].desc()).limit(20)
         
     def get(self, cls, id):
         """Return the object belonging to "cls" with id "id"
@@ -148,31 +150,47 @@ class Storage():
         order_type = options.get("order_type")
         if not order_attribute or order_attribute not in ["added_at", "times_taken"]:
             order_attribute = "added_at"
-        if order_attribute == "added_at":
-            try:
-                after = datetime.fromisoformat(after)
-            except (ValueError, TypeError):
-                return None
-        else:
-            if type(after) is not int:
-                try:
-                    after = int(after)
-                except ValueError:
-                    return None
+        if after != 'initial':
+            if order_attribute == "added_at":
+                    try:
+                        after = datetime.fromisoformat(after)
+                    except (ValueError, TypeError):
+                        return None
+            else:
+                if type(after) is not int:
+                    try:
+                        after = int(after)
+                    except ValueError:
+                        return None
         if not order_type or order_type not in ["asc", "desc"]:
             order_type = "desc"
         prev = 0
-        for cat in cats:
-            if order_type == "asc":
-                sub_result = Storage.__session.query(Quiz)\
-                            .filter(Quiz.__dict__[order_attribute] > after)\
-                            .filter(Quiz.category.name == cat)\
-                            .limit(for_cat + prev)
-            else:
-                sub_result = Storage.__session.query(Quiz)\
-                            .filter(Quiz.__dict__[order_attribute] < after)\
-                            .filter(Quiz.category.name == cat)\
-                            .limit(for_cat + prev)
-            prev = for_cat - len(sub_result.all())
-            result.extend(sub_result.all())
+        if after != 'initial':
+            for cat in cats:
+                if order_type == "asc":
+                    sub_result = Storage.__session.query(Quiz)\
+                                .filter(Quiz.__dict__[order_attribute] > after)\
+                                .filter(Quiz.category.name == cat)\
+                                .limit(for_cat + prev)
+                else:
+                    sub_result = Storage.__session.query(Quiz)\
+                                .filter(Quiz.__dict__[order_attribute] < after)\
+                                .filter(Quiz.category.name == cat)\
+                                .limit(for_cat + prev)
+                prev = for_cat - len(sub_result.all())
+                result.extend(sub_result.all())
+        else:
+            for cat in cats:
+                if order_type == "asc":
+                    sub_result = Storage.__session.query(Quiz)\
+                                .order_by(Quiz.__dict__[order_attribute].asc())\
+                                .filter(Quiz.category.name == cat)\
+                                .limit(for_cat + prev)
+                else:
+                    sub_result = Storage.__session.query(Quiz)\
+                                .order_by(Quiz.__dict__[order_attribute].desc())\
+                                .filter(Quiz.category.name == cat)\
+                                .limit(for_cat + prev)
+                prev = for_cat - len(sub_result.all())
+                result.extend(sub_result.all())
         return result
