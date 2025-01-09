@@ -83,6 +83,7 @@ const orderTypeElement = document.querySelector(".filters div:nth-child(2) i");
 const popularityFilter = document.querySelector(".filters div:last-of-type");
 const filterTrigger = document.querySelector(".filters > i:last-child");
 const quizzesCache = [];
+const quizBoxesAffected = [];
 let filterCats = [];
 let orderType = "desc";
 let orderAttribute = "";
@@ -181,6 +182,7 @@ filterTrigger.addEventListener('click', () => {
 	
 	// Handle overlay and quiz card details when clicking over a quiz card
 	for (const quizBox of quizBoxes) {
+            quizBoxesAffected.shift(quizBox);
 	    quizBox.addEventListener('click', () => {
 	        overlayLayer.style.display = "block";
 
