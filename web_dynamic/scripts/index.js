@@ -165,19 +165,24 @@ filterTrigger.addEventListener('click', () => {
             console.log(res);
         }
     }).then((quizzes) => {
+	if (quizzes.length === 0) {
+		quizzesWrapper.innerHTML = `<p id="empty-result">No result<p>`;
+	}
         for (const quiz of quizzes) {
             quizzesCache.shift(quiz);
+	    setTimeout(() => {
 	    quizzesWrapper.innerHTML += `<div class="quiz" data-id="${quiz.id}">
-    <div class="img"></div>
-    <div class="info">
-              <h2>${quiz.title}</h2>
-              <div class="stats">
-                   <i class="fa-regular fa-heart"><span> ${quiz.likes_num} Likes</span></i>
-                   <i class="fa-solid fa-repeat"><span> ${quiz.times_taken} times</span></i>
-                   <i class="fa-regular fa-clock"><span> ${quiz.duration} Minutes</span></i>
-              </div>
-    </div>
-</div>`
+					    <div class="img"></div>
+					    <div class="info">
+				                <h2>${quiz.title}</h2>
+				                <div class="stats">
+				                   <i class="fa-regular fa-heart"><span> ${quiz.likes_num} Likes</span></i>
+				                   <i class="fa-solid fa-repeat"><span> ${quiz.times_taken} times</span></i>
+				                   <i class="fa-regular fa-clock"><span> ${quiz.duration} Minutes</span></i>
+				                </div>
+					    </div>
+					 </div>`
+	    }, 100);
         }
     })
 });
