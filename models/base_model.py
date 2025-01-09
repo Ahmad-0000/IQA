@@ -38,7 +38,7 @@ class BaseModel():
                 self.added_at = datetime.utcnow()
                 self.updated_at = self.added_at
             if 'updated_at' not in kwargs:
-                self.added_at = datetime.utcnow()
+                self.updated_at = self.added_at
             if "password" in self.__dict__:
                 self.password = bytes(self.password, "utf-8")
                 self.password = bcrypt.hashpw(self.password, bcrypt.gensalt())
