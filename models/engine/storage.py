@@ -158,8 +158,8 @@ class Storage():
                                 .filter(Quiz.category.has(name=cat))\
                                 .limit(for_cat + prev)\
                                 .all()
-                prev = for_cat - len(sub_result.all())
-                result.extend(sub_result.all())
+                prev = for_cat - len(sub_result)
+                result.extend(sub_result)
             return result
         if order_attribute == "added_at":
             if type(after) is not datetime:
@@ -185,6 +185,6 @@ class Storage():
                             .filter(Quiz.category.has(name=cat))\
                             .limit(for_cat + prev)\
                             .all()
-            prev = for_cat - len(sub_result.all())
-            result.extend(sub_result.all())
+            prev = for_cat - len(sub_result)
+            result.extend(sub_result)
         return result
