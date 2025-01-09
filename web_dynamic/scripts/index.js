@@ -181,7 +181,7 @@ filterTrigger.addEventListener('click', () => {
         }
 	
 	// Handle overlay and quiz card details when clicking over a quiz card
-	quizBoxes = document.getElementsByClassName(".quiz");
+	quizBoxes = document.getElementsByClassName("quiz");
 	for (const quizBox of quizBoxes) {
             quizBoxesAffected.shift(quizBox);
 	    quizBox.addEventListener('click', () => {
