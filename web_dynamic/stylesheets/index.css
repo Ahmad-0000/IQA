@@ -109,6 +109,10 @@
     cursor: pointer;
 }
 
+#categories i[checked="true"] {
+    color: var(--blue);
+}
+
 #categories {
     margin: 10px auto 20px;
     height: 1em;
@@ -286,6 +290,64 @@
 #categories i:hover {
     color: var(--blue);
 }
+
+.filters {
+    font-weight: bold;
+    width: fit-content;
+    right: 0px;
+    top: 10px;
+    margin: 0px auto 25px;
+    border-radius: 30px;
+}
+
+.filters div {
+    text-align: center;
+    display: inline-block;
+    padding: 10px;
+    width: 90px;
+}
+
+.filters div:hover {
+    cursor: pointer;
+}
+
+.filters div:first-child {
+    border-radius: 30px 0px 0px 30px;
+}
+
+.filters div:last-of-type {
+    border-radius: 0px 30px 30px 0px;
+}
+
+.filters div:nth-child(2) {
+    width: fit-content;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+}
+
+
+.filters div[checked="true"] {
+    background-color: var(--blue);
+    color: white;
+}
+
+.filters [order-type="desc"] {
+    transform: rotate(180deg);
+}
+
+.filters > i:last-child {
+    position: absolute;
+    right: -40px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.filters > i:last-child:hover {
+    color: var(--blue);
+}
+
 
 .quizzes-wrapper {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
