@@ -153,7 +153,7 @@ class Storage():
                 after = datetime.fromisoformat(after)
             except (ValueError, TypeError):
                 return None
-        elif order_attribute == "times_taken":
+        else:
             if type(after) is not int:
                 try:
                     after = int(after)
@@ -166,12 +166,12 @@ class Storage():
             if order_type == "asc":
                 sub_result = Storage.__session.query(Quiz)\
                             .filter(Quiz.__dict__[order_attribute] > after)\
-                            .filter(Quiz.category_id == cat)\
+                            .filter(Quiz.category.name == cat)\
                             .limit(for_cat + prev)
             else:
                 sub_result = Storage.__session.query(Quiz)\
                             .filter(Quiz.__dict__[order_attribute] < after)\
-                            .filter(Quiz.category_id == cat)\
+                            .filter(Quiz.category.name == cat)\
                             .limit(for_cat + prev)
             prev = for_cat - len(sub_result.all())
             result.extend(sub_result.all())
