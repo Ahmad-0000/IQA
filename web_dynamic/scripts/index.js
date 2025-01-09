@@ -88,7 +88,8 @@ const dateFilter = document.querySelector(".filters div:first-of-type");
 const orderTypeDiv = document.querySelector(".filters div:nth-child(2)");
 const orderTypeElement = document.querySelector(".filters div:nth-child(2) i");
 const popularityFilter = document.querySelector(".filters div:last-of-type");
-const filterTrigger = document.querySelector(".filters > i:last-child")
+const filterTrigger = document.querySelector(".filters > i:last-child");
+const quizzesCache = [];
 let filterCats = [];
 let orderType = "desc";
 let orderAttribute = "";
@@ -158,25 +159,25 @@ filterTrigger.addEventListener('click', () => {
     fetch(url).then((res) => {
         if (res.ok) {
             return res.json();
+            quizzesCache = [];
         } else {
             // Show error page
             console.log(res);
         }
     }).then((quizzes) => {
         for (const quiz of quizzes) {
-            console.log(quiz);
+            quizzesCache.shift(quiz);
+	    quizzesWrapper.innerHTML += `<div class="quiz" data-id="${quiz.id}">
+                                           <div class="img"></div>
+                                           <div class="info">
+                                             <h2>${quiz.title}/h2>
+                                             <div class="stats">
+                                               <i class="fa-regular fa-heart"><span> ${quiz.likes_num} Likes</span></i>
+                                               <i class="fa-solid fa-repeat"><span> ${quiz.times_taken} times</span></i>
+                                               <i class="fa-regular fa-clock"><span> ${quiz.duration} Minutes</span></i>
+                                             </div>               
+                                           </div>
+                                         </div>`        
         }
     })
 });
-
-// <div class="quiz" data-id="">
-//                         <div class="img"></div>
-//                         <div class="info">
-//                             <h2>Title</h2>
-//                             <div class="stats">
-//                                 <i class="fa-regular fa-heart"><span> 10 Likes</span></i>
-//                                 <i class="fa-solid fa-repeat"><span> 10 times</span></i>
-//                                 <i class="fa-regular fa-clock"><span> 10 Minutes</span></i>
-//                             </div>
-//                         </div>
-//                     </div>
