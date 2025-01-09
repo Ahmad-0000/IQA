@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Quiz</title>
+    <!-- Start local stylesheets -->
+    <link rel="stylesheet" href="stylesheets/global.css">
+    <link rel="stylesheet" href="stylesheets/framework.css">
+    <link rel="stylesheet" href="stylesheets/make_quiz.css">
+    <!-- End local stylesheets -->
+    <!-- Start Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <!-- End Font Awesome -->
+    <!-- Start Scripts -->
+    <script src="scripts/make_quiz.js" defer></script>
+    <!-- End Scripts -->
+</head>
+<body>
+    <!-- Start Error page -->
+    <div id="error">
+        <div>
+            <h1>Error <span>error code</span></h1>
+            <p>Error text</p>
+            <p>For more info visit <a href="#">Link</a></p>
+        </div>
+    </div>
+    <!-- End Error page -->
+    <form class="p-20 rad-10">
+        <div id="quiz-info">
+            <h2>Quiz info</h2>
+            <label for="title">
+                Title:
+                <input type="text" name="title" id="title" maxlength="100" required>
+            </label>
+            <label for="description">
+                Description
+                <textarea name="description" id="description" required></textarea>
+            </label>
+            <label for="duration">
+                Duration <span>In minutes</span>:
+                <input name="duration" type="number" max="30" min="5" required>
+            </label>
+            <label for="difficulty">
+                Difficulty:
+                <div><input type="radio" name="difficulty" value="easy" required> Easy</div>
+                <div><input type="radio" name="difficulty" value="medium" required> Medium</div>
+                <div><input type="radio" name="difficulty" value="hard" required> Hard</div>
+            </label>
+            <label for="category">
+                Category:
+                <div><input type="radio" name="category" value="Medicine" required> Medicine</div>
+                <div><input type="radio" name="category" value="Math"> Math</div>
+                <div><input type="radio" name="category" value="Food"> Food</div>
+                <div><input type="radio" name="category" value="Art"> Art</div>
+                <div><input type="radio" name="category" value="Physics"> Physics</div>
+                <div><input type="radio" name="category" value="Chemistry"> Chemistry</div>
+                <div><input type="radio" name="category" value="Geography"> Geography</div>
+                <div><input type="radio" name="category" value="History"> History</div>
+                <div><input type="radio" name="category" value="Geometry"> Geometry</div>
+                <div><input type="radio" name="category" value="Compuer Science"> Compuer Science</div>
+            </label>
+        </div>
+        <h2>Questions <i class="fa-solid fa-plus" id="new-question"></i> <i class="fa-solid fa-minus" id="delete-question"></i></h2>
+        <div class="questions" id="questionsContainer">
+            <div class="question-1 border p-10 rad-10">
+                <label>
+                    Body:
+                    <input type="text" max="256" required>
+                </label>
+                <p>Answers: <i class="fa-solid fa-plus newAnswer"></i> <i class="fa-solid fa-minus deleteAnswer"></i></p>
+                <label class="answer-1">
+                    <div class="answer"><input type="radio" name="answer-1" required> <input type="text" required></div>
+                    <div class="answer"><input type="radio" name="answer-1" required> <input type="text" required></div>
+                </label>
+            </div>
+        </div>
+        <input type="submit">
+    </form>
+</body>
+</html>
