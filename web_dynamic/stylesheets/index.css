@@ -103,6 +103,7 @@
 
 .outer-wrapper {
     min-height: 90vh;
+    padding-bottom: 60px;
 }
 
 #categories i:hover {
@@ -354,6 +355,15 @@
     gap: 15px;
 }
 
+#empty-result {
+    position: absolute;
+    color: var(--red);
+    font-size: 24px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .quizzes-wrapper .quiz {
     padding: 10px;
     background-color: #ddd;
@@ -431,6 +441,16 @@
 .quizzes-wrapper .quiz .stats i:hover {
     cursor: pointer;
     width: 100px;
+}
+
+#more {
+    padding: 10px 15px;
+    color: white;
+    background-color: var(--blue);
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
 }
 
 /* End Wrapper */

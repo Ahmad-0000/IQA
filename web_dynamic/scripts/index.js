@@ -98,38 +98,42 @@ const orderTypeDiv = document.querySelector(".filters div:nth-child(2)");
 const orderTypeElement = document.querySelector(".filters div:nth-child(2) i");
 const popularityFilter = document.querySelector(".filters div:last-of-type");
 const filterTrigger = document.querySelector(".filters > i:last-child");
+const more = document.querySelector("#more");
+let url;
 let quizzesCache = [];
 let filterCats = [];
 let orderType = "desc";
 let after = "initial";
-let orderAttribute = "";
+let orderAttribute = "added_at";
 
 
-fetch("http://localhost:5001/api/v1/quizzes?order_attribute=added_at&order_type=desc&after=initial").then((res) => {
+fetch(`http://localhost:5001/api/v1/quizzes?order_attribute=${orderAttribute}&order_type=${orderType}&after=${after}`).then((res) => {
         if (res.ok) {
             return res.json();
         } else {
            showErrorPage(res); 
         }
     }).then((quizzes) => {
-	quizzesWrapper.innerHTML = "";
         quizzesCache = [];
 	if (quizzes.length === 0) {
-		quizzesWrapper.innerHTML = `<p id="empty-result">No result<p>`;
+		quizzesWrapper.innerHTML = `<p id="empty-result">No results<p>`;
 	}
         for (const quiz of quizzes) {
             quizzesCache.unshift(quiz);
-	    quizzesWrapper.innerHTML += `<div class="quiz" data-id="${quiz.id}">
-					    <div class="img"></div>
-					    <div class="info">
-				                <h2>${quiz.title}</h2>
-				                <div class="stats">
-				                   <i class="fa-regular fa-heart"><span> ${quiz.likes_num} Likes</span></i>
-				                   <i class="fa-solid fa-repeat"><span> ${quiz.times_taken} times</span></i>
-				                   <i class="fa-regular fa-clock"><span> ${quiz.duration} Minutes</span></i>
-				                </div>
-					    </div>
-					 </div>`
+	        quizzesWrapper.innerHTML += `<div class="quiz" data-id="${quiz.id}">
+                                            <div class="img"></div>
+                                            <div class="info">
+                                                    <h2>${quiz.title}</h2>
+                                                    <div class="stats">
+                                                    <i class="fa-regular fa-heart"><span> ${quiz.likes_num} Likes</span></i>
+                                                    <i class="fa-solid fa-repeat"><span> ${quiz.times_taken} times</span></i>
+                                                    <i class="fa-regular fa-clock"><span> ${quiz.duration} Minutes</span></i>
+                                                    </div>
+                                            </div>
+                                        </div>`
+        }
+        if (quizzesCache[quizzesCache.length - 1]) {
+            after = quizzesCache[quizzesCache.length - 1].getAttribute(orderAttribute);
         }
 	
 	// Handle overlay and quiz card details when clicking over a quiz card
@@ -233,7 +237,6 @@ for (const cat of cats) {
 }
 
 filterTrigger.addEventListener('click', () => {
-    let url;
     if (! orderAttribute) {
         orderAttribute = "added_at";
     }
@@ -252,25 +255,29 @@ filterTrigger.addEventListener('click', () => {
            showErrorPage(res); 
         }
     }).then((quizzes) => {
-	quizzesWrapper.innerHTML = "";
+        quizzesWrapper.innerHTML = "";
         quizzesCache = [];
-	console.log(quizzes);
-	if (quizzes.length === 0) {
-		quizzesWrapper.innerHTML = `<p id="empty-result">No result<p>`;
-	}
+        console.log(quizzes);
+        if (quizzes.length === 0) {
+            alert("No more results");
+            return;
+        }
         for (const quiz of quizzes) {
             quizzesCache.unshift(quiz);
-	    quizzesWrapper.innerHTML += `<div class="quiz" data-id="${quiz.id}">
-					    <div class="img"></div>
-					    <div class="info">
-				                <h2>${quiz.title}</h2>
-				                <div class="stats">
-				                   <i class="fa-regular fa-heart"><span> ${quiz.likes_num} Likes</span></i>
-				                   <i class="fa-solid fa-repeat"><span> ${quiz.times_taken} times</span></i>
-				                   <i class="fa-regular fa-clock"><span> ${quiz.duration} Minutes</span></i>
-				                </div>
-					    </div>
-					 </div>`
+	        quizzesWrapper.innerHTML += `<div class="quiz" data-id="${quiz.id}">
+                                            <div class="img"></div>
+                                            <div class="info">
+                                                <h2>${quiz.title}</h2>
+                                                <div class="stats">
+                                                    <i class="fa-regular fa-heart"><span> ${quiz.likes_num} Likes</span></i>
+                                                    <i class="fa-solid fa-repeat"><span> ${quiz.times_taken} times</span></i>
+                                                    <i class="fa-regular fa-clock"><span> ${quiz.duration} Minutes</span></i>
+                                                </div>
+                                            </div>
+                                        </div>`
+        }
+        if (quizzesCache[quizzesCache.length - 1]) {
+            after = quizzesCache[quizzesCache.length - 1].getAttribute(orderAttribute);
         }
 	
 	// Handle overlay and quiz card details when clicking over a quiz card
@@ -314,4 +321,82 @@ filterTrigger.addEventListener('click', () => {
 	    }, 500);
 	});
     });
+});
+
+more.addEventListener('click', () => {
+    if (filterCats.length > 0) {
+        url = `http://localhost:5001/api/v1/quizzes?cats=${filterCats.join(',')}&order_attribute=${orderAttribute}&order_type=${orderType}`;
+    } else {
+        url = `http://localhost:5001/api/v1/quizzes?order_attribute=${orderAttribute}&order_type=${orderType}`;
+    }
+    fetch(url).then((res) => {
+        if (res.ok) {
+            return res.json();
+        } else {
+            showErrorPage(res);
+        }
+    }).then((quizzes) => {
+        if (quizzes.length === 0) {
+            alert("No more results");
+            return;
+        }
+        for (const quiz of quizzes) {
+            quizzesCache.unshift(quiz);
+	        quizzesWrapper.innerHTML += `<div class="quiz" data-id="${quiz.id}">
+                                            <div class="img"></div>
+                                            <div class="info">
+                                                <h2>${quiz.title}</h2>
+                                                <div class="stats">
+                                                    <i class="fa-regular fa-heart"><span> ${quiz.likes_num} Likes</span></i>
+                                                    <i class="fa-solid fa-repeat"><span> ${quiz.times_taken} times</span></i>
+                                                    <i class="fa-regular fa-clock"><span> ${quiz.duration} Minutes</span></i>
+                                                </div>
+                                            </div>
+                                        </div>`
+        }
+        if (quizzesCache[quizzesCache.length - 1]) {
+            after = quizzesCache[quizzesCache.length - 1].getAttribute(orderAttribute);
+        }
+	
+	// Handle overlay and quiz card details when clicking over a quiz card
+	quizBoxes = document.getElementsByClassName("quiz");
+	for (const quizBox of quizBoxes) {
+	    quizBox.addEventListener('click', () => {
+	        overlayLayer.style.display = "block";
+	        setTimeout(() => {
+        	    overlayLayer.style.filter = "blur(4px)";
+	        }, 20);
+	    });
+
+	    quizBox.addEventListener('click', () => {
+		const [me] = quizzesCache.filter((quiz) => quiz.id === quizBox.getAttribute("data-id"));
+		quizTitle.textContent = me.title;
+		quizDescription.textContent = me.description;
+		quizUser.textContent = me.user_id;
+		quizAddTime.textContent = me.added_at.split('T')[0] + ' ' + me.added_at.split('T')[1] + ' UTC';
+		quizUpdateTime.textContent = me.updated_at.split('T')[0] + ' ' + me.updated_at.split('T')[1] + ' UTC';
+		if (me.added_at = me.updated_at) {
+                    quizUpdateTime.textContent = 'None';
+		}
+		quizDifficulty.textContent = me.difficulty;
+		quizLikes.textContent += me.likes_num;
+		quizRepeats.textContent += me.times_taken;
+		quizDuration.textContent += me.duration + ' Minutes';
+	        quizDetails.style.display = "flex";
+	        setTimeout(() => {
+	            quizDetails.style.transform = "translate(-50%, -50%)";
+	            quizDetails.style.opacity = "1";
+	        }, 0);
+	    });
+	}
+
+	quizDetailsCloser.addEventListener('click', () => {
+	    overlayLayer.style.display = "none";
+	    quizDetails.style.transform = "translate(-50%, 0)";
+	    quizDetails.style.opacity = "0";
+	    setTimeout(() => {
+	        quizDetails.style.display = "none";
+	    }, 500);
+	});
+  })
 });
