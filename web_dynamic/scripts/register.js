@@ -23,7 +23,7 @@ myForm.addEventListener('submit', (event) => {
       data[pair[0]] = pair[1];
     }
     data['agree'] = true;
-    fetch("http://localhost:5001/api/v1/users?user_id=me", {
+    fetch("http://localhost:5001/api/v1/users", {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(data),
