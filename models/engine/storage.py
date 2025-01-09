@@ -66,28 +66,29 @@ class Storage():
             return None
         return Storage.__session.query(cls).order_by(cls.added_at.desc()).all()
 
-    def get_paged_quizzes(self, cls, order_by, order_type, after):
+    def get_paged_quizzes(self, order_by, order_type, after):
         """Get paged members for api
         """
         if after == 'initial':
             if order_type == 'asc':
-                return Storage.__session.query(cls).order_by(cls.__dict__[order_by].asc()).limit(20)
+                return Storage.__session.query(Quiz).order_by(Quiz.__dict__[order_by].asc()).limit(20).all()
             else:
-                return Storage.__session.query(cls).order_by(cls.__dict__[order_by].desc()).limit(20)
+                return Storage.__session.query(Quiz).order_by(Quiz.__dict__[order_by].desc()).limit(20).all()
         if order_by == "added_at":
-            try:
-                after = datetime.fromisoformat(after)
-            except ValueError:
-                return None # 400
+            if type(after) is not datetime:
+                try:
+                    after = datetime.fromisoformat(after)
+                except (ValueError, TypeError):
+                    return None # 400
         else:
             try:
                 after = int(after)
             except ValueError:
                 return None # 400
         if order_type == "asc":
-            return Storage.__session.query(cls).filter(cls.__dict__[order_by] > after).limit(20)
+            return Storage.__session.query(Quiz).filter(Quiz.__dict__[order_by] > after).limit(20).all()
         else:
-            return Storage.__session.query(cls).filter(cls.__dict__[order_by] < after).limit(20)
+            return Storage.__session.query(Quiz).filter(Quiz.__dict__[order_by] < after).limit(20).all()
         
     def get(self, cls, id):
         """Return the object belonging to "cls" with id "id"
@@ -132,7 +133,7 @@ class Storage():
         result = q.all()
         return result
 
-    def get_quizzes_with_cats(self, cats: list, after, order_attribute, order_type) -> list:
+    def get_quizzes_with_cats(self, cats: list, order_attribute, order_type, after) -> list:
         """Get filtered quizzes for the main wrapper
         """
         result = []
@@ -149,20 +150,23 @@ class Storage():
                     sub_result = Storage.__session.query(Quiz)\
                                 .order_by(Quiz.__dict__[order_attribute].asc())\
                                 .filter(Quiz.category.has(name=cat))\
-                                .limit(for_cat + prev)
+                                .limit(for_cat + prev)\
+                                .all()
                 else:
                     sub_result = Storage.__session.query(Quiz)\
                                 .order_by(Quiz.__dict__[order_attribute].desc())\
                                 .filter(Quiz.category.has(name=cat))\
-                                .limit(for_cat + prev)
+                                .limit(for_cat + prev)\
+                                .all()
                 prev = for_cat - len(sub_result.all())
                 result.extend(sub_result.all())
             return result
         if order_attribute == "added_at":
-            try:
-                after = datetime.fromisoformat(after)
-            except (ValueError, TypeError):
-                return None
+            if type(after) is not datetime:
+                try:
+                    after = datetime.fromisoformat(after)
+                except (ValueError, TypeError):
+                    return None
         else:
             try:
                 after = int(after)
@@ -173,12 +177,14 @@ class Storage():
                 sub_result = Storage.__session.query(Quiz)\
                             .filter(Quiz.__dict__[order_attribute] > after)\
                             .filter(Quiz.category.has(name=cat))\
-                            .limit(for_cat + prev)
+                            .limit(for_cat + prev)\
+                            .all()
             else:
                 sub_result = Storage.__session.query(Quiz)\
                             .filter(Quiz.__dict__[order_attribute] < after)\
                             .filter(Quiz.category.has(name=cat))\
-                            .limit(for_cat + prev)
+                            .limit(for_cat + prev)\
+                            .all()
             prev = for_cat - len(sub_result.all())
             result.extend(sub_result.all())
         return result
