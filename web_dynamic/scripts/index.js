@@ -152,9 +152,9 @@ filterTrigger.addEventListener('click', () => {
         orderType = "desc";
     }
     if (filterCats.length === 0) {
-        url = `http://localhost:5001/api/v1/quizzes?order_attribute=${orderAttribute}?order_type=${orderType}`;
+        url = `http://localhost:5001/api/v1/quizzes?order_attribute=${orderAttribute}&order_type=${orderType}`;
     } else {
-        url = `http://localhost:5001/api/v1/quizzes?cats=${filterCats.join(',')}?order_attribute=${orderAttribute}?order_type=${orderType}`;
+        url = `http://localhost:5001/api/v1/quizzes?cats=${filterCats.join(',')}&order_attribute=${orderAttribute}&order_type=${orderType}`;
     }
     fetch(url).then((res) => {
         if (res.ok) {
