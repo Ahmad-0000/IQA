@@ -7,6 +7,13 @@ const categoriesPopover = document.getElementById("categories-popover");
 const categoriesCloser = document.getElementById("categories-closer");
 const quizzesWrapper = document.querySelector(".quizzes-wrapper")
 
+async function showErrorPage(response) {
+  // Show the error page
+  errorPage.style.display = "flex";
+  const data = await response.json();
+  errorCode.textContent = data.status;
+  errorMessage.textContent = data.body;
+}
 
 modifiers.addEventListener('click', () => {
     if (categoriesPopover.style.display === "block") {
@@ -308,12 +315,3 @@ filterTrigger.addEventListener('click', () => {
 	});
     });
 });
-
-
-async function showErrorPage(response) {
-  // Show the error page
-  errorPage.style.display = "flex";
-  const data = await response.json();
-  errorCode.textContent = data.status;
-  errorMessage.textContent = data.body;
-}
