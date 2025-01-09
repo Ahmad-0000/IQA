@@ -83,7 +83,6 @@ const orderTypeElement = document.querySelector(".filters div:nth-child(2) i");
 const popularityFilter = document.querySelector(".filters div:last-of-type");
 const filterTrigger = document.querySelector(".filters > i:last-child");
 const quizzesCache = [];
-const quizBoxesAffected = [];
 let filterCats = [];
 let orderType = "desc";
 let orderAttribute = "";
@@ -164,8 +163,7 @@ filterTrigger.addEventListener('click', () => {
 		quizzesWrapper.innerHTML = `<p id="empty-result">No result<p>`;
 	}
         for (const quiz of quizzes) {
-            quizzesCache.shift(quiz);
-	    setTimeout(() => {
+            quizzesCache.unshift(quiz);
 	    quizzesWrapper.innerHTML += `<div class="quiz" data-id="${quiz.id}">
 					    <div class="img"></div>
 					    <div class="info">
@@ -177,22 +175,21 @@ filterTrigger.addEventListener('click', () => {
 				                </div>
 					    </div>
 					 </div>`
-	    }, 100);
         }
 	
 	// Handle overlay and quiz card details when clicking over a quiz card
 	quizBoxes = document.getElementsByClassName("quiz");
 	for (const quizBox of quizBoxes) {
-            quizBoxesAffected.shift(quizBox);
 	    quizBox.addEventListener('click', () => {
 	        overlayLayer.style.display = "block";
-
 	        setTimeout(() => {
         	    overlayLayer.style.filter = "blur(4px)";
 	        }, 20);
 	    });
 
 	    quizBox.addEventListener('click', () => {
+		const [me] = quizzesCache.filter((quiz) => quiz.id === quizBox.getAttribute("data-id"));
+		quizDetails.children[1].textContent = me.title;
 	        quizDetails.style.display = "flex";
 	        setTimeout(() => {
 	            quizDetails.style.transform = "translate(-50%, -50%)";
