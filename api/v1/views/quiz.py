@@ -64,6 +64,7 @@ def create_quiz():
                 else:
                     new_question.delete()
         except (DataError, IntegrityError):
+            storage.close()
             pass
     if not added_questions:
         quiz.delete()
@@ -79,14 +80,20 @@ def create_quiz():
 def get_quizzes():
     """GET /api/v1/quizzes => Returns the quizzes
     """
-    order_by = request.args.get("order_by")
+    cats = request.args.get("cats")
+    order_attribute = request.args.get("order_attribute")
     order_type = request.args.get("order_type")
     after = request.args.get("after")
-    if not order_by:
+    if cats:
+        result = storage.get_quizzes_with_cats(cats.split(','), after, {"order_attribute": order_attribute, "order_type": order_type})
+        if result is None:
+            abort(400, "Abide to data constraints")
+        return jsonify([r.to_dict() for r in result])
+    if not order_attribute:
         return make_response(jsonify([quiz.to_dict() for quiz in storage.get_all(Quiz)]), 200)
-    result = storage.get_paged(Quiz, order_by, order_type, after)
+    result = storage.get_paged(Quiz, order_attribute, order_type, after)
     if result is None:
-        return make_response(jsonify([]), 204)
+        abort(400, "Abide to data constraints")
     if type(result) is Quiz:
         result = [result]
     return make_response(jsonify([r.to_dict() for r in result]), 200)
