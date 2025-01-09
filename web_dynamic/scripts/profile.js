@@ -1,7 +1,5 @@
 // Populating profile page
 const errorPage = document.querySelector("#error");
-const errorCode = document.querySelector("#error h1 span");
-const errorMessage = document.querySelector("#error p:first-of-type");
 const url = new URL(location.href);
 const userId = url.searchParams.get("user_id");
 const namePlace = document.querySelector(".personal-info p:first-of-type");
@@ -42,6 +40,8 @@ if (userId === null || userId === "me") {
 
 async function showErrorPage(response) {
     // Show the error page
+    const errorCode = document.querySelector("#error h1 span");
+    const errorMessage = document.querySelector("#error p:first-of-type");
     errorPage.style.display = "flex";
     const data = await response.json();
     errorCode.textContent = data.status;
