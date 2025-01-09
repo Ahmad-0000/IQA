@@ -165,6 +165,7 @@ filterTrigger.addEventListener('click', () => {
             console.log(res);
         }
     }).then((quizzes) => {
+	quizzesWrapper.innerHTML = "";
 	if (quizzes.length === 0) {
 		quizzesWrapper.innerHTML = `<p id="empty-result">No result<p>`;
 	}
