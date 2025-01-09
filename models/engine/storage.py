@@ -78,7 +78,7 @@ class Storage():
                 after = datetime.fromisoformat(after)
             except ValueError:
                 return None
-        elif after:
+        else:
             try:
                 after = int(after)
             except ValueError:
@@ -90,9 +90,9 @@ class Storage():
                 return Storage.__session.query(cls).filter(cls.__dict__[order_by] > after).limit(20)
             else:
                 return Storage.__session.query(cls).filter(cls.__dict__[order_by] < after).limit(20)
-        else if order_type == "asc":
+        elif order_type == "asc":
             return Storage.__session.query(cls).order_by(cls.__dict__[order_by].asc()).limit(20)
-        else if order_type == "desc":
+        elif order_type == "desc":
             return Storage.__session.query(cls).order_by(cls.__dict__[order_by].desc()).limit(20)
         
     def get(self, cls, id):
@@ -170,12 +170,12 @@ class Storage():
                 if order_type == "asc":
                     sub_result = Storage.__session.query(Quiz)\
                                 .filter(Quiz.__dict__[order_attribute] > after)\
-                                .filter(Quiz.category.name == cat)\
+                                .filter(Quiz.category.has(name=cat))\
                                 .limit(for_cat + prev)
                 else:
                     sub_result = Storage.__session.query(Quiz)\
                                 .filter(Quiz.__dict__[order_attribute] < after)\
-                                .filter(Quiz.category.name == cat)\
+                                .filter(Quiz.category.has(name=cat))\
                                 .limit(for_cat + prev)
                 prev = for_cat - len(sub_result.all())
                 result.extend(sub_result.all())
@@ -184,12 +184,12 @@ class Storage():
                 if order_type == "asc":
                     sub_result = Storage.__session.query(Quiz)\
                                 .order_by(Quiz.__dict__[order_attribute].asc())\
-                                .filter(Quiz.category.name == cat)\
+                                .filter(Quiz.category.has(name=cat))\
                                 .limit(for_cat + prev)
                 else:
                     sub_result = Storage.__session.query(Quiz)\
                                 .order_by(Quiz.__dict__[order_attribute].desc())\
-                                .filter(Quiz.category.name == cat)\
+                                .filter(Quiz.category.has(name=cat))\
                                 .limit(for_cat + prev)
                 prev = for_cat - len(sub_result.all())
                 result.extend(sub_result.all())
