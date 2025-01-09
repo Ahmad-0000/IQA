@@ -247,6 +247,7 @@ filterTrigger.addEventListener('click', () => {
     }).then((quizzes) => {
 	quizzesWrapper.innerHTML = "";
         quizzesCache = [];
+	console.log(quizzes);
 	if (quizzes.length === 0) {
 		quizzesWrapper.innerHTML = `<p id="empty-result">No result<p>`;
 	}
