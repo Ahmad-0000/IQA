@@ -86,14 +86,16 @@ def get_quizzes():
     after = request.args.get("after")
     if not after:
         after = "initial"
+    if not order_attribute or order_attribute not in ["added_at", "times_taken"]:
+        order_attribute = "added_at"
+    if not order_type or order_type not in ['asc', 'desc']:
+        order_type = 'desc'
     if cats:
         result = storage.get_quizzes_with_cats(cats.split(','), after, {"order_attribute": order_attribute, "order_type": order_type})
         if result is None:
             abort(400, "Abide to data constraints")
         return jsonify([r.to_dict() for r in result])
-    if not order_attribute:
-        return make_response(jsonify([quiz.to_dict() for quiz in storage.get_all(Quiz)]), 200)
-    result = storage.get_paged(Quiz, order_attribute, order_type, after)
+    result = storage.get_paged_quizzes(Quiz, order_attribute, order_type, after)
     if result is None:
         abort(400, "Abide to data constraints")
     if type(result) is Quiz:

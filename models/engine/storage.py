@@ -66,34 +66,28 @@ class Storage():
             return None
         return Storage.__session.query(cls).order_by(cls.added_at.desc()).all()
 
-    def get_paged(self, cls, order_by, order_type, after):
+    def get_paged_quizzes(self, cls, order_by, order_type, after):
         """Get paged members for api
         """
-        if cls is not Quiz:
-            return None
-        if order_by not in ["added_at", "likes_num", "times_taken"]:
-            return None
-        if order_by == "added_at" and after:
+        if after == 'initial':
+            if order_type == 'asc':
+                return Storage.__session.query(cls).order_by(cls.__dict__[order_by].asc()).limit(20)
+            else:
+                return Storage.__session.query(cls).order_by(cls.__dict__[order_by].desc()).limit(20)
+        if order_by == "added_at":
             try:
                 after = datetime.fromisoformat(after)
             except ValueError:
-                return None
+                return None # 400
         else:
             try:
                 after = int(after)
             except ValueError:
-                return None
-        if order_type not in ["desc", "asc"]:
-            order_type = "desc"
-        if after:
-            if order_type == "asc":
-                return Storage.__session.query(cls).filter(cls.__dict__[order_by] > after).limit(20)
-            else:
-                return Storage.__session.query(cls).filter(cls.__dict__[order_by] < after).limit(20)
-        elif order_type == "asc":
-            return Storage.__session.query(cls).order_by(cls.__dict__[order_by].asc()).limit(20)
-        elif order_type == "desc":
-            return Storage.__session.query(cls).order_by(cls.__dict__[order_by].desc()).limit(20)
+                return None # 400
+        if order_type == "asc":
+            return Storage.__session.query(cls).filter(cls.__dict__[order_by] > after).limit(20)
+        else:
+            return Storage.__session.query(cls).filter(cls.__dict__[order_by] < after).limit(20)
         
     def get(self, cls, id):
         """Return the object belonging to "cls" with id "id"
@@ -138,48 +132,18 @@ class Storage():
         result = q.all()
         return result
 
-    def get_quizzes_with_cats(self, cats: list, after, options) -> list:
+    def get_quizzes_with_cats(self, cats: list, after, order_attribute, order_type) -> list:
         """Get filtered quizzes for the main wrapper
         """
+        result = []
         for cat in cats:
             if type(cat) is not str:
-                return None
-        result = []
+                cats.remove(cat)
+        if not cats:
+            return []
         for_cat = 20 // len(cats)
-        order_attribute = options.get("order_attribute")
-        order_type = options.get("order_type")
-        if not order_attribute or order_attribute not in ["added_at", "times_taken"]:
-            order_attribute = "added_at"
-        if after != 'initial':
-            if order_attribute == "added_at":
-                    try:
-                        after = datetime.fromisoformat(after)
-                    except (ValueError, TypeError):
-                        return None
-            else:
-                if type(after) is not int:
-                    try:
-                        after = int(after)
-                    except ValueError:
-                        return None
-        if not order_type or order_type not in ["asc", "desc"]:
-            order_type = "desc"
         prev = 0
-        if after != 'initial':
-            for cat in cats:
-                if order_type == "asc":
-                    sub_result = Storage.__session.query(Quiz)\
-                                .filter(Quiz.__dict__[order_attribute] > after)\
-                                .filter(Quiz.category.has(name=cat))\
-                                .limit(for_cat + prev)
-                else:
-                    sub_result = Storage.__session.query(Quiz)\
-                                .filter(Quiz.__dict__[order_attribute] < after)\
-                                .filter(Quiz.category.has(name=cat))\
-                                .limit(for_cat + prev)
-                prev = for_cat - len(sub_result.all())
-                result.extend(sub_result.all())
-        else:
+        if after == 'initial':
             for cat in cats:
                 if order_type == "asc":
                     sub_result = Storage.__session.query(Quiz)\
@@ -193,4 +157,28 @@ class Storage():
                                 .limit(for_cat + prev)
                 prev = for_cat - len(sub_result.all())
                 result.extend(sub_result.all())
+            return result
+        if order_attribute == "added_at":
+            try:
+                after = datetime.fromisoformat(after)
+            except (ValueError, TypeError):
+                return None
+        else:
+            try:
+                after = int(after)
+            except ValueError:
+                return None
+        for cat in cats:
+            if order_type == "asc":
+                sub_result = Storage.__session.query(Quiz)\
+                            .filter(Quiz.__dict__[order_attribute] > after)\
+                            .filter(Quiz.category.has(name=cat))\
+                            .limit(for_cat + prev)
+            else:
+                sub_result = Storage.__session.query(Quiz)\
+                            .filter(Quiz.__dict__[order_attribute] < after)\
+                            .filter(Quiz.category.has(name=cat))\
+                            .limit(for_cat + prev)
+            prev = for_cat - len(sub_result.all())
+            result.extend(sub_result.all())
         return result
