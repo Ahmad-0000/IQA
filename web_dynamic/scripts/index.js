@@ -94,6 +94,7 @@ const filterTrigger = document.querySelector(".filters > i:last-child");
 const quizzesCache = [];
 let filterCats = [];
 let orderType = "desc";
+let after = "initial";
 let orderAttribute = "";
 
 dateFilter.addEventListener('click', () => {
@@ -106,6 +107,9 @@ dateFilter.addEventListener('click', () => {
         }
         dateFilter.setAttribute("checked", true);
         orderAttribute = "added_at";
+	if (quizzesCache[quizzesCache.length - 1]) {
+	  after = quizzesCache[quizzesCache.length - 1].added_at;
+	}
     }
 });
 
