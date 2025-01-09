@@ -168,16 +168,16 @@ filterTrigger.addEventListener('click', () => {
         for (const quiz of quizzes) {
             quizzesCache.shift(quiz);
 	    quizzesWrapper.innerHTML += `<div class="quiz" data-id="${quiz.id}">
-                                           <div class="img"></div>
-                                           <div class="info">
-                                             <h2>${quiz.title}/h2>
-                                             <div class="stats">
-                                               <i class="fa-regular fa-heart"><span> ${quiz.likes_num} Likes</span></i>
-                                               <i class="fa-solid fa-repeat"><span> ${quiz.times_taken} times</span></i>
-                                               <i class="fa-regular fa-clock"><span> ${quiz.duration} Minutes</span></i>
-                                             </div>               
-                                           </div>
-                                         </div>`        
+    <div class="img"></div>
+    <div class="info">
+              <h2>${quiz.title}</h2>
+              <div class="stats">
+                   <i class="fa-regular fa-heart"><span> ${quiz.likes_num} Likes</span></i>
+                   <i class="fa-solid fa-repeat"><span> ${quiz.times_taken} times</span></i>
+                   <i class="fa-regular fa-clock"><span> ${quiz.duration} Minutes</span></i>
+              </div>
+    </div>
+</div>`
         }
     })
 });
