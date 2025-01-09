@@ -69,21 +69,14 @@ cats.forEach((hoveredCat) => {
     });
 });
 
-
-// Fetch categories and give ids
-
-fetch("http://localhost:5001/api/v1/categoreis").then(res => {
-    if (res.status == 200) {
-        return res.json()
-    }
-}).then((categoreis) => {
-    for (const cat of categoreis) {
-        const htmlCat = document.querySelector(`#categories i[title='${cat.name}']`);
-        htmlCat.setAttribute('data-id', cat.id);
-    }
-})
-
-
+// Fetch filtered quizzes
+const page = document.querySelector(".page");
+const overlayLayer = document.getElementById("quiz-overlay");
+const quizDetails = document.getElementById("quiz-details");
+const quizDetailsCloser = document.getElementById('quiz-details-closer');
+const originalQuizDetailsClasses = quizDetails.className;
+const originalOverlayClasses = overlayLayer.className;
+const quizBoxes = document.getElementsByClassName("quiz");
 const dateFilter = document.querySelector(".filters div:first-of-type");
 const orderTypeDiv = document.querySelector(".filters div:nth-child(2)");
 const orderTypeElement = document.querySelector(".filters div:nth-child(2) i");
@@ -185,5 +178,35 @@ filterTrigger.addEventListener('click', () => {
 					 </div>`
 	    }, 100);
         }
-    })
+	
+	// Handle overlay and quiz card details when clicking over a quiz card
+	for (const quizBox of quizBoxes) {
+	    quizBox.addEventListener('click', () => {
+	        overlayLayer.style.display = "block";
+
+	        setTimeout(() => {
+        	    overlayLayer.style.filter = "blur(4px)";
+	        }, 20);
+	    });
+
+	    quizBox.addEventListener('click', () => {
+	        quizDetails.style.display = "flex";
+	        setTimeout(() => {
+	            quizDetails.style.transform = "translate(-50%, -50%)";
+	            quizDetails.style.opacity = "1";
+	        }, 0);
+	    });
+	}
+
+	quizDetailsCloser.addEventListener('click', () => {
+	    overlayLayer.style.display = "none";
+	    quizDetails.style.transform = "translate(-50%, 0)";
+	    quizDetails.style.opacity = "0";
+	    setTimeout(() => {
+	        quizDetails.style.display = "none";
+	    }, 500);
+	});
+    });
 });
+
+
