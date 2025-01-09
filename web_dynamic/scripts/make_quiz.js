@@ -5,6 +5,7 @@ let newAnswer = document.getElementsByClassName("newAnswer");
 let deleteAnswer = document.getElementsByClassName("deleteAnswer");
 const myForm = document.querySelector("form");
 const requestData = {questions_collection: []};
+const errorPage = document.querySelector("#error");
 let questionsNum = 1
 
 async function showErrorPage(response) {
