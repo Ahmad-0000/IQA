@@ -60,6 +60,7 @@ def create_question(quiz_id):
             answer.save()
             saved_answers.append(answer)
         except (DataError, IntegrityError):
+            storage.close()
             pass
     if len(saved_answers) < 2:
         abort(400, "Abide to data constraints")
