@@ -91,11 +91,11 @@ def get_quizzes():
     if not order_type or order_type not in ['asc', 'desc']:
         order_type = 'desc'
     if cats:
-        result = storage.get_quizzes_with_cats(cats.split(','), after, {"order_attribute": order_attribute, "order_type": order_type})
+        result = storage.get_quizzes_with_cats(cats.split(','), order_attribute, order_type, after)
         if result is None:
             abort(400, "Abide to data constraints")
         return jsonify([r.to_dict() for r in result])
-    result = storage.get_paged_quizzes(Quiz, order_attribute, order_type, after)
+    result = storage.get_paged_quizzes(order_attribute, order_type, after)
     if result is None:
         abort(400, "Abide to data constraints")
     if type(result) is Quiz:
