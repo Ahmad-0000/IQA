@@ -76,7 +76,7 @@ const quizDetails = document.getElementById("quiz-details");
 const quizDetailsCloser = document.getElementById('quiz-details-closer');
 const originalQuizDetailsClasses = quizDetails.className;
 const originalOverlayClasses = overlayLayer.className;
-const quizBoxes = document.getElementsByClassName("quiz");
+let quizBoxes;
 const dateFilter = document.querySelector(".filters div:first-of-type");
 const orderTypeDiv = document.querySelector(".filters div:nth-child(2)");
 const orderTypeElement = document.querySelector(".filters div:nth-child(2) i");
@@ -181,6 +181,7 @@ filterTrigger.addEventListener('click', () => {
         }
 	
 	// Handle overlay and quiz card details when clicking over a quiz card
+	quizBoxes = document.getElementsByClassName(".quiz");
 	for (const quizBox of quizBoxes) {
             quizBoxesAffected.shift(quizBox);
 	    quizBox.addEventListener('click', () => {
