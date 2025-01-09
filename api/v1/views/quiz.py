@@ -17,11 +17,12 @@ def create_quiz():
     if not request.is_json:
         abort(400, "Not JSON")
     user = request.current_user
-    required_data = ["title", "description", "difficulty", "questions_collection"]
-    for data in required_data:
-        if data not in request.json:
-            abort(400, f"Missing {data}")
-    questions = request.json['questions_collection']
+    title = request.json.get('title')
+    description = request.json.get('description')
+    difficulty = request.json.get('difficulty')
+    questions = request.json.get('questions_collection')
+    if not title or not description or not difficulty or not questions:
+        abort(400, "Missing data")
     if type(questions) is not list:
         abort(400, "Abide to data constraints")
     if not questions:
@@ -29,7 +30,7 @@ def create_quiz():
     for question in questions:
         try:
             if "body" in question and "answers_collection" in question\
-                and type(question['body']) is str and len(question['body']) > 0\
+                and type(question['body']) is str and question['body']\
                 and type(question['answers_collection']) is list and len(question['answers_collection']) > 1:
                 break
         except TypeError:
