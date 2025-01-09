@@ -199,6 +199,14 @@ filterTrigger.addEventListener('click', () => {
 	    quizBox.addEventListener('click', () => {
 		const [me] = quizzesCache.filter((quiz) => quiz.id === quizBox.getAttribute("data-id"));
 		quizTitle.textContent = me.title;
+		quizDescription.textContent = me.description;
+		quizUser.textContent = me.user_id;
+		quizAddTime.textContent = me.added_at;
+		quizUpdateTime.textContent = me.updated_at;
+		quizDifficulty.textContent = me.difficulty;
+		quizLikes.textContent = me.likes_num;
+		quizRepeats.textContent = me.times_taken;
+		quizDuration.textContent = me.duration;
 	        quizDetails.style.display = "flex";
 	        setTimeout(() => {
 	            quizDetails.style.transform = "translate(-50%, -50%)";
