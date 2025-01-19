@@ -17,7 +17,7 @@ class Snapshot(BaseModel, Base):
     is_true = Column(Boolean, nullable=False)
 
     user = relationship('User', back_populates='snapshots')
-    quiz = relationship('Quiz', back_populates='snapshots')
-    question = relationship('Question', back_populates='snapshot')
-    answer = relationship('Answer', back_populates='snapshot')
-    score = relationship('Score', back_populates='snapshot')
+    quiz = relationship('Quiz')
+    question = relationship('Question')
+    answer = relationship('Answer')
+    score = relationship('Score')
