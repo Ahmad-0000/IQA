@@ -1,7 +1,7 @@
 """User model class
 """
 from models.base_model import BaseModel, Base
-from sqlalchemy import Table, Column, String, Date, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, Date, ForeignKey
 from sqlalchemy.orm import relationship, Mapped
 from typing import List
 
@@ -23,8 +23,11 @@ class User(BaseModel, Base):
     dob = Column(Date, nullable=False)
     email = Column(String(50), nullable=False, unique=True)
     password = Column(String(100), nullable=False)
-    image_path = Column(String(256), nullable=True, default=None)
+    image_path = Column(String(57), nullable=True, default=None)
     bio = Column(String(300), nullable=True)
+    likes = Column(Integer, nullable=True, default=0)
+    quizzes_taken = Column(Integer, nullable=True, default=0)
+    quizzes_made = Column(Integer, nullable=True, default=0)
 
     quizzes = relationship(
                     'Quiz', 
@@ -41,4 +44,7 @@ class User(BaseModel, Base):
             cascade='all, delete, delete-orphan',
             back_populates='user'
     )
-    liked_quizzes: Mapped[List['Quiz']] = relationship(secondary=quizzes_likes, back_populates='fans_users')
+    liked_quizzes: Mapped[List['Quiz']] = relationship(
+                                                secondary=quizzes_likes,
+                                                back_populates='fans_users'
+                                            )
