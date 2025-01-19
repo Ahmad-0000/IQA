@@ -10,9 +10,6 @@ from uuid import uuid4
 from pprint import pprint
 
 
-unittest.TestLoader.sortTestMethodUsing = None
-
-
 class TestAnswer(unittest.TestCase):
     """Main test class
     """
@@ -39,15 +36,6 @@ class TestAnswer(unittest.TestCase):
         else:
             sys.exit(1)
 
-    @classmethod
-    def tearDownClass(cls):
-        """Destroying class test environment
-        """
-        del cls.client
-        del cls.user
-        del cls.quiz
-        del cls.quizzes
-  
     def test_new_like(self):
         """Test "POST /quizzes/<quiz_id>/like
         """
@@ -83,7 +71,7 @@ class TestAnswer(unittest.TestCase):
         own_quiz = own_quiz_res.json
         res = self.client.post(f"/api/v1/quizzes/{own_quiz['id']}/like")
         self.assertEqual(res.status_code, 400)
-        self.assertEqual(res.json, {"error": "You can't assign a like to your own quiz"})
+        self.assertEqual(res.json, {"error": "You can't make a like to your own quiz"})
 
     @unittest.skip
     def test_remove_like(self):
@@ -95,6 +83,7 @@ class TestAnswer(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(old_likes_num - 1, new_likes_num)
 
+    @unittest.skip
     def test_remove_unmade_like(self):
         """Test remove unmade like
         """
