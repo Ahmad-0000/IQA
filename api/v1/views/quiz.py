@@ -96,11 +96,9 @@ def get_quizzes():
         if result is None:
             abort(400, "Abide to data constraints")
         return jsonify([r.to_dict() for r in result])
-    result = storage.get_paged_quizzes(order_attribute, order_type, after)
+    result = storage.get_paged(Quiz, order_attribute, order_type, after)
     if result is None:
         abort(400, "Abide to data constraints")
-    if type(result) is Quiz:
-        result = [result]
     return make_response(jsonify([r.to_dict() for r in result]), 200)
 
 @app_views.route("/quizzes/<quiz_id>", methods=['GET'], strict_slashes=False)
