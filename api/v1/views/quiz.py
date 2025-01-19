@@ -125,6 +125,22 @@ def get_users_liked_quizzes(user_id):
     return jsonify([quiz.to_dict() for quiz in user.liked_quizzes])
 
 
+@app_views.route("/quizzes/<user_id>/taken", methods=['GET'], strict_slashes=False)
+def get_users_taken_quizzes(user_id):
+    """Get the user with id = id taken quizzes
+    """
+    if "user_id" == "me":
+        if not request.current_user:
+            abort(401)
+        user_id = request.current_user.id
+    user = storage.get(User, user_id)
+    if not user:
+        abort(404)
+    taken_ids = [socre.quiz_id for score in user.scores]
+    quizzes = [storage.get(Quiz, quiz_id) for quiz_id in taken_ids]
+    return jsonify([quiz.to_dict() if quiz else "Deleted" for quiz in quizzes])
+    
+
 @app_views.route("/quizzes/<quiz_id>", methods=['PUT'], strict_slashes=False)
 def update_a_quiz(quiz_id):
     """PUT /quizzes/<quiz_id> => Updates the quiz with id
