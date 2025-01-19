@@ -8,7 +8,8 @@ from models.users import User
 class SessionAuth():
     """Handles session authentication
     """
-    user_id_by_session_id = {}
+    __user_id_by_session_id = {}
+
     def require_auth(
             self, method, path,
             included_methods: list, execluded_pathes) -> bool:
@@ -35,7 +36,7 @@ class SessionAuth():
             return None
         if type(session) is not str:
             return None
-        return SessionAuth.user_id_by_session_id.get(session)
+        return SessionAuth.__user_id_by_session_id.get(session)
 
     def current_user(self, request):
         """Get the account info based on the session id
@@ -55,7 +56,7 @@ class SessionAuth():
         if not user:
             return None
         session_id = str(uuid4())
-        SessionAuth.user_id_by_session_id[session_id] = user_id
+        SessionAuth.__user_id_by_session_id[session_id] = user_id
         return session_id
 
     def destroy_session(self, request):
@@ -64,7 +65,7 @@ class SessionAuth():
         session = self.session_cookie(request)
         if not session:
             return False
-        if session in SessionAuth.user_id_by_session_id:
-            del SessionAuth.user_id_by_session_id[session]
+        if session in SessionAuth.__user_id_by_session_id:
+            del SessionAuth.__user_id_by_session_id[session]
             return True
         return False
