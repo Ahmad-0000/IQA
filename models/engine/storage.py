@@ -11,7 +11,6 @@ from models.questions import Question
 from models.answers import Answer
 from models.feedbacks import FeedBack
 from models.scores import Score
-from models.categories import Category
 
 
 class Storage():
@@ -19,7 +18,7 @@ class Storage():
     """
     __engine = None
     __session = None
-    classes = [User, Quiz, Question, Answer, FeedBack, Category, Score]
+    classes = [User, Quiz, Question, Answer, FeedBack, Score]
 
     def __init__(self):
         """Initialize storage object
@@ -119,7 +118,6 @@ class Storage():
                         ],
                 "Question": ["quiz_id"],
                 "Answer": ["is_true", "question_id"],
-                "Category": ["name"],
                 "FeedBack": ["user_id", "quiz_id"]
             }
         if cls not in Storage.classes[:-1]:
