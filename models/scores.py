@@ -14,4 +14,3 @@ class Score(BaseModel, Base):
     quiz_id = Column(String(36), ForeignKey('quizzes.id'), nullable=False)
 
     user = relationship('User', back_populates='scores')
-    quiz = relationship('Quiz', back_populates='scores')
