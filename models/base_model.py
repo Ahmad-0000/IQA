@@ -25,10 +25,12 @@ class BaseModel():
     def __init__(self, *args, **kwargs):
         """Intialize an object
         """
+        # default initialization
         if not kwargs:
             self.id = str(uuid4())
             self.added_at = datetime.utcnow()
             self.updated_at = self.added_at
+        # custom initialization through keywoard arguments
         else:
             for k in kwargs:
                 self.__dict__[k] = kwargs[k]
@@ -44,8 +46,10 @@ class BaseModel():
                 self.password = bcrypt.hashpw(self.password, bcrypt.gensalt())
                 self.password = self.password.decode('utf-8')
             if "image_path" in kwargs and kwargs['image_path']:
-                self.image_path = f'/data/iqa/profile_images/{self.id}'
-        
+                self.image_path = '/data/iqa/images/{}/{}'\
+                                  .format(self.__class__.__name__.lower(),
+                                          self.id)
+ 
     def __str__(self):
         """Customize __str__ output
         """
@@ -67,7 +71,7 @@ class BaseModel():
         return dict_repr
 
     def save(self):
-        """Save the current object in the session
+        """Save the current object in the db session
         """
         from models import storage
         if self.__class__.__name__ == "User":
@@ -77,7 +81,7 @@ class BaseModel():
         storage.save()
 
     def delete(self):
-        """Remove the current object from the session
+        """Remove the current object from the db
         """
         from models import storage
         storage.delete(self)
