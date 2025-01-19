@@ -151,7 +151,7 @@ class Storage():
         result = q.all()
         return result
 
-    def get_quizzes_with_cats(self, cats: list, order_attribute, order_type, after) -> list:
+    def get_quizzes_with_cats(self, cats: list, attribute, _type, after) -> list:
         """Get filtered quizzes for the main wrapper
         """
         result = []
@@ -161,25 +161,28 @@ class Storage():
         if not cats:
             return []
         for_cat = 20 // len(cats)
-        prev = 0
+        rest = 20 % len(cats)
         if after == 'initial':
             for cat in cats:
-                if order_type == "asc":
+                if _type == "asc":
                     sub_result = Storage.__session.query(Quiz)\
                                 .order_by(Quiz.__dict__[order_attribute].asc())\
-                                .filter(Quiz.category.has(name=cat))\
-                                .limit(for_cat + prev)\
+                                .filter(Quiz.category == cat)\
+                                .limit(for_cat + rest)\
                                 .all()
                 else:
                     sub_result = Storage.__session.query(Quiz)\
-                                .order_by(Quiz.__dict__[order_attribute].desc())\
-                                .filter(Quiz.category.has(name=cat))\
-                                .limit(for_cat + prev)\
+                                .order_by(Quiz.__dict__[attribute].desc())\
+                                .filter(Quiz.category == cat)\
+                                .limit(for_cat + rest)\
                                 .all()
-                prev = for_cat - len(sub_result)
+                if len(sub_result) == (for_cat _ rest):
+                    rest = 0
+                else:
+                    rest += for_cat - len(sub_result)
                 result.extend(sub_result)
             return result
-        if order_attribute == "added_at":
+        if attribute == "added_at":
             if type(after) is not datetime:
                 try:
                     after = datetime.fromisoformat(after)
@@ -191,18 +194,21 @@ class Storage():
             except ValueError:
                 return None
         for cat in cats:
-            if order_type == "asc":
+            if _type == "asc":
                 sub_result = Storage.__session.query(Quiz)\
-                            .filter(Quiz.__dict__[order_attribute] > after)\
-                            .filter(Quiz.category.has(name=cat))\
-                            .limit(for_cat + prev)\
+                            .filter(Quiz.__dict__[attribute] > after)\
+                            .filter(Quiz.category == cat)\
+                            .limit(for_cat + rest)\
                             .all()
             else:
                 sub_result = Storage.__session.query(Quiz)\
-                            .filter(Quiz.__dict__[order_attribute] < after)\
-                            .filter(Quiz.category.has(name=cat))\
-                            .limit(for_cat + prev)\
+                            .filter(Quiz.__dict__[attribute] < after)\
+                            .filter(Quiz.category == cat)\
+                            .limit(for_cat + rest)\
                             .all()
-            prev = for_cat - len(sub_result)
+                if len(sub_result) == (for_cat + rest):
+                    rest = 0
+                else:
+                    rest += for_cat - len(sub_result)
             result.extend(sub_result)
         return result
