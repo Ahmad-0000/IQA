@@ -25,12 +25,10 @@ class BaseModel():
     def __init__(self, *args, **kwargs):
         """Intialize an object
         """
-        # default initialization
         if not kwargs:
             self.id = str(uuid4())
             self.added_at = datetime.utcnow()
             self.updated_at = self.added_at
-        # custom initialization through keywoard arguments
         else:
             for k in kwargs:
                 self.__dict__[k] = kwargs[k]
