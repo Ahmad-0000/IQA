@@ -176,7 +176,7 @@ class Storage():
                                 .filter(Quiz.category == cat)\
                                 .limit(for_cat + rest)\
                                 .all()
-                if len(sub_result) == (for_cat _ rest):
+                if len(sub_result) == (for_cat + rest):
                     rest = 0
                 else:
                     rest += for_cat - len(sub_result)
