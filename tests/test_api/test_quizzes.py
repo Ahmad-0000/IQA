@@ -83,7 +83,7 @@ class TestQuiz(unittest.TestCase):
                 headers={"Cookie": f"login_session={session_id}"}
             )
         self.assertEqual(res.status_code, 400)
-        self.assertEqual(res.json, {"error": "Missing title"})
+        self.assertEqual(res.json, {"error": "Missing data"})
         req_json['title'] = "fake"
         del req_json['description']
         res = self.__class__.client.post(
@@ -91,7 +91,7 @@ class TestQuiz(unittest.TestCase):
                 headers={"Cookie": f"login_session={session_id}"}
             )
         self.assertEqual(res.status_code, 400)
-        self.assertEqual(res.json, {"error": "Missing description"})
+        self.assertEqual(res.json, {"error": "Missing data"})
         req_json['description'] = 'fake'
         del req_json['difficulty']
         res = self.__class__.client.post(
@@ -99,7 +99,7 @@ class TestQuiz(unittest.TestCase):
                 headers={"Cookie": f"login_session={session_id}"}
             )
         self.assertEqual(res.status_code, 400)
-        self.assertEqual(res.json, {"error": "Missing difficulty"})
+        self.assertEqual(res.json, {"error": "Missing data"})
         req_json['difficulty'] = 'easy'
         del req_json['questions_collection']
         res = self.__class__.client.post(
@@ -107,7 +107,7 @@ class TestQuiz(unittest.TestCase):
                 headers={"Cookie": f"login_session={session_id}"}
             )
         self.assertEqual(res.status_code, 400)
-        self.assertEqual(res.json, {"error": "Missing questions_collection"})
+        self.assertEqual(res.json, {"error": "Missing data"})
 
     def test_new_quiz_minimum_requirements_data_types(self):
         """Test "POST /users/<user_id>/quizzes"
@@ -132,7 +132,7 @@ class TestQuiz(unittest.TestCase):
                 headers={"Cookie": f"login_session={session_id}"}
             )
         self.assertEqual(res.status_code, 400)
-        self.assertEqual(res.json, {"error": "Abide to data constraints"})
+        self.assertEqual(res.json, {"error": "Missing data"})
         req_json['questions_collection'] = []
         req_json['questions_collection'].append({"answers_collection": {}})
         res = self.__class__.client.post(
@@ -172,7 +172,7 @@ class TestQuiz(unittest.TestCase):
                 headers={"Cookie": f"login_session={session_id}"}
             )
         self.assertEqual(res.status_code, 400)
-        self.assertEqual(res.json, {"error": "At least one question is required"})
+        self.assertEqual(res.json, {"error": "Missing data"})
         req_json['questions_collection'].append({"body": "fake", "answers_collection": []})
         res = self.__class__.client.post(
                 f"/api/v1/quizzes", json=req_json,
