@@ -35,12 +35,12 @@ class TestAuth(unittest.TestCase):
     def test_register(self):
         """Test "POST /users/<user_id>/quizzes"
         """
-        res = self.__class__.client.post("/api/v1/users", json={
+        res = self.client.post("/api/v1/users", json={
                 "first_name": "ahmad",
                 "middle_name": "husain",
                 "last_name": "basheer",
                 "dob": "2005-03-05",
-                "email": self.__class__.email,
+                "email": self.email,
                 "password": "fakepass"
             });
         self.assertEqual(res.status_code, 201)
@@ -50,8 +50,8 @@ class TestAuth(unittest.TestCase):
     def test_login(self):
         """PUT /api/v1/users/<user_id>/quizzes/<quiz_id>
         """
-        res = self.__class__.client.post("/api/v1/login", json={
-                "email": self.__class__.email,
+        res = self.client.post("/api/v1/login", json={
+                "email": self.email,
                 "password": "fakepass"
             })
         self.assertEqual(res.status_code, 200)
@@ -61,5 +61,5 @@ class TestAuth(unittest.TestCase):
     def test_logout(self):
         """Test "DELETE /api/v1/quizzes/<quiz_id>"
         """
-        res = self.__class__.client.delete("/api/v1/logout");
+        res = self.client.delete("/api/v1/logout");
         self.assertEqual(res.status_code, 200)
