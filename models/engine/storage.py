@@ -35,6 +35,8 @@ class Storage():
     def reload(self):
         """Reload data from the database
         """
+        if getenv("IQA_DB_NAME") == "test_iqa":
+            Base.metadata.drop_all(Storage.__engine)
         Base.metadata.create_all(Storage.__engine)
         Session = scoped_session(sessionmaker(bind=Storage.__engine, expire_on_commit=False))
         Storage.__session = Session()
