@@ -11,6 +11,7 @@ from models.questions import Question
 from models.answers import Answer
 from models.feedbacks import FeedBack
 from models.scores import Score
+from models.snapshots import Snapshot
 
 
 class Storage():
@@ -18,7 +19,7 @@ class Storage():
     """
     __engine = None
     __session = None
-    classes = [User, Quiz, Question, Answer, FeedBack, Score]
+    classes = [User, Quiz, Question, Answer, FeedBack, Score, Snapshot]
 
     def __init__(self):
         """Initialize storage object
@@ -118,7 +119,10 @@ class Storage():
                         ],
                 "Question": ["quiz_id"],
                 "Answer": ["is_true", "question_id"],
-                "FeedBack": ["user_id", "quiz_id"]
+                "FeedBack": ["user_id", "quiz_id"],
+                "Snapshot": ['user_id', 'quiz_id',
+                           'question_id', 'answer_id',
+                           'score_id', 'is_true']
             }
         if cls not in Storage.classes[:-1]:
             return []
