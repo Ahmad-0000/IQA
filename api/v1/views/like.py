@@ -15,7 +15,10 @@ def make_like(quiz_id):
     if not quiz:
         abort(404)
     if quiz.user_id == request.current_user.id:
-        abort(400, "You can't assign a like to your own quiz")
+        abort(400, "You can't make a like to your own quiz")
+    print(quiz.fans_users)
+    if request.current_user in quiz.fans_users:
+        abort(400, "You've already made a like for this quiz")
     quiz.fans_users.append(request.current_user)
     quiz.likes_num += 1
     quiz.save()
