@@ -60,3 +60,28 @@ class RedisStackCache():
             if result:
                 added += 1 # Count how many quizzes was set
         return added
+
+    def populate_popular_pool(self, pool_size):
+        """Populate the popular quizzes pool
+        """
+        added = 0
+        # Get the quizzes
+        quizzes = storage.get_paged(Quiz, "times_taken", "desc", "initial", pool_size)
+        # Put them in an appropriate JSON format
+        prepared_quizzes = [quiz.to_a_cache_pool() for quiz in quizzes]
+        # store the quizzes
+        for prepared_quiz in prepared_quizzes:
+            RedisStackCache.__client.json()\
+                    .set(
+                        f"popular:quiz:{prepared_quiz['general_details']['id']}",
+                        "$",
+                        json.dumps(prepared_quiz)
+                    )
+            result = RedisStackCache.__client\
+                        .expire(
+                                f"popular:quiz:{prepared_quiz['general_details']['id']}",
+                                RedisStackCache.__expiry_time * 60
+                            )
+            if result:
+                added += 1 # Count how many quizzes was set
+        return added
