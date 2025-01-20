@@ -49,7 +49,7 @@ class RedisStackCache():
                     .set(
                         f"{_type}:quiz:{prepared_quiz['general_details']['id']}",
                         "$",
-                        json.dumps(prepared_quiz)
+                        prepared_quiz
                     )
             result = RedisStackCache.__client\
                         .expire(
