@@ -108,3 +108,12 @@ class RedisStackCache():
                         f'$["general_details"].{k}',
                         v
                     )
+
+    def delete_quiz(self, quiz_id):
+        """Delete a quiz to keep consistency with the db
+        """
+        result = 0
+        result += RedisStackCache.__client.json().delete(f'newest:quiz:{quiz_id}')
+        result += RedisStackCache.__client.json().delete(f'oldest:quiz:{quiz_id}')
+        result += RedisStackCache.__client.json().delete(f'popular:quiz:{quiz_id}')
+        return result
