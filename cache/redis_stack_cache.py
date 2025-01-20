@@ -52,10 +52,10 @@ class RedisStackCache():
                         prepared_quiz
                     )
             result = RedisStackCache.__client\
-                        .expire(
-                                f"{_type}:quiz:{prepared_quiz['general_details']['id']}",
-                                RedisStackCache.__expiry_time * 60
-                            )
+                    .expire(
+                        f"{_type}:quiz:{prepared_quiz['general_details']['id']}",
+                        RedisStackCache.__expiry_time * 60
+                    )
             if result:
                 added += 1 # Count how many quizzes was set
         return added
@@ -77,10 +77,10 @@ class RedisStackCache():
                         prepared_quiz
                     )
             result = RedisStackCache.__client\
-                        .expire(
-                                f"popular:quiz:{prepared_quiz['general_details']['id']}",
-                                RedisStackCache.__expiry_time * 60
-                            )
+                    .expire(
+                        f"popular:quiz:{prepared_quiz['general_details']['id']}",
+                        RedisStackCache.__expiry_time * 60
+                    )
             if result:
                 added += 1 # Count how many quizzes was set
         return added
