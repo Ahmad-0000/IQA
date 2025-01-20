@@ -1,7 +1,6 @@
 """Redis Stack caching layer
 """
 import redis
-import json
 from os import getenv
 from models import storage
 from models.quizzes import Quiz
@@ -75,7 +74,7 @@ class RedisStackCache():
                     .set(
                         f"popular:quiz:{prepared_quiz['general_details']['id']}",
                         "$",
-                        json.dumps(prepared_quiz)
+                        prepared_quiz
                     )
             result = RedisStackCache.__client\
                         .expire(
