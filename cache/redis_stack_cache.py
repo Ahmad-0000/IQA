@@ -4,6 +4,10 @@ import redis
 from os import getenv
 from models import storage
 from models.quizzes import Quiz
+from redis.commands.search.field import NumericField
+from redis.commands.search.indexDefinition import (IndexDefinition,
+        IndexType
+)
 
 
 class RedisStackCache():
@@ -26,7 +30,67 @@ class RedisStackCache():
             port = 6379
         RedisStackCache.__client = redis.Redis(
                 host=host, port=port, db=db, decode_responses=True
+        )
+        index_name = "newest"
+        schema = (
+            NumericField(
+                '$.general_details.added_at',
+                as_name='date',
+                sortable=True
+            )
+        )
+        try:
+            RedisStackCache.__client.ft(index_name).dropindex()
+        except:
+            pass
+        RedisStackCache.__client.ft(index_name).create_index(
+                schema,
+                definition=IndexDefinition(
+                    index_type=IndexType.JSON,
+                    prefix=['newest:quiz:']
                 )
+        )
+        print(RedisStackCache.__client.ft(index_name).info())
+        index_name = "oldest"
+        schema = (
+            NumericField(
+                '$.general_details.added_at',
+                as_name='date',
+                sortable=True
+            )
+        )
+        try:
+            RedisStackCache.__client.ft(index_name).dropindex()
+        except:
+            pass 
+        RedisStackCache.__client.ft(index_name).create_index(
+            schema,
+            definition=IndexDefinition(
+                index_type=IndexType.JSON,
+                prefix=["oldest:quiz:"]
+            )
+        )
+        print(RedisStackCache.__client.ft(index_name).info())
+        index_name = "popular"
+        schema = (
+            NumericField(
+                '$.general_details.times_taken',
+                as_name='repeats',
+                sortable=True
+            )
+        )
+        try:
+            RedisStackCache.__client.ft(index_name).dropindex()
+        except:
+            pass 
+        RedisStackCache.__client.ft(index_name).create_index(
+            schema,
+            definition=IndexDefinition(
+                index_type=IndexType.JSON,
+                prefix=["popular:quiz:"]
+            )
+        )
+        print(RedisStackCache.__client.ft(index_name).info())
 
     def populate_quizzes_pool(self, _type, pool_size):
         """Populate the recent or oldest quizzes pool with the 1st 100
