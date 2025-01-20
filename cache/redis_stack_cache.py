@@ -184,7 +184,7 @@ class RedisStackCache():
 
     def get_paged_newest(self, after: str, limit: int):
         """Returns a "limit" number of quizzes from the
-        newest:pool
+        newest index
         """
         if after == "initial":
             q = Query('*').sort_by('date', asc=False).paging(0, limit)
@@ -192,3 +192,14 @@ class RedisStackCache():
             after = int(datetime.fromisoformat(after).timestamp())
             q = Query(f'@date:[-inf {after}]').sort_by('date', asc=False).paging(1, limit)
         return RedisStackCache.__client.ft('newest').search(q)
+    
+    def get_paged_oldest(self, after: str, limit: int):
+        """Returns a "limit" number of quizzes from the
+        oldest indext
+        """
+        if after == "initial":
+            q = Query('*').sort_by('date', asc=True).paging(0, limit)
+        else:
+            after = int(datetime.fromisoformat(after).timestamp())
+            q = Query(f'@date:[{after} +inf]').sort_by('date', asc=True).paging(1, limit)
+        return RedisStackCache.__client.ft('oldest').search(q)
