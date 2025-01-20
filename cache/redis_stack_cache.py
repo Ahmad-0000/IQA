@@ -84,3 +84,27 @@ class RedisStackCache():
             if result:
                 added += 1 # Count how many quizzes was set
         return added
+
+    def update_quiz(self, quiz_id, attributes: dict):
+        """Update quiz attributes to keep consistency with db
+        """
+        if RedisStackCache.__client.json().get(f'newest:quiz:{quiz_id}'):
+            for k, v in attributes.items():
+                RedisStackCache.__client.json().set(
+                        f'newest:quiz:{quiz_id}',
+                        f'$["general_details"].{k}',
+                        v
+                    )
+        if RedisStackCache.__client.json().get(f'oldest:quiz:{quiz_id}'):
+            for k, v in attributes.items():
+                RedisStackCache.__client.json().set(
+                        f'oldest:quiz:{quiz_id}',
+                        f'$["general_details"].{k}',
+                        v
+                    )
+        if RedisStackCache.__client.json().get(f'popular:quiz:{quiz_id}'):
+            for k, v in attributes.items():
+                RedisStackCache.__client.json().set(f'popular:quiz:{quiz_id}',
+                        f'$["general_details"].{k}',
+                        v
+                    )
