@@ -1,10 +1,13 @@
 """Redis Stack caching layer
 """
 import redis
+import json
 from os import getenv
+from datetime import datetime
 from models import storage
 from models.quizzes import Quiz
 from redis.commands.search.field import NumericField
+from redis.commands.search.query import Query
 from redis.commands.search.indexDefinition import (IndexDefinition,
         IndexType
 )
@@ -178,3 +181,14 @@ class RedisStackCache():
         result += RedisStackCache.__client.json().delete(f'oldest:quiz:{quiz_id}')
         result += RedisStackCache.__client.json().delete(f'popular:quiz:{quiz_id}')
         return result
+
+    def get_paged_newest(self, after: str, limit: int):
+        """Returns a "limit" number of quizzes from the
+        newest:pool
+        """
+        if after == "initial":
+            q = Query('*').sort_by('date', asc=False).paging(0, limit)
+        else:
+            after = int(datetime.fromisoformat(after).timestamp())
+            q = Query(f'@date:[-inf {after}]').sort_by('date', asc=False).paging(1, limit)
+        return RedisStackCache.__client.ft('newest').search(q)
