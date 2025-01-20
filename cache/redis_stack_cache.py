@@ -50,7 +50,6 @@ class RedisStackCache():
                     prefix=['newest:quiz:']
                 )
         )
-        print(RedisStackCache.__client.ft(index_name).info())
         index_name = "oldest"
         schema = (
             NumericField(
@@ -70,7 +69,6 @@ class RedisStackCache():
                 prefix=["oldest:quiz:"]
             )
         )
-        print(RedisStackCache.__client.ft(index_name).info())
         index_name = "popular"
         schema = (
             NumericField(
@@ -90,7 +88,6 @@ class RedisStackCache():
                 prefix=["popular:quiz:"]
             )
         )
-        print(RedisStackCache.__client.ft(index_name).info())
 
     def populate_quizzes_pool(self, _type, pool_size):
         """Populate the recent or oldest quizzes pool with the 1st 100
