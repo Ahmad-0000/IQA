@@ -48,6 +48,7 @@ class Quiz(BaseModel, Base):
                                     prepared_quiz['general_details']['added_at']
                                 ).timestamp()
                             )
+        prepared_quiz['to_ongoing_session'] = self.to_ongoing_session()
         return prepared_quiz
 
     def to_ongoing_session(self):
@@ -75,7 +76,8 @@ class Quiz(BaseModel, Base):
                 if answer.is_true:
                     correct_answers.append(answer.id)
         prepared_quiz = {
-                            "references": 1
+                            "references": 1,
+                            "questions_num": len(self.questions),
                             "questions": questions,
                             "question_ids": question_ids,
                             "correct_answers": correct_answers
