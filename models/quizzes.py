@@ -42,6 +42,7 @@ class Quiz(BaseModel, Base):
         """
         prepared_quiz = {}
         prepared_quiz['general_details'] = self.to_dict()
+        prepared_quiz['general_details']['questions_num'] = len(self.questions)
         prepared_quiz['general_details']['added_at'] = int(
                                 datetime.fromisoformat(
                                     prepared_quiz['general_details']['added_at']
