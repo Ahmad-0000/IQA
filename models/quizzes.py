@@ -75,6 +75,7 @@ class Quiz(BaseModel, Base):
                 if answer.is_true:
                     correct_answers.append(answer.id)
         prepared_quiz = {
+                            "references": 1
                             "questions": questions,
                             "question_ids": question_ids,
                             "correct_answers": correct_answers
