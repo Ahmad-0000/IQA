@@ -301,3 +301,46 @@ class RedisStackCache():
         """Get the number of quizzes in a pool
         """
         return RedisStackCache.__client.get(f'{_type}_pool_size')
+
+    def start_a_quiz(self, quiz_id: str, user_id: str, session_id: str):
+        """Starti a quiz session for multiple users
+        """
+        from_cache = True
+        quiz = RedisStackCache.__client.json().get(f'newest:quiz:{quiz_id}')
+        if not quiz:
+            quiz = RedisStackCache.__client.json().get(f'oldest:quiz:{quiz_id}')
+        if not quiz:
+            quiz = RedisStackCache.__client.json().get(f'popular:quiz:{quiz_id}')
+        if not quiz:
+            from_cache = False
+            quiz = storage.get(Quiz, quiz_id)
+        if not quiz:
+            return 404
+        if type(quiz) is dict:
+            deadline =  int(
+                            (
+                                datetime.utcnow() +
+                                timedelta(minutes=quiz['general_details']['duration'])
+                            ).timestamp()
+                        )
+        else:
+            deadline =  int(
+                            (
+                                datetime.utcnow() +
+                                timedelta(minutes=quiz.duration)
+                            ).timestamp()
+                        )
+        if not RedisStackCache.__client.exists(f'ongoing:{quiz_id}'):
+            if from_cache:
+                RedisStackCache.__client.json().set(f'ongoing:{quiz_id}', "$", quiz['to_ongoing_session'])
+            else:
+                RedisStackCache.__client.json().set(f'ongoing:{quiz_id}', "$", quiz.to_ongoing_session())
+        RedisStackCache.__client.sadd(f'ongoing_quiz_tracker:{quiz_id}', f'{session_id}:{quiz_id}')
+        session = {
+            "user_id": user_id,
+            "quiz_id": quiz_id,
+            "deadline": deadline,
+            "score": 0,
+            "snapshots": {}
+        }
+        RedisStackCache.__client.json().set(f'{session_id}:{quiz_id}', "$", session)
