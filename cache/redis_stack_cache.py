@@ -18,6 +18,7 @@ class RedisStackCache():
     """
     __expiry_time = 30 # In minutes
     __client = None
+    _pool_size = 100
 
     def __init__(self):
         """Initialization
@@ -92,9 +93,9 @@ class RedisStackCache():
             )
         )
 
-    def populate_quizzes_pool(self, _type, pool_size):
-        """Populate the recent or oldest quizzes pool with the 1st 100
-        newest or oldest quizzes from the database
+    def populate_quizzes_pool(self, _type):
+        """Populate the recent or oldest quizzes pool with
+        some newest or oldest quizzes from the database
         """
         added = 0
         if _type not in ["newest", "oldest"]:
@@ -104,7 +105,7 @@ class RedisStackCache():
         else:
             order = "asc"
         # Get the quizzes
-        quizzes = storage.get_paged(Quiz, "added_at", order, "initial", pool_size)
+        quizzes = storage.get_paged(Quiz, "added_at", order, "initial", RedisStackCache._pool_size)
         # Put them in an appropriate JSON format
         prepared_quizzes = [quiz.to_a_cache_pool() for quiz in quizzes]
         # store the quizzes
@@ -129,12 +130,12 @@ class RedisStackCache():
         )
         return added
 
-    def populate_popular_pool(self, pool_size):
+    def populate_popular_pool(self):
         """Populate the popular quizzes pool
         """
         added = 0
         # Get the quizzes
-        quizzes = storage.get_paged(Quiz, "times_taken", "desc", "initial", pool_size)
+        quizzes = storage.get_paged(Quiz, "times_taken", "desc", "initial", RedisStackCache._pool_size)
         # Put them in an appropriate JSON format
         prepared_quizzes = [quiz.to_a_cache_pool() for quiz in quizzes]
         # store the quizzes
@@ -182,6 +183,7 @@ class RedisStackCache():
                         f'$["general_details"].{k}',
                         v
                     )
+        return True
 
     def delete_quiz(self, quiz_id):
         """Delete a quiz to keep consistency with the db
