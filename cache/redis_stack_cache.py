@@ -187,10 +187,77 @@ class RedisStackCache():
         """Delete a quiz to keep consistency with the db
         """
         result = 0
-        result += RedisStackCache.__client.json().delete(f'newest:quiz:{quiz_id}')
-        result += RedisStackCache.__client.json().delete(f'oldest:quiz:{quiz_id}')
-        result += RedisStackCache.__client.json().delete(f'popular:quiz:{quiz_id}')
-        return result
+        total = 0
+        exists = RedisStackCache.__client.exists(f'newest:quiz:{quiz_id}')
+        if exists:
+            total += 1
+            last_quiz = self.get_paged_newest(
+                                                    'initial',
+                                                    100
+                                                ).docs[-1].json
+            last_quiz = json.loads(last_quiz)
+            alternate = storage.get_paged(
+                                            Quiz,
+                                            "added_at",
+                                            "desc",
+                                            datetime.fromtimestamp(last_quiz['general_details']['added_at']),
+                                            1
+            )
+            if alternate:
+                alternate = alternate[0].to_a_cache_pool()
+                timeout = RedisStackCache.__client.ttl(f'newest:quiz:{quiz_id}')
+                RedisStackCache.__client.json().set(f'newest:quiz:{alternate["general_details"]["id"]}', "$", alternate)
+                RedisStackCache.__client.expire(f'newest:quiz:{alternate["general_details"]["id"]}', timeout)
+                RedisStackCache.__client.incrby('newest_pool_size')
+            result += RedisStackCache.__client.json().delete(f'newest:quiz:{quiz_id}')
+            RedisStackCache.__client.incrby('newest_pool_size', -1)
+        exists = RedisStackCache.__client.exists(f'oldest:quiz:{quiz_id}')
+        if exists:
+            total += 1
+            last_quiz = self.get_paged_oldest(
+                                                    'initial',
+                                                    100
+                                                ).docs[-1].json
+            last_quiz = json.loads(last_quiz)
+            alternate = storage.get_paged(
+                                            Quiz,
+                                            "added_at",
+                                            "asc",
+                                            datetime.fromtimestamp(last_quiz['general_details']['added_at']),
+                                            1
+            )
+            if alternate:
+                alternate = alternate[0].to_a_cache_pool()
+                timeout = RedisStackCache.__client.ttl(f'oldest:quiz:{quiz_id}')
+                RedisStackCache.__client.json().set(f'oldest:quiz:{alternate["general_details"]["id"]}', "$", alternate)
+                RedisStackCache.__client.expire(f'oldest:quiz:{alternate["general_details"]["id"]}', timeout)
+                RedisStackCache.__client.incrby('oldest_pool_size')
+            result += RedisStackCache.__client.json().delete(f'oldest:quiz:{quiz_id}')
+            RedisStackCache.__client.incrby('oldest_pool_size', -1)
+        exists = RedisStackCache.__client.exists(f'popular:quiz:{quiz_id}')
+        if exists:
+            total += 1
+            last_quiz = self.get_paged_popular(
+                                                    'initial',
+                                                    100
+                                                ).docs[-1].json
+            last_quiz = json.loads(last_quiz)
+            alternate = storage.get_paged(
+                                            Quiz,
+                                            "times_taken",
+                                            "desc",
+                                            last_quiz['general_details']['times_taken'],
+                                            1
+            )
+            if alternate:
+                alternate = alternate[0].to_a_cache_pool()
+                timeout = RedisStackCache.__client.ttl(f'popular:quiz:{quiz_id}')
+                RedisStackCache.__client.json().set(f'popular:quiz:{alternate["general_details"]["id"]}', "$", alternate)
+                RedisStackCache.__client.expire(f'popular:quiz:{alternate["general_details"]["id"]}', timeout)
+                RedisStackCache.__client.incrby('popular_pool_size')
+            result += RedisStackCache.__client.json().delete(f'popular:quiz:{quiz_id}')
+            RedisStackCache.__client.incrby('popular_pool_size', -1)
+        return (total, result)
 
     def get_paged_newest(self, after: str, limit: int):
         """Returns a "limit" number of quizzes from the
