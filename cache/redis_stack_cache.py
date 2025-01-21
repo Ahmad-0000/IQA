@@ -3,7 +3,7 @@
 import redis
 import json
 from os import getenv
-from datetime import datetime
+from datetime import datetime, timedelta
 from models import storage
 from models.quizzes import Quiz
 from redis.commands.search.field import NumericField
@@ -210,9 +210,9 @@ class RedisStackCache():
                 timeout = RedisStackCache.__client.ttl(f'newest:quiz:{quiz_id}')
                 RedisStackCache.__client.json().set(f'newest:quiz:{alternate["general_details"]["id"]}', "$", alternate)
                 RedisStackCache.__client.expire(f'newest:quiz:{alternate["general_details"]["id"]}', timeout)
-                RedisStackCache.__client.incrby('newest_pool_size')
+                RedisStackCache.__client.incr('newest_pool_size')
             result += RedisStackCache.__client.json().delete(f'newest:quiz:{quiz_id}')
-            RedisStackCache.__client.incrby('newest_pool_size', -1)
+            RedisStackCache.__client.decr('newest_pool_size')
         exists = RedisStackCache.__client.exists(f'oldest:quiz:{quiz_id}')
         if exists:
             total += 1
@@ -233,9 +233,9 @@ class RedisStackCache():
                 timeout = RedisStackCache.__client.ttl(f'oldest:quiz:{quiz_id}')
                 RedisStackCache.__client.json().set(f'oldest:quiz:{alternate["general_details"]["id"]}', "$", alternate)
                 RedisStackCache.__client.expire(f'oldest:quiz:{alternate["general_details"]["id"]}', timeout)
-                RedisStackCache.__client.incrby('oldest_pool_size')
+                RedisStackCache.__client.incr('oldest_pool_size')
             result += RedisStackCache.__client.json().delete(f'oldest:quiz:{quiz_id}')
-            RedisStackCache.__client.incrby('oldest_pool_size', -1)
+            RedisStackCache.__client.decr('oldest_pool_size')
         exists = RedisStackCache.__client.exists(f'popular:quiz:{quiz_id}')
         if exists:
             total += 1
@@ -256,9 +256,9 @@ class RedisStackCache():
                 timeout = RedisStackCache.__client.ttl(f'popular:quiz:{quiz_id}')
                 RedisStackCache.__client.json().set(f'popular:quiz:{alternate["general_details"]["id"]}', "$", alternate)
                 RedisStackCache.__client.expire(f'popular:quiz:{alternate["general_details"]["id"]}', timeout)
-                RedisStackCache.__client.incrby('popular_pool_size')
+                RedisStackCache.__client.incr('popular_pool_size')
             result += RedisStackCache.__client.json().delete(f'popular:quiz:{quiz_id}')
-            RedisStackCache.__client.incrby('popular_pool_size', -1)
+            RedisStackCache.__client.decr('popular_pool_size')
         return (total, result)
 
     def get_paged_newest(self, after: str, limit: int):
