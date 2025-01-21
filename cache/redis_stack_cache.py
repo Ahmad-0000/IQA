@@ -104,6 +104,8 @@ class RedisStackCache():
             order = "desc"
         else:
             order = "asc"
+        if RedisStackCache.__client.get(f'{_type}_pool_size') is not None:
+            return RedisStackCache._pool_size
         # Get the quizzes
         quizzes = storage.get_paged(Quiz, "added_at", order, "initial", RedisStackCache._pool_size)
         # Put them in an appropriate JSON format
@@ -134,6 +136,8 @@ class RedisStackCache():
         """Populate the popular quizzes pool
         """
         added = 0
+        if RedisStackCache.__client.get(f'popular_pool_size') is not None:
+            return RedisStackCache._pool_size
         # Get the quizzes
         quizzes = storage.get_paged(Quiz, "times_taken", "desc", "initial", RedisStackCache._pool_size)
         # Put them in an appropriate JSON format
