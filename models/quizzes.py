@@ -69,7 +69,6 @@ class Quiz(BaseModel, Base):
                         {
                             'id': answer.id,
                             'body': answer.body,
-                            'is_true': answer.is_true
                         }
                 )
                 if answer.is_true:
