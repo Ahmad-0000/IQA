@@ -122,6 +122,11 @@ class RedisStackCache():
                     )
             if result:
                 added += 1 # Count how many quizzes was set
+        RedisStackCache.__client.setex(
+                                        f'{_type}_pool_size',
+                                        RedisStackCache.__expiry_time * 60,
+                                        added
+        )
         return added
 
     def populate_popular_pool(self, pool_size):
@@ -147,6 +152,11 @@ class RedisStackCache():
                     )
             if result:
                 added += 1 # Count how many quizzes was set
+        RedisStackCache.__client.setex(
+                                        'popular_pool_size',
+                                        RedisStackCache.__expiry_time * 60,
+                                        added
+        )
         return added
 
     def update_quiz(self, quiz_id, attributes: dict):
@@ -213,3 +223,8 @@ class RedisStackCache():
         else:
             q = Query(f'@repeats:[-inf {after}]').sort_by('repeats', asc=False).paging(1, limit)
         return RedisStackCache.__client.ft('popular').search(q)
+
+    def get_pool_size(self, _type: str):
+        """Get the number of quizzes in a pool
+        """
+        return RedisStackCache.__client.get(f'{_type}_pool_size')
