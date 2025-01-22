@@ -215,3 +215,8 @@ class Storage():
                     rest += for_cat - len(sub_result)
             result.extend(sub_result)
         return result
+
+    def rollback(self):
+        """Rollback when an error happens
+        """
+        Storage.__session.rollback()
