@@ -395,3 +395,30 @@ class RedisStackCache():
         else:
             status = False
         return RedisStackCache.__client.json().set(session_cookie, f"$.snapshots.{question_id}", [answer_id, status])
+
+    def get_next_question(self, session_cookie: str, idx: int):
+        """Get the next question from an ongoing quiz session
+        """
+        session = RedisStackCache.__client.json().get(session_cookie)
+        if not session:
+            return 404
+        quiz_id = session['quiz_id']
+        if int(datetime.utcnow().timestamp()) >= session['deadline']:
+            score = session['score']
+            score = Score(score=score, user_id=user_id, quiz_id=quiz_id)
+            score.save()
+            snapshots = session['snapshots']
+            snapshot_ids = register_snapshots(
+                                                score_id=score.id,
+                                                user_id=session['user_id'],
+                                                quiz_id=['quiz_id'],
+                                                snapshots=snapshots.items()
+            )
+            RedisStackCache.__client.json().delete('session_cookie')
+            RedisStackCache.__client.srem(f'ongoing_quiz_tracker:{quiz_id}', session_cookie)
+            return (404, snapshot_ids)
+        ongoing_quiz = RedisStackCache.__client.json().get(f'ongoing:{quiz_id}')
+        try:
+            return ongoing_quiz['questions'][idx]
+        except IndexError:
+            return (404, ongoing_quiz['questions_num'])
