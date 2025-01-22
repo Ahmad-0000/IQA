@@ -418,6 +418,20 @@ class RedisStackCache():
             RedisStackCache.__client.srem(f'ongoing_quiz_tracker:{quiz_id}', session_cookie)
             return (404, snapshot_ids)
         ongoing_quiz = RedisStackCache.__client.json().get(f'ongoing:{quiz_id}')
+        if idx == -1:
+            score = session['score']
+            score = Score(score=score, user_id=user_id, quiz_id=quiz_id)
+            score.save()
+            snapshots = session['snapshots']
+            snapshot_ids = register_snapshots(
+                                                score_id=score.id,
+                                                user_id=session['user_id'],
+                                                quiz_id=['quiz_id'],
+                                                snapshots=snapshots.items()
+            )
+            RedisStackCache.__client.json().delete('session_cookie')
+            RedisStackCache.__client.srem(f'ongoing_quiz_tracker:{quiz_id}', session_cookie)
+            return (201, score.score)
         try:
             return ongoing_quiz['questions'][idx]
         except IndexError:
