@@ -382,6 +382,7 @@ class RedisStackCache():
             snapshots = session['snapshots']
             snapshot_ids = register_snapshots(score_id=score.id, user_id=user_id, quiz_id=quiz_id, snapshots=snapshots.items())
             RedisStackCache.__client.json().delete('session_cookie')
+            RedisStackCache.__client.srem(f'ongoing_quiz_tracker:{quiz_id}', session_cookie)
             return (404, snapshot_ids)
         if RedisStackCache.__client.json().arrindex(f'ongoing:{quiz_id}', "$.question_ids", question_id)[0] == -1:
             return 400
