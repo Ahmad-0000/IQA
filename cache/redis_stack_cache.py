@@ -365,3 +365,32 @@ class RedisStackCache():
         session_cookie = session_id + ':' + quiz_id 
         RedisStackCache.__client.json().set(session_cookie, "$", session)
         return session_cookie
+
+    def register_a_snapshot(self, session_cookie: str, question_id: str, answer_id: str):
+        """Register a snapshot, which is a data about the answer
+        a user choose for a particular question
+        """
+        session = RedisStackCache.__client.json().get(session_cookie)
+        if session is None:
+            return 404
+        user_id = session['user_id']
+        quiz_id = session_cookie.split(':')[1]
+        if int(datetime.utcnow().timestamp()) >= session['deadline']:
+            score = session['score']
+            score = Score(score=score, user_id=user_id, quiz_id=quiz_id)
+            score.save()
+            snapshots = session['snapshots']
+            snapshot_ids = register_snapshots(score_id=score.id, user_id=user_id, quiz_id=quiz_id, snapshots=snapshots.items())
+            RedisStackCache.__client.json().delete('session_cookie')
+            return (404, snapshot_ids)
+        if RedisStackCache.__client.json().arrindex(f'ongoing:{quiz_id}', "$.question_ids", question_id)[0] == -1:
+            return 400
+        elif RedisStackCache.__client.json().get(session_cookie, f"$.snapshots.{question_id}" ):
+            return 409
+        if RedisStackCache.__client.json().arrindex(f'ongoing:{quiz_id}', "$.correct_answers", answer_id)[0] != -1:
+            status = True
+            questions_num = RedisStackCache.__client.json().get(f'ongoing:{quiz_id}', '$.questions_num')[0]
+            RedisStackCache.__client.json().numincrby(session_cookie, "$.score", 100 / questions_num)
+        else:
+            status = False
+        return RedisStackCache.__client.json().set(session_cookie, f"$.snapshots.{question_id}", [answer_id, status])
