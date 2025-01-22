@@ -6,12 +6,31 @@ from os import getenv
 from datetime import datetime, timedelta
 from models import storage
 from models.quizzes import Quiz
+from models.scores import Score
+from models.snapshots import Snapshot
 from redis.commands.search.field import NumericField
 from redis.commands.search.query import Query
 from redis.commands.search.indexDefinition import (IndexDefinition,
         IndexType
 )
 
+
+def register_snapshots(user_id, quiz_id, score_id, snapshots) -> list:
+    """A function to create snapshots for a specific quiz sesssion
+    """
+    snapshot_ids = []
+    for question_id, info in snapshots:
+        snapshot = Snapshot(
+                                user_id=user_id,
+                                quiz_id=quiz_id,
+                                score_id=score_id,
+                                question_id=question_id,
+                                answer_id=(info[0] if len(info[0]) == 36 else None),
+                                is_true=info[1]
+        )
+        snapshot.save()
+        snapshot_ids.append(snapshot.id)
+    return snapshot_ids
 
 class RedisStackCache():
     """Handles cache logic
@@ -343,4 +362,6 @@ class RedisStackCache():
             "score": 0,
             "snapshots": {}
         }
-        RedisStackCache.__client.json().set(f'{session_id}:{quiz_id}', "$", session)
+        session_cookie = session_id + ':' + quiz_id 
+        RedisStackCache.__client.json().set(session_cookie, "$", session)
+        return session_cookie
