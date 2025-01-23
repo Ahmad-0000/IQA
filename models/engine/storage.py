@@ -1,6 +1,7 @@
 """Declare a class to handle DB storage
 """
 from os import getenv
+from datetime import datetime
 from sqlalchemy import  create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from models.base_model import Base
@@ -10,7 +11,7 @@ from models.questions import Question
 from models.answers import Answer
 from models.feedbacks import FeedBack
 from models.scores import Score
-from models.categories import Category
+from models.snapshots import Snapshot
 
 
 class Storage():
@@ -18,7 +19,7 @@ class Storage():
     """
     __engine = None
     __session = None
-    classes = [User, Quiz, Question, Answer, FeedBack, Score, Category]
+    classes = [User, Quiz, Question, Answer, FeedBack, Snapshot, Score]
 
     def __init__(self):
         """Initialize storage object
@@ -72,3 +73,4 @@ class Storage():
             return None
         obj = Storage.__session.query(cls).filter_by(id=id).one_or_none()
         return obj
+
