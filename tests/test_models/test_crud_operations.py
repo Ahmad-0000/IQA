@@ -114,3 +114,28 @@ class TestUser(unittest.TestCase):
         new_first_name = self.cursor.fetchone()[0]
         self.assertEqual(initial_first_name, "Ahmad")
         self.assertEqual(new_first_name, "Mohammad")
+
+
+    def test_db_deletion(self):
+        """Test deletion from the database
+        """
+        user = User(
+                         first_name="Ahmad",
+                         middle_name="Husain",
+                         last_name="Basheer",
+                         dob=date(2005, 3, 5),
+                         email="ahmadfruit211@gmail.com",
+                         password="fakepassword",
+                         image_path="somepath",
+                         bio="A person seeking to be a software engineer"
+        )
+        user.save()
+        self.db_connection.commit()
+        self.cursor.execute(f'SELECT COUNT(*) FROM users WHERE id = "{user.id}"')
+        initial_user_presence = bool(self.cursor.fetchone()[0])
+        user.delete() 
+        self.db_connection.commit()
+        self.cursor.execute(f'SELECT COUNT(*) FROM users WHERE id = "{user.id}"')
+        new_user_presence = bool(self.cursor.fetchone()[0])
+        self.assertTrue(initial_user_presence)
+        self.assertFalse(new_user_presence)
