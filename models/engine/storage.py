@@ -68,6 +68,33 @@ class Storage():
             return None
         return Storage.__session.query(cls).order_by(cls.added_at.desc()).all()
 
+    def get_paged(self, cls, attribute, _type, after, limit=20):
+        """Get paged members for api
+        """
+        if cls not in Storage.classes:
+            return None
+        if after == 'initial':
+            if _type == 'asc':
+                return Storage.__session.query(cls)\
+                        .order_by(cls.__dict__[attribute].asc())\
+                        .limit(limit)\
+                        .all()
+            else:
+                return Storage.__session.query(cls)\
+                        .order_by(cls.__dict__[attribute].desc())\
+                        .limit(limit)\
+                        .all()
+        if _type == "asc":
+            return Storage.__session.query(cls)\
+                    .filter(cls.__dict__[attribute] > after)\
+                    .limit(limit)\
+                    .all()
+        else:
+            return Storage.__session.query(cls)\
+                    .filter(cls.__dict__[attribute] < after)\
+                    .limit(limit)\
+                    .all()
+        
     def get(self, cls, id):
         """Return the object belonging to "cls" with id "id"
         """
