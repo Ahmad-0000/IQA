@@ -28,7 +28,7 @@ class TestUser(unittest.TestCase):
     def tearDownClass(cls):
         """Execute for class clean up
         """
-        cls.user.delete()
+        del cls.user
 
     def test_attributes(self):
         """Test normal initialization
@@ -44,6 +44,6 @@ class TestUser(unittest.TestCase):
                         bytes(self.__class__.user.password, 'utf-8')))
         self.assertEqual(self.__class__.user.image_path, expected_path)
         self.assertEqual(self.__class__.user.bio, expected_bio)
-        self.assertEqual(self.__class__.user.quizzes_made, 0)
-        self.assertEqual(self.__class__.user.quizzes_taken, 0)
-        self.assertEqual(self.__class__.user.liked_quizzes_num, 0)
+        self.assertEqual(self.user.liked_quizzes_num, 0)
+        self.assertEqual(self.user.quizzes_made, 0)
+        self.assertEqual(self.user.quizzes_taken, 0)
