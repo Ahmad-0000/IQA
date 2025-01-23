@@ -18,7 +18,7 @@ class Quiz(BaseModel, Base):
     duration = Column(Integer, nullable=False, default=5)
     image_path = Column(String(256), nullable=True, default=None)
     difficulty = Column(Enum('Easy', 'Medium', 'Hard'), nullable=False)
-    category_id = Column(String(36), ForeignKey('categories.id'), nullable=True)
+    category = Column(String(20), nullable=True)
     user_id = Column(String(36), ForeignKey('users.id'), nullable=False)
     user = relationship('User', back_populates='quizzes')
     questions = relationship(
