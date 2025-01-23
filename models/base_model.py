@@ -5,6 +5,7 @@ from datetime import datetime
 from uuid import uuid4
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm.collections import InstrumentedList
 
 
 # Create Base class that some other models will inherit from
@@ -44,7 +45,6 @@ class BaseModel():
                 self.image_path = '/data/iqa/images/{}/{}'\
                                   .format(self.__class__.__name__.lower(),
                                           self.id)
-
  
     def __str__(self):
         """Customize __str__ output
@@ -56,7 +56,9 @@ class BaseModel():
         """
         dict_repr = {}
         for k in self.__dict__:
-            if k == '_sa_instance_state':
+            if k == '_sa_instance_state' or k == 'password':
+                pass
+            elif type(self.__dict__[k]) is InstrumentedList:
                 pass
             else:
                 dict_repr[k] = self.__dict__[k]
