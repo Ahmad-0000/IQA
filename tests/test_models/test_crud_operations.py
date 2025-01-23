@@ -90,10 +90,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(initial_rows_number + 1, new_rows_number)
 
     def test_db_update(self):
-        """Test object data update int the db
-        """
-    def test_db_creation(self):
-        """Test object creation in the db
+        """Test object data update in the db
         """
         user = User(
                          first_name="Ahmad",
