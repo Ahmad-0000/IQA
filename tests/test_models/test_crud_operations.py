@@ -103,6 +103,7 @@ class TestUser(unittest.TestCase):
                          bio="A person seeking to be a software engineer"
         )
         user.save()
+        self.db_connection.commit()
         self.cursor.execute(f'SELECT first_name FROM users WHERE id = "{user.id}"')
         initial_first_name = self.cursor.fetchone()[0]
         user.update(first_name='Mohammad')
