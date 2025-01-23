@@ -48,7 +48,7 @@ class TestBaseModel(unittest.TestCase):
         """
         expected_dict = {
                 'id': self.bm.id,
-                'added_at': self.bm.added_at,
-                'updated_at': self.bm.updated_at
-            }
+                'added_at': self.bm.added_at.isoformat(),
+                'updated_at': self.bm.updated_at.isoformat()
+        }
         self.assertEqual(self.bm.to_dict(), expected_dict)
