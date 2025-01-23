@@ -50,3 +50,36 @@ class Quiz(BaseModel, Base):
                             )
         prepared_quiz['to_ongoing_session'] = self.to_ongoing_session()
         return prepared_quiz
+
+    def to_ongoing_session(self):
+        """Prepare a quiz to be stored in an ongoing test session
+        """
+        question_ids = []
+        correct_answers = []
+        questions = []
+        for question in self.questions:
+            question_ids.append(question.id)
+            questions.append(
+                    {
+                        "id": question.id,
+                        "body": question.body,
+                        "answers": []
+                    }
+            )
+            for answer in question.answers:
+                questions[-1]['answers'].append(
+                        {
+                            'id': answer.id,
+                            'body': answer.body,
+                        }
+                )
+                if answer.is_true:
+                    correct_answers.append(answer.id)
+        prepared_quiz = {
+                            "references": 1,
+                            "questions_num": len(self.questions),
+                            "questions": questions,
+                            "question_ids": question_ids,
+                            "correct_answers": correct_answers
+                        }
+        return prepared_quiz
