@@ -2,6 +2,7 @@
 Test BaseModel class and instances behavior
 """
 import unittest
+from unittest.mock import patch
 from datetime import datetime
 from uuid import uuid4
 from models.base_model import BaseModel
@@ -14,11 +15,6 @@ class TestBaseModel(unittest.TestCase):
         """Initialize a new object with each test case
         """
         self.bm = BaseModel()
-
-    def tearDown(self):
-        """Destroy previously initialized BaseModel
-        """
-        del self.bm
 
     def test_default_initialization(self):
         """Test "id", "added_at" and "updated_at" attributes presence
@@ -38,7 +34,7 @@ class TestBaseModel(unittest.TestCase):
             'id': id,
             'added_at': added_at,
             'updated_at': updated_at
-            })
+        })
         self.assertEqual(self.bm.id, id)
         self.assertEqual(self.bm.added_at, added_at)
         self.assertEqual(self.bm.updated_at, updated_at)
@@ -52,3 +48,11 @@ class TestBaseModel(unittest.TestCase):
                 'updated_at': self.bm.updated_at.isoformat()
         }
         self.assertEqual(self.bm.to_dict(), expected_dict)
+
+    @patch('models.base_model.BaseModel.to_dict', return_value='TO_DICT')
+    def test_str_representation(self, patched_to_dict):
+        """Test __str__ method return value
+        """
+        expected_str = f'[BaseModel] ({self.bm.id}) TO_DICT'
+        real_str = self.bm.__str__()
+        self.assertEqual(real_str, expected_str)

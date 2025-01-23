@@ -31,7 +31,7 @@ class TestUser(unittest.TestCase):
     def test_attributes(self):
         """Test normal initialization
         """
-        expected_path = f"/data/iqa/profile_images/{self.__class__.user.id}"
+        expected_path = f"/data/iqa/images/user/{self.__class__.user.id}"
         expected_bio = "A person seeking to be a software engineer"
         self.assertEqual(self.__class__.user.first_name, "Ahmad")
         self.assertEqual(self.__class__.user.middle_name, "Husain")
