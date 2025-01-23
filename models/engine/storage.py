@@ -140,7 +140,7 @@ class Storage():
         if not limit or limit < 0:
             return q.all()
         else:
-	    return q.all().limit(limit)
+            return q.all().limit(limit)
         return result
 
     def get_categorized_quizzes(self, categories: list, attribute, _type, after) -> list:
