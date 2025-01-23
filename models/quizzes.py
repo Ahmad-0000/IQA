@@ -16,7 +16,7 @@ class Quiz(BaseModel, Base):
     times_taken = Column(Integer, nullable=False, default=0)
     likes_num = Column(Integer, nullable=False, default=0)
     duration = Column(Integer, nullable=False, default=5)
-    image_path = Column(String(256), nullable=True, default=None)
+    image_path = Column(String(57), nullable=True, default=None)
     difficulty = Column(Enum('Easy', 'Medium', 'Hard'), nullable=False)
     category = Column(String(20), nullable=True)
     user_id = Column(String(36), ForeignKey('users.id'), nullable=False)
