@@ -25,7 +25,7 @@ class User(BaseModel, Base):
     password = Column(String(100), nullable=False)
     image_path = Column(String(57), nullable=True, default=None)
     bio = Column(String(300), nullable=True)
-    liked_quizzes = Column(Integer, nullable=True, default=0)
+    liked_quizzes_num = Column(Integer, nullable=True, default=0)
     quizzes_taken = Column(Integer, nullable=True, default=0)
     quizzes_made = Column(Integer, nullable=True, default=0)
 
