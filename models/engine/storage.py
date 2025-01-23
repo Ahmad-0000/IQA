@@ -35,6 +35,8 @@ class Storage():
     def reload(self):
         """Reload data from the database
         """
+        if getenv("IQA_DB_NAME") == "test_iqa":
+            Base.metadata.drop_all(Storage.__engine)
         Base.metadata.create_all(Storage.__engine)
         Session = scoped_session(sessionmaker(bind=Storage.__engine, expire_on_commit=False))
         Storage.__session = Session()
@@ -65,7 +67,7 @@ class Storage():
         if cls not in Storage.classes:
             return None
         return Storage.__session.query(cls).all()
-
+        
     def get(self, cls, id):
         """Return the object belonging to "cls" with id "id"
         """
@@ -73,4 +75,3 @@ class Storage():
             return None
         obj = Storage.__session.query(cls).filter_by(id=id).one_or_none()
         return obj
-
