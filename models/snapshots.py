@@ -11,7 +11,7 @@ class Snapshot(BaseModel, Base):
     __tablename__ = "snapshots"
     user_id = Column(String(36), ForeignKey('users.id'), nullable=False)
     score_id = Column(String(36), ForeignKey('scores.id'), nullable=False)
-    answer_id = Column(String(36), ForeignKey('answers.id'), nullable=False)
+    answer_id = Column(String(36), nullable=True)
     question_id = Column(String(36), ForeignKey('questions.id'), nullable=False)
     is_true = Column(Boolean, nullable=False)
 
