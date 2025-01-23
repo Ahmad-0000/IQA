@@ -1,7 +1,7 @@
 """User model class
 """
 from models.base_model import BaseModel, Base
-from sqlalchemy import Table, Column, String, Date, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, Date, ForeignKey
 from sqlalchemy.orm import relationship, Mapped
 from typing import List
 
@@ -25,6 +25,9 @@ class User(BaseModel, Base):
     password = Column(String(100), nullable=False)
     image_path = Column(String(256), nullable=True, default=None)
     bio = Column(String(300), nullable=True)
+    liked_quizzes = Column(Integer, nullable=True, default=0)
+    quizzes_taken = Column(Integer, nullable=True, default=0)
+    quizzes_made = Column(Integer, nullable=True, default=0)
 
     quizzes = relationship(
                     'Quiz', 
