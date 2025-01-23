@@ -10,7 +10,7 @@ class Question(BaseModel, Base):
     """
     __tablename__ = 'questions'
     body = Column(Text, nullable=False)
-    image_path = Column(String(256), nullable=True, default=None)
+    image_path = Column(String(61), nullable=True, default=None)
     quiz_id = Column(String(36), ForeignKey('quizzes.id'), nullable=False)
     answers = relationship(
                 'Answer',
