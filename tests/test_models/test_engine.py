@@ -23,7 +23,7 @@ class TestStorageEngine(unittest.TestCase):
     """
 
     @classmethod
-    def setUp(cls):
+    def setUpClass(cls):
         """Establish db connection for this class
         """
         cls.db_connection = MySQLdb.connect(
@@ -32,11 +32,11 @@ class TestStorageEngine(unittest.TestCase):
                     host=host,
                     port=port,
                     db=db
-                )
+        )
         cls.cursor = cls.db_connection.cursor()
 
     @classmethod
-    def tearDown(cls):
+    def tearDownClass(cls):
         """Close the cursor and connection of this class
         """
         cls.cursor.close()
