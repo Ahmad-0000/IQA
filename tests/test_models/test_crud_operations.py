@@ -4,6 +4,15 @@ import bcrypt
 import unittest
 from datetime import date
 from models.users import User
+import MySQLdb
+from os import getenv
+
+
+user = getenv('IQA_DB_USER')
+pawd = getenv('IQA_DB_PAWD')
+host = getenv('IQA_DB_HOST')
+port = int(getenv('IQA_DB_PORT'))
+db = getenv('IQA_DB_NAME')
 
 
 class TestUser(unittest.TestCase):
@@ -23,12 +32,22 @@ class TestUser(unittest.TestCase):
                          bio="A person seeking to be a software engineer"
         )
         cls.user.save()
+        cls.db_connection = MySQLdb.connect(
+                    user=user,
+                    passwd=pawd,
+                    host=host,
+                    port=port,
+                    db=db
+        )
+        cls.cursor = cls.db_connection.cursor()
 
     @classmethod
     def tearDownClass(cls):
         """Execute for class clean up
         """
-        del cls.user
+        cls.user.delete()
+        cls.cursor.close()
+        cls.db_connection.close()
 
     def test_attributes(self):
         """Test normal initialization
