@@ -66,7 +66,7 @@ class Storage():
         """
         if cls not in Storage.classes:
             return None
-        return Storage.__session.query(cls).all()
+        return Storage.__session.query(cls).order_by(cls.added_at.desc()).all()
 
     def get(self, cls, id):
         """Return the object belonging to "cls" with id "id"
