@@ -60,6 +60,8 @@ class BaseModel():
                 pass
             elif type(self.__dict__[k]) is InstrumentedList:
                 pass
+            elif k == "added_at" or k == "updated_at" or k == "dob":
+                dict_repr[k] = self.__dict__[k].isoformat()
             else:
                 dict_repr[k] = self.__dict__[k]
         return dict_repr
