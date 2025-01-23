@@ -13,7 +13,7 @@ class Quiz(BaseModel, Base):
     __tablename__ = 'quizzes'
     title = Column(String(100), nullable=False)
     description = Column(String(512), nullable=False)
-    times_taken = Column(Integer, nullable=False, default=0)
+    repeats = Column(Integer, nullable=False, default=0)
     likes_num = Column(Integer, nullable=False, default=0)
     duration = Column(Integer, nullable=False, default=5)
     image_path = Column(String(57), nullable=True, default=None)

@@ -115,7 +115,7 @@ class Storage():
                             "email"
                         ],
                 Quiz: [
-                            "times_taken",
+                            "repeats",
                             "likes_num",
                             "duration",
                             "difficulty",
