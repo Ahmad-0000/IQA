@@ -48,3 +48,8 @@ class User(BaseModel, Base):
                                                 secondary=quizzes_likes,
                                                 back_populates='fans_users'
     )
+    snapshots = relationship(
+            'Snapshot',
+            cascade='all, delete, delete-orphan',
+            back_populates='user'
+    )
