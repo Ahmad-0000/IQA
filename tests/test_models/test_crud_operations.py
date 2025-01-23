@@ -1,4 +1,6 @@
 """Test CRUD operations using a "User" class instance
+NOTE: "Reading" operation will not be tested here, it will
+be tested as an engine funcionality
 """
 import bcrypt
 import unittest
