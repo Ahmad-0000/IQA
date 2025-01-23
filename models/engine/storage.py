@@ -139,3 +139,49 @@ class Storage():
                 q = q.filter_by(**{k: v})
         result = q.all()
         return result
+
+    def get_categorized_quizzes(self, categories: list, attribute, _type, after) -> list:
+        """Get filtered quizzes for the main wrapper
+        """
+        result = []
+        per_category = 20 // len(categories)
+        rest = 20 % len(categories)
+        if after == 'initial':
+            for category in categories:
+                if _type == "asc":
+                    sub_result = Storage.__session.query(Quiz)\
+                                .order_by(Quiz.__dict__[order_attribute].asc())\
+                                .filter(Quiz.category == category)\
+                                .limit(per_category + rest)\
+                                .all()
+                else:
+                    sub_result = Storage.__session.query(Quiz)\
+                                .order_by(Quiz.__dict__[attribute].desc())\
+                                .filter(Quiz.category == category)\
+                                .limit(per_category + rest)\
+                                .all()
+                if len(sub_result) == (per_category + rest):
+                    rest = 0
+                else:
+                    rest += per_category - len(sub_result)
+                result.extend(sub_result)
+            return result
+        for category in categories:
+            if _type == "asc":
+                sub_result = Storage.__session.query(Quiz)\
+                            .filter(Quiz.__dict__[attribute] > after)\
+                            .filter(Quiz.category == category)\
+                            .limit(per_category + rest)\
+                            .all()
+            else:
+                sub_result = Storage.__session.query(Quiz)\
+                            .filter(Quiz.__dict__[attribute] < after)\
+                            .filter(Quiz.category == category)\
+                            .limit(per_category + rest)\
+                            .all()
+                if len(sub_result) == (per_category + rest):
+                    rest = 0
+                else:
+                    rest += per_category - len(sub_result)
+            result.extend(sub_result)
+        return result
