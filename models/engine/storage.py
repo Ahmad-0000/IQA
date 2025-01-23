@@ -103,7 +103,7 @@ class Storage():
         obj = Storage.__session.query(cls).filter_by(id=id).one_or_none()
         return obj
 
-    def get_filtered(self, cls, filters: dict):
+    def get_filtered(self, cls, filters: dict, limit=None):
         """Getting filtered data
         """
         allowed_filters = {
@@ -137,7 +137,10 @@ class Storage():
                 pass
             else:
                 q = q.filter_by(**{k: v})
-        result = q.all()
+        if not limit or limit < 0:
+            return q.all()
+        else:
+	    return q.all().limit(limit)
         return result
 
     def get_categorized_quizzes(self, categories: list, attribute, _type, after) -> list:
