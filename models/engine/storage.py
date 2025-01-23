@@ -67,7 +67,7 @@ class Storage():
         if cls not in Storage.classes:
             return None
         return Storage.__session.query(cls).all()
-        
+
     def get(self, cls, id):
         """Return the object belonging to "cls" with id "id"
         """
@@ -75,3 +75,40 @@ class Storage():
             return None
         obj = Storage.__session.query(cls).filter_by(id=id).one_or_none()
         return obj
+
+    def get_filtered(self, cls, filters: dict):
+        """Getting filtered data
+        """
+        allowed_filters = {
+                "Common": ["added_at", "updated_at"],
+                User: [
+                            "first_name",
+                            "middle_name",
+                            "last_name",
+                            "email"
+                        ],
+                Quiz: [
+                            "times_taken",
+                            "likes_num",
+                            "duration",
+                            "difficulty",
+                            "category_id",
+                            "user_id"
+                        ],
+                Question: ["quiz_id"],
+                Answer: ["is_true", "question_id"],
+                FeedBack: ["user_id", "quiz_id"],
+                Snapshot: ['user_id', 'quiz_id',
+                           'question_id', 'answer_id',
+                           'score_id', 'is_true']
+        }
+        if cls not in Storage.classes[:-1]:
+            return []
+        q = Storage.__session.query(cls)
+        for k, v in filters.items():
+            if k not in allowed_filters["Common"] and k not in allowed_filters[cls]:
+                pass
+            else:
+                q = q.filter_by(**{k: v})
+        result = q.all()
+        return result
