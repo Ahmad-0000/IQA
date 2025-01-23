@@ -1,4 +1,4 @@
-"""Test "User" class behavior
+"""Test CRUD operations using a "User" class instance
 """
 import bcrypt
 import unittest
@@ -19,14 +19,16 @@ class TestUser(unittest.TestCase):
                          dob=date(2005, 3, 5),
                          email="ahmad.new.m.v@gmail.com",
                          password="fakepassword",
-                         image_path="invalid",
-                         bio="A person seeking to be a software engineer")
+                         image_path="somepath",
+                         bio="A person seeking to be a software engineer"
+        )
+        cls.user.save()
 
     @classmethod
     def tearDownClass(cls):
         """Execute for class clean up
         """
-        del cls.user
+        cls.user.delete()
 
     def test_attributes(self):
         """Test normal initialization
@@ -42,3 +44,6 @@ class TestUser(unittest.TestCase):
                         bytes(self.__class__.user.password, 'utf-8')))
         self.assertEqual(self.__class__.user.image_path, expected_path)
         self.assertEqual(self.__class__.user.bio, expected_bio)
+        self.assertEqual(self.__class__.user.quizzes_made, 0)
+        self.assertEqual(self.__class__.user.quizzes_taken, 0)
+        self.assertEqual(self.__class__.user.liked_quizzes_num, 0)
