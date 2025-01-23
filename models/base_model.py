@@ -6,8 +6,10 @@ from uuid import uuid4
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 
+
 # Create Base class that some other models will inherit from
 Base = declarative_base()
+
 
 class BaseModel():
     """Main model that others will inherit from
@@ -40,7 +42,7 @@ class BaseModel():
                 self.password = self.password.decode('utf-8')
             if "image_path" in kwargs and kwargs['image_path']:
                 self.image_path = f'/data/iqa/profile_images/{self.id}'
-        
+ 
     def __str__(self):
         """Customize __str__ output
         """
@@ -58,14 +60,14 @@ class BaseModel():
         return dict_repr
 
     def save(self):
-        """Save the current object in the session
+        """Save the current object in the db session
         """
         from models import storage
         storage.add(self)
         storage.save()
 
     def delete(self):
-        """Remove the current object from the session
+        """Remove the current object from the db
         """
         from models import storage
         storage.delete(self)
