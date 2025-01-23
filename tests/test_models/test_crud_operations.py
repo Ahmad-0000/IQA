@@ -66,3 +66,25 @@ class TestUser(unittest.TestCase):
         self.assertEqual(self.user.liked_quizzes_num, 0)
         self.assertEqual(self.user.quizzes_made, 0)
         self.assertEqual(self.user.quizzes_taken, 0)
+
+    def test_db_creation(self):
+        """Test object creation in the db
+        """
+        self.cursor.execute('SELECT COUNT(*) FROM users;')
+        initial_rows_number = self.cursor.fetchone()[0]
+        self.db_connection.commit()
+        user = User(
+                         first_name="Ahmad",
+                         middle_name="Husain",
+                         last_name="Basheer",
+                         dob=date(2005, 3, 5),
+                         email="ahmadhusain5002@gmail.com",
+                         password="fakepassword",
+                         image_path="somepath",
+                         bio="A person seeking to be a software engineer"
+        )
+        user.save()
+        self.cursor.execute('SELECT COUNT(*) FROM users;')
+        new_rows_number = self.cursor.fetchone()[0]
+        self.db_connection.commit()
+        self.assertEqual(initial_rows_number + 1, new_rows_number)
