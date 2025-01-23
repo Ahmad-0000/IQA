@@ -1,5 +1,6 @@
 """Quiz model class
 """
+from datetime import datetime
 from sqlalchemy import Column, Integer, String, Enum, ForeignKey
 from sqlalchemy.orm import relationship, Mapped
 from models.base_model import Base, BaseModel
@@ -35,3 +36,17 @@ class Quiz(BaseModel, Base):
                                             secondary=quizzes_likes,
                                             back_populates='liked_quizzes'
     )
+
+    def to_a_cache_pool(self):
+        """Prepare a quiz to be stored in a cache pool
+        """
+        prepared_quiz = {}
+        prepared_quiz['general_details'] = self.to_dict()
+        prepared_quiz['general_details']['questions_num'] = len(self.questions)
+        prepared_quiz['general_details']['added_at'] = int(
+                                datetime.fromisoformat(
+                                    prepared_quiz['general_details']['added_at']
+                                ).timestamp()
+                            )
+        prepared_quiz['to_ongoing_session'] = self.to_ongoing_session()
+        return prepared_quiz
