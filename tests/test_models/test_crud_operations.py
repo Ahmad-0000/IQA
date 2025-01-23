@@ -88,3 +88,29 @@ class TestUser(unittest.TestCase):
         new_rows_number = self.cursor.fetchone()[0]
         self.db_connection.commit()
         self.assertEqual(initial_rows_number + 1, new_rows_number)
+
+    def test_db_update(self):
+        """Test object data update int the db
+        """
+    def test_db_creation(self):
+        """Test object creation in the db
+        """
+        user = User(
+                         first_name="Ahmad",
+                         middle_name="Husain",
+                         last_name="Basheer",
+                         dob=date(2005, 3, 5),
+                         email="ahmadhusain5002@gmail.com",
+                         password="fakepassword",
+                         image_path="somepath",
+                         bio="A person seeking to be a software engineer"
+        )
+        user.save()
+        self.cursor.execute(f'SELECT first_name FROM users WHERE id = "{user.id}"')
+        initial_first_name = self.cursor.fetchone()[0]
+        user.update(first_name='Mohammad')
+        self.db_connection.commit()
+        self.cursor.execute(f'SELECT first_name FROM users WHERE id = "{user.id}"')
+        new_first_name = self.cursor.fetchone()[0]
+        self.assertEqual(initial_first_name, "Ahmad")
+        self.assertEqual(new_first_name, "Mohammad")
