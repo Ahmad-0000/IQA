@@ -54,17 +54,17 @@ class TestUser(unittest.TestCase):
     def test_attributes(self):
         """Test normal initialization
         """
-        expected_path = f"/data/iqa/images/user/{self.__class__.user.id}"
+        expected_path = f"/data/iqa/images/user/{self.user.id}"
         expected_bio = "A person seeking to be a software engineer"
-        self.assertEqual(self.__class__.user.first_name, "Ahmad")
-        self.assertEqual(self.__class__.user.middle_name, "Husain")
-        self.assertEqual(self.__class__.user.last_name, "Basheer")
-        self.assertEqual(self.__class__.user.dob, date(2005, 3, 5))
-        self.assertEqual(self.__class__.user.email, "ahmad.new.m.v@gmail.com")
+        self.assertEqual(self.user.first_name, "Ahmad")
+        self.assertEqual(self.user.middle_name, "Husain")
+        self.assertEqual(self.user.last_name, "Basheer")
+        self.assertEqual(self.user.dob, date(2005, 3, 5))
+        self.assertEqual(self.user.email, "ahmad.new.m.v@gmail.com")
         self.assertTrue(bcrypt.checkpw(bytes('fakepassword', 'utf-8'),
-                        bytes(self.__class__.user.password, 'utf-8')))
-        self.assertEqual(self.__class__.user.image_path, expected_path)
-        self.assertEqual(self.__class__.user.bio, expected_bio)
+                        bytes(self.user.password, 'utf-8')))
+        self.assertEqual(self.user.image_path, expected_path)
+        self.assertEqual(self.user.bio, expected_bio)
         self.assertEqual(self.user.liked_quizzes_num, 0)
         self.assertEqual(self.user.quizzes_made, 0)
         self.assertEqual(self.user.quizzes_taken, 0)
