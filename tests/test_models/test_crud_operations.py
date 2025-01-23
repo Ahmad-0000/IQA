@@ -100,7 +100,7 @@ class TestUser(unittest.TestCase):
                          middle_name="Husain",
                          last_name="Basheer",
                          dob=date(2005, 3, 5),
-                         email="ahmadhusain5002@gmail.com",
+                         email="ahmadfruit311@gmail.com",
                          password="fakepassword",
                          image_path="somepath",
                          bio="A person seeking to be a software engineer"
