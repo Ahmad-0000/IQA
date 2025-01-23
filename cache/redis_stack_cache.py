@@ -403,6 +403,7 @@ class RedisStackCache():
         if not session:
             return 404
         quiz_id = session['quiz_id']
+        user_id = session['user_id']
         if int(datetime.utcnow().timestamp()) >= session['deadline'] or idx == -1:
             score = session['score']
             score = Score(score=score, user_id=user_id, quiz_id=quiz_id)
@@ -410,8 +411,8 @@ class RedisStackCache():
             snapshots = session['snapshots']
             snapshot_ids = register_snapshots(
                                                 score_id=score.id,
-                                                user_id=session['user_id'],
-                                                quiz_id=['quiz_id'],
+                                                user_id=user_id,
+                                                quiz_id=quiz_id,
                                                 snapshots=snapshots.items()
             )
             RedisStackCache.__client.json().delete('session_cookie')
