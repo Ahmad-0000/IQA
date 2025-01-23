@@ -16,6 +16,21 @@ class TestBaseModel(unittest.TestCase):
         """
         self.bm = BaseModel()
 
+    # New feature
+    def assertHasAttr(self, obj, attr):
+        """Test attribute presence
+        """
+        result = hasattr(obj, attr)
+        self.assertTrue(result)
+
+    # New feature
+    def assertAlmostEqualDatetimes(self, datetime1, datetime2):
+        """Compare datetime objects for approximate equality
+        """
+        datetime1 = int(datetime1.timestamp())
+        datetime2 = int(datetime2.timestamp())
+        self.assertLess(abs(datetime1 - datetime2), 3)
+
     def test_default_initialization(self):
         """Test "id", "added_at" and "updated_at" attributes presence
         """
@@ -56,3 +71,21 @@ class TestBaseModel(unittest.TestCase):
         expected_str = f'[BaseModel] ({self.bm.id}) TO_DICT'
         real_str = self.bm.__str__()
         self.assertEqual(real_str, expected_str)
+
+    @patch('models.storage.save')
+    def test_update_method(self, patched_save):
+        """Test the behavior of self.bm.update(**kwargs)
+        """
+        fake_added_at = datetime.utcnow()
+        new_data = {
+                    'id': '123456',
+                    'added_at': fake_added_at,
+                    'bouns_attribute': 'winner'
+        }
+        self.bm.update(**new_data)
+        updated_at = datetime.utcnow()
+        self.assertEqual(self.bm.id, '123456')
+        self.assertEqual(self.bm.added_at, fake_added_at)
+        self.assertHasAttr(self.bm, 'bouns_attribute')
+        self.assertEqual(self.bm.bouns_attribute, 'winner')
+        self.assertAlmostEqualDatetimes(self.bm.updated_at, updated_at)
