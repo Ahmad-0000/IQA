@@ -17,5 +17,4 @@ class Snapshot(BaseModel, Base):
 
     user = relationship('User', back_populates='snapshots')
     question = relationship('Question')
-    answer = relationship('Answer')
     score = relationship('Score', back_populates='snapshots')
