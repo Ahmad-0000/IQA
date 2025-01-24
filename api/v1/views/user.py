@@ -7,7 +7,6 @@ from flask import make_response, jsonify, abort, request
 from api.v1.views import app_views
 from models import storage
 from models.users import User
-from models.exc import DOBError
 
 
 @app_views.route("/users", methods=['GET'], strict_slashes=False)
@@ -58,8 +57,6 @@ def new_account():
         new_user.save()
     except DataError:
         abort(400, "Abide to data constraints")
-    except DOBError:
-        abort(400, "Users with age less than 10 years are not allowed")
     from api.v1.app import auth
     session_id = auth.create_session(new_user.id)
     res = make_response(jsonify(new_user.to_dict()), 201)
