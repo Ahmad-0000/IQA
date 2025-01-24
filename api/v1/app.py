@@ -1,16 +1,22 @@
 """API app
 """
 from os import getenv
-from flask import Flask, make_response, jsonify, request, abort
+from flask import (
+        Flask,
+        make_response,
+        jsonify,
+        request,
+        abort
+)
 from flask_cors import CORS
 from api.v1.views import app_views
 from models import storage
 from api.v1.auth.session_auth import SessionAuth
 
+
 app = Flask(__name__)
 app.register_blueprint(app_views, url_prefix="/api/v1")
 auth = SessionAuth()
-
 CORS(app, supports_credentials=True, origins="http://localhost:8080")
 
 @app.before_request
@@ -23,7 +29,7 @@ def handle_credentials():
             request.path,
             included_methods=["POST", "PUT", "DELETE"],
             execluded_pathes=[("POST", "/api/v1/login"), ("POST", "/api/v1/users")]
-            ):
+    ):
         if not auth.session_cookie(request):
             abort(401)
         if not request.current_user:
