@@ -4,12 +4,14 @@ import bcrypt
 from datetime import datetime
 from uuid import uuid4
 from sqlalchemy import Column, String, DateTime
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm.collections import InstrumentedList
 
 
-# Create Base class that some other models will inherit from
-Base = declarative_base()
+# Create Base class that all other models will inherit from
+class Base(DeclarativeBase):
+    """Base model class
+    """
 
 
 class BaseModel():
