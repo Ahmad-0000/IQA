@@ -66,6 +66,8 @@ class BaseModel():
                 dict_repr[k] = self.__dict__[k].isoformat()
             else:
                 dict_repr[k] = self.__dict__[k]
+        if self.__class__.__name__ == "Quiz":
+            dict_repr['questions number'] = len(self.questions)
         return dict_repr
 
     def save(self):
