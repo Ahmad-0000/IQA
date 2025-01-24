@@ -14,10 +14,8 @@ from models.exc import DOBError
 def show_all_users():
     """GET /users => Shows all users accounts
     """
-    users_accounts = storage.get_all(User)
-    return make_response(jsonify(
-            [user_account.to_dict() for user_account in users_accounts]),
-            200)
+    users = storage.get_all(User)
+    return jsonify([user.to_dict() for user in users]),
 
 @app_views.route("/users/<user_id>", methods=['GET'], strict_slashes=False)
 def show_user(user_id):
@@ -32,7 +30,7 @@ def show_user(user_id):
         user_account = storage.get(User, user_id)
     if not user_account:
         abort(404)
-    return make_response(jsonify(user_account.to_dict()), 200)
+    return jsonify(user_account.to_dict())
 
 
 @app_views.route("/users", methods=['POST'], strict_slashes=False)
@@ -90,7 +88,7 @@ def update_account():
         user.update(**to_update)
     except DataError:
         abort(400, "Abide to data constraints")
-    return make_response(jsonify(user.to_dict()), 200)
+    return jsonify(user.to_dict())
 
 @app_views.route("/users", methods=['DELETE'], strict_slashes=False)
 def delete_account():
