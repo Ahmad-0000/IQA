@@ -7,8 +7,6 @@ from sqlalchemy import Column, String, DateTime
 from sqlalchemy.exc import DataError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm.collections import InstrumentedList
-from models.exc import DOBError
-
 
 # Create Base class that some other models will inherit from
 Base = declarative_base()
