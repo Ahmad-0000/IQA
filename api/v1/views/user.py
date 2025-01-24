@@ -14,7 +14,7 @@ def show_all_users():
     """GET /users => Shows all users accounts
     """
     users = storage.get_all(User)
-    return jsonify([user.to_dict() for user in users]),
+    return jsonify([user.to_dict() for user in users])
 
 @app_views.route("/users/<user_id>", methods=['GET'], strict_slashes=False)
 def show_user(user_id):
