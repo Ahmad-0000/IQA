@@ -23,15 +23,9 @@ class User(BaseModel, Base):
     dob = Column(Date, nullable=False)
     email = Column(String(50), nullable=False, unique=True)
     password = Column(String(100), nullable=False)
-<<<<<<< HEAD
-    image_path = Column(String(57), nullable=True, default=None)
-    bio = Column(String(300), nullable=True)
-    likes = Column(Integer, nullable=True, default=0)
-=======
     image_path = Column(String(58), nullable=True, default=None)
     bio = Column(String(300), nullable=True)
     liked_quizzes_num = Column(Integer, nullable=True, default=0)
->>>>>>> storage
     quizzes_taken = Column(Integer, nullable=True, default=0)
     quizzes_made = Column(Integer, nullable=True, default=0)
 
@@ -53,11 +47,7 @@ class User(BaseModel, Base):
     liked_quizzes: Mapped[List['Quiz']] = relationship(
                                                 secondary=quizzes_likes,
                                                 back_populates='fans_users'
-<<<<<<< HEAD
-                                            )
-=======
     )
->>>>>>> storage
     snapshots = relationship(
             'Snapshot',
             cascade='all, delete, delete-orphan',
