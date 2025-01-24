@@ -38,25 +38,44 @@ def new_account():
     """
     if not request.is_json:
         abort(400, "Not a JSON")
-    required_data = [
-                "first_name", "middle_name", "last_name",
-                "dob", "email", "password"
-            ]
-    for data in required_data:
-        if data not in request.json:
-            abort(400, f"Missing {data}")
-    user_attributes = {k: v for k, v in request.json.items() if k in required_data}
-    if len(storage.get_filtered(User, {"email": request.json['email']})) > 0:
-        abort(409, f"User with email {request.json['email']} is present")
+    first_name = request.json.get('first_name')
+    middle_name = request.json.get('middle_name')
+    last_name = request.json.get('last_name')
+    dob = request.json.get('dob')
+    email = request.json.get('email')
+    password = request.json.get('password')
+    if not first_name:
+        abort(400, f"Missing first name")
+    if not middle_name:
+        abort(400, f"Missing middle name")
+    if not last_name:
+        abort(400, f"Missing last name")
+    if not dob:
+        abort(400, f"Missing date of birth")
     try:
-        user_attributes['dob'] = date.fromisoformat(user_attributes['dob'])
+        dob = date.fromisoformat(dob)
     except ValueError:
         abort(400, "Use YYYY-MM-DD format for date of birth")
-    new_user = User(**user_attributes)
+    if (date.today() - dob).days < 3650:
+        abort(400, "You need to be at least 10 years old")
+    if not email:
+        abort(400, f"Missing email")
+    if storage.get_filtered(User, {"email": email}):
+        abort(409, f"User with email {request.json['email']} is present")
+    if not password:
+        abort(400, f"Missing password")
+    new_user = User(
+                    first_name=first_name,
+                    middle_name=middle_name,
+                    last_name=last_name,
+                    dob=dob,
+                    email=email,
+                    password=password
+    )
     try:
         new_user.save()
     except DataError:
-        abort(400, "Abide to data constraints")
+        abort(400, f"Abide to data constraints")
     from api.v1.app import auth
     session_id = auth.create_session(new_user.id)
     res = make_response(jsonify(new_user.to_dict()), 201)
@@ -71,8 +90,7 @@ def update_account():
     """
     if not request.is_json:
         abort(400, "Not JSON")
-    user = request.current_user
-    allowed = ["first_name", "bio", "image", "password"]
+    allowed = ["first_name", "bio", "password"]
     to_update = {}
     for k, v in request.json.items():
         if k not in allowed:
@@ -80,12 +98,18 @@ def update_account():
         else:
             to_update.update({k: v})
     if not to_update:
-        abort(400, "Provide attribute names to update")
+        abort(400, "Provide at least one value to update")
+    same_data = 0
+    for k, v in to_update.items():
+        if request.current_user.__dict__[k] == v:
+            same_data += 1
+    if same_data == len(to_update):
+        abort(400, "Provide at least one different value")
     try:
-        user.update(**to_update)
+        request.current_user.update(**to_update)
     except DataError:
         abort(400, "Abide to data constraints")
-    return jsonify(user.to_dict())
+    return jsonify(request.current_user.to_dict())
 
 @app_views.route("/users", methods=['DELETE'], strict_slashes=False)
 def delete_account():
