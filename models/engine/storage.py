@@ -123,11 +123,11 @@ class Storage():
                             "user_id"
                         ],
                 Question: ["quiz_id"],
-                Answer: ["is_true", "question_id"],
+                Answer: ["status", "question_id"],
                 FeedBack: ["user_id", "quiz_id"],
                 Snapshot: ['user_id', 'quiz_id',
                            'question_id', 'answer_id',
-                           'score_id', 'is_true']
+                           'score_id', 'status']
         }
         if cls not in Storage.classes[:-1]:
             return []

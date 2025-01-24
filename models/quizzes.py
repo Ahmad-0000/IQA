@@ -73,7 +73,7 @@ class Quiz(BaseModel, Base):
                             'body': answer.body,
                         }
                 )
-                if answer.is_true:
+                if answer.status:
                     correct_answers.append(answer.id)
         prepared_quiz = {
                             "references": 1,
