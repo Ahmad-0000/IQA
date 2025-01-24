@@ -84,6 +84,20 @@ class Storage():
                         .order_by(cls.__dict__[attribute].desc())\
                         .limit(limit)\
                         .all()
+<<<<<<< HEAD
+        if attribute == "added_at":
+            if type(after) is not datetime:
+                try:
+                    after = datetime.fromisoformat(after)
+                except (ValueError, TypeError):
+                    return None # 400
+        else:
+            try:
+                after = int(after)
+            except ValueError:
+                return None # 400
+=======
+>>>>>>> storage
         if _type == "asc":
             return Storage.__session.query(cls)\
                     .filter(cls.__dict__[attribute] > after)\
@@ -103,7 +117,11 @@ class Storage():
         obj = Storage.__session.query(cls).filter_by(id=id).one_or_none()
         return obj
 
+<<<<<<< HEAD
+    def get_filtered(self, cls, filters: dict):
+=======
     def get_filtered(self, cls, filters: dict, limit=None):
+>>>>>>> storage
         """Getting filtered data
         """
         allowed_filters = {
@@ -115,7 +133,11 @@ class Storage():
                             "email"
                         ],
                 Quiz: [
+<<<<<<< HEAD
+                            "times_taken",
+=======
                             "repeats",
+>>>>>>> storage
                             "likes_num",
                             "duration",
                             "difficulty",
@@ -128,7 +150,11 @@ class Storage():
                 Snapshot: ['user_id', 'quiz_id',
                            'question_id', 'answer_id',
                            'score_id', 'is_true']
+<<<<<<< HEAD
+            }
+=======
         }
+>>>>>>> storage
         if cls not in Storage.classes[:-1]:
             return []
         q = Storage.__session.query(cls)
@@ -137,6 +163,29 @@ class Storage():
                 pass
             else:
                 q = q.filter_by(**{k: v})
+<<<<<<< HEAD
+        result = q.all()
+        return result
+
+    def get_quizzes_with_cats(self, cats: list, attribute, _type, after) -> list:
+        """Get filtered quizzes for the main wrapper
+        """
+        result = []
+        for cat in cats:
+            if type(cat) is not str:
+                cats.remove(cat)
+        if not cats:
+            return []
+        for_cat = 20 // len(cats)
+        rest = 20 % len(cats)
+        if after == 'initial':
+            for cat in cats:
+                if _type == "asc":
+                    sub_result = Storage.__session.query(Quiz)\
+                                .order_by(Quiz.__dict__[order_attribute].asc())\
+                                .filter(Quiz.category == cat)\
+                                .limit(for_cat + rest)\
+=======
         if not limit or limit < 0:
             return q.all()
         else:
@@ -156,10 +205,39 @@ class Storage():
                                 .order_by(Quiz.__dict__[attribute].asc())\
                                 .filter(Quiz.category == category)\
                                 .limit(per_category + rest)\
+>>>>>>> storage
                                 .all()
                 else:
                     sub_result = Storage.__session.query(Quiz)\
                                 .order_by(Quiz.__dict__[attribute].desc())\
+<<<<<<< HEAD
+                                .filter(Quiz.category == cat)\
+                                .limit(for_cat + rest)\
+                                .all()
+                if len(sub_result) == (for_cat + rest):
+                    rest = 0
+                else:
+                    rest += for_cat - len(sub_result)
+                result.extend(sub_result)
+            return result
+        if attribute == "added_at":
+            if type(after) is not datetime:
+                try:
+                    after = datetime.fromisoformat(after)
+                except (ValueError, TypeError):
+                    return None
+        else:
+            try:
+                after = int(after)
+            except ValueError:
+                return None
+        for cat in cats:
+            if _type == "asc":
+                sub_result = Storage.__session.query(Quiz)\
+                            .filter(Quiz.__dict__[attribute] > after)\
+                            .filter(Quiz.category == cat)\
+                            .limit(for_cat + rest)\
+=======
                                 .filter(Quiz.category == category)\
                                 .limit(per_category + rest)\
                                 .all()
@@ -175,10 +253,20 @@ class Storage():
                             .filter(Quiz.__dict__[attribute] > after)\
                             .filter(Quiz.category == category)\
                             .limit(per_category + rest)\
+>>>>>>> storage
                             .all()
             else:
                 sub_result = Storage.__session.query(Quiz)\
                             .filter(Quiz.__dict__[attribute] < after)\
+<<<<<<< HEAD
+                            .filter(Quiz.category == cat)\
+                            .limit(for_cat + rest)\
+                            .all()
+                if len(sub_result) == (for_cat + rest):
+                    rest = 0
+                else:
+                    rest += for_cat - len(sub_result)
+=======
                             .filter(Quiz.category == category)\
                             .limit(per_category + rest)\
                             .all()
@@ -186,5 +274,6 @@ class Storage():
                     rest = 0
                 else:
                     rest += per_category - len(sub_result)
+>>>>>>> storage
             result.extend(sub_result)
         return result

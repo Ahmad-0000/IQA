@@ -1,12 +1,12 @@
 """Contain BaseModel class
 """
 import bcrypt
-from datetime import datetime
+from datetime import datetime, date, timedelta
 from uuid import uuid4
 from sqlalchemy import Column, String, DateTime
+from sqlalchemy.exc import DataError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm.collections import InstrumentedList
-
 
 # Create Base class that some other models will inherit from
 Base = declarative_base()
@@ -70,6 +70,9 @@ class BaseModel():
         """Save the current object in the db session
         """
         from models import storage
+        if self.__class__.__name__ == "User":
+            if self.dob > (date.today() - timedelta(3650)):
+                raise DOBError()
         storage.add(self)
         storage.save()
 
