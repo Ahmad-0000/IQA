@@ -75,7 +75,7 @@ def new_account():
     try:
         new_user.save()
     except DataError:
-        abort(400, f"Abide to data constraints")
+        abort(400, "Abide to data constraints")
     from api.v1.app import auth
     session_id = auth.create_session(new_user.id)
     res = make_response(jsonify(new_user.to_dict()), 201)
