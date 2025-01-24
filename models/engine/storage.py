@@ -153,7 +153,7 @@ class Storage():
             for category in categories:
                 if _type == "asc":
                     sub_result = Storage.__session.query(Quiz)\
-                                .order_by(Quiz.__dict__[order_attribute].asc())\
+                                .order_by(Quiz.__dict__[attribute].asc())\
                                 .filter(Quiz.category == category)\
                                 .limit(per_category + rest)\
                                 .all()
