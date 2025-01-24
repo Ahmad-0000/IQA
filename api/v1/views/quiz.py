@@ -108,7 +108,7 @@ def get_quiz(quiz_id):
     quiz = storage.get(Quiz, quiz_id)
     if not quiz:
         abort(404)
-    return make_response(jsonify(quiz.to_dict()), 200)
+    return jsonify(quiz.to_dict())
 
 
 @app_views.route("/quizzes/<user_id>/liked", methods=['GET'], strict_slashes=False)
