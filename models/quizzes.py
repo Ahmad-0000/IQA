@@ -1,9 +1,6 @@
 """Quiz model class
 """
-<<<<<<< HEAD
-=======
 from datetime import datetime
->>>>>>> storage
 from sqlalchemy import Column, Integer, String, Enum, ForeignKey
 from sqlalchemy.orm import relationship, Mapped
 from models.base_model import Base, BaseModel
@@ -38,9 +35,6 @@ class Quiz(BaseModel, Base):
     fans_users: Mapped[List['User']] = relationship(
                                             secondary=quizzes_likes,
                                             back_populates='liked_quizzes'
-<<<<<<< HEAD
-                                        )
-=======
     )
 
     def to_a_cache_pool(self):
@@ -89,4 +83,3 @@ class Quiz(BaseModel, Base):
                             "correct_answers": correct_answers
                         }
         return prepared_quiz
->>>>>>> storage
