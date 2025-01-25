@@ -1,6 +1,8 @@
 """Quiz view
 """
 import json
+from os import getenv
+from uuid import uuid4
 from cache import cache_client
 from datetime import datetime
 from sqlalchemy.exc import DataError, IntegrityError
@@ -108,7 +110,7 @@ def get_quizzes():
     if not after:
         after = "initial"
     if not attribute or attribute not in ["added_at", "repeats"]:
-        order_attribute = "added_at"
+        attribute = "added_at"
     if not _type or _type not in ['asc', 'desc']:
         order_type = 'desc'
     if categories:
@@ -136,9 +138,9 @@ def get_quizzes():
     if docs and len(docs) != 20:
         last_doc = docs[-1]
         if attribute == 'added_at':
-            after = datetime.fromtimestamp(last_doc['added_t'])
+            after = datetime.fromtimestamp(last_doc['added_at'])
         else:
-            after = last_docs['repeats']
+            after = last_doc['repeats']
         rest_docs = storage.get_paged(Quiz, attribute, _type, after=after, limit=20 - len(docs))
         docs.extend(rest_docs)
     for doc in docs:
@@ -238,3 +240,54 @@ def delete_quiz(quiz_id):
         abort(403)
     quiz.delete()
     return make_response(jsonify({}), 204)
+
+@app_views.route("/quizzes/start/<quiz_id>", methods=['POST'], strict_slashes=False)
+def start_a_quiz(quiz_id):
+    """Start a quiz session
+    """
+    session_id = str(uuid4())
+    result = cache_client.start_a_quiz(quiz_id, request.current_user.id, session_id)
+    if result == 404:
+        abort(404)
+    res = jsonify({"status": "ok"})
+    cookie_name = getenv('IQA_QUIZ_SESSION_COOKIE')
+    res.set_cookie(cookie_name, result[0], expires=datetime.fromtimestamp(result[1]))
+    return res
+
+@app_views.route("/quizzes/next/<idx>", methods=['GET'], strict_slashes=False)
+def get_next_question(idx):
+    """Get the next question from the quiz session based on idx
+    """
+    cookie_name = getenv('IQA_QUIZ_SESSION_COOKIE')
+    session_cookie = request.cookies.get(cookie_name)
+    if type(idx) is not int:
+        try:
+            idx = int(idx)
+        except (ValueError, TypeError):
+            abort(400, "<index> is needed to be a number")
+    result = cache_client.get_next_question(session_cookie, idx)
+    if type(result) is tuple and result[0] == 404:
+        abort(404)
+    elif type(result) is tuple and result[0] == 201:
+        return make_response(jsonify(result[1]), 201)
+    return jsonify(result)
+
+@app_views.route("/quizzes/answer/<question_id>", methods=['POST'], strict_slashes=False)
+def answer_a_question(question_id):
+    """Answer a question in a quiz session
+    """
+    if not request.is_json:
+        abort(400, "Not JSON")
+    cookie_name = getenv('IQA_QUIZ_SESSION_COOKIE')
+    session_id = request.cookies.get(cookie_name)
+    if not session_id:
+        abort(404)
+    answer_id = request.json.get('answer_id')
+    if not answer_id:
+        abort(404)
+    result = cache_client.register_snapshots(session_id, question_id, answer_id) # cache_client.answer
+    if type(result) is int:
+        abort(result)
+    if type(result) is tuple:
+        abort(result[0], result[1])
+    return make_response(jsonify({"status": "ok"}), 201)
