@@ -28,11 +28,13 @@ myForm.addEventListener('submit', (event) => {
       credentials: 'include',
     }).then((res) => {
           if (res.ok) {
-            document.location = "/profile.html?user_id=me";
+            return res.json();
           } else {
             showErrorPage(res);
           }
-      })
+      }).then((data) => {
+          document.location = `/profile.html?user_id=${data.id}`;
+      });
   }
 });
 
