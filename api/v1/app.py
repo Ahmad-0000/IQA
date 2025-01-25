@@ -23,7 +23,6 @@ CORS(app, supports_credentials=True, origins="http://localhost:8080")
 def handle_credentials():
     """Handle authentication
     """
-    request.current_user = auth.current_user(request)
     if auth.require_auth(
             request.method,
             request.path,
@@ -32,6 +31,7 @@ def handle_credentials():
     ):
         if not auth.session_cookie(request):
             abort(401)
+        request.current_user = auth.current_user(request)
         if not request.current_user:
             abort(403)
 
