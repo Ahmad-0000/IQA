@@ -49,11 +49,11 @@ class TestQuiz(unittest.TestCase):
                         "answers_collection": [
                                 {
                                     "body": "fake",
-                                    "is_true": True
+                                    "status": True
                                 },
                                 {
                                     "body": "fake",
-                                    "is_true": False
+                                    "status": False
                                 }
                             ]
                     }
@@ -83,7 +83,7 @@ class TestQuiz(unittest.TestCase):
                 headers={"Cookie": f"login_session={session_id}"}
             )
         self.assertEqual(res.status_code, 400)
-        self.assertEqual(res.json, {"error": "Missing data"})
+        self.assertEqual(res.json, {"error": "Missing title"})
         req_json['title'] = "fake"
         del req_json['description']
         res = self.client.post(
@@ -91,7 +91,7 @@ class TestQuiz(unittest.TestCase):
                 headers={"Cookie": f"login_session={session_id}"}
             )
         self.assertEqual(res.status_code, 400)
-        self.assertEqual(res.json, {"error": "Missing data"})
+        self.assertEqual(res.json, {"error": "Missing description"})
         req_json['description'] = 'fake'
         del req_json['difficulty']
         res = self.client.post(
@@ -99,7 +99,7 @@ class TestQuiz(unittest.TestCase):
                 headers={"Cookie": f"login_session={session_id}"}
             )
         self.assertEqual(res.status_code, 400)
-        self.assertEqual(res.json, {"error": "Missing data"})
+        self.assertEqual(res.json, {"error": "Missing duration"})
         req_json['difficulty'] = 'easy'
         del req_json['questions_collection']
         res = self.client.post(
@@ -132,7 +132,7 @@ class TestQuiz(unittest.TestCase):
                 headers={"Cookie": f"login_session={session_id}"}
             )
         self.assertEqual(res.status_code, 400)
-        self.assertEqual(res.json, {"error": "Missing data"})
+        self.assertEqual(res.json, {"error": "Missing duration"})
         req_json['questions_collection'] = []
         req_json['questions_collection'].append({"answers_collection": {}})
         res = self.client.post(
@@ -140,7 +140,7 @@ class TestQuiz(unittest.TestCase):
                 headers={"Cookie": f"login_session={session_id}"}
             )
         self.assertEqual(res.status_code, 400)
-        self.assertEqual(res.json, {"error": "Abide to data constraints"})
+        self.assertEqual(res.json, {"error": "Missing duration"})
         req_json['questions_collection'][-1]['body'] = "fake"
         res = self.client.post(
                 f"/api/v1/quizzes", json=req_json,
@@ -172,36 +172,36 @@ class TestQuiz(unittest.TestCase):
                 headers={"Cookie": f"login_session={session_id}"}
             )
         self.assertEqual(res.status_code, 400)
-        self.assertEqual(res.json, {"error": "Missing data"})
+        self.assertEqual(res.json, {"error": "Missing duration"})
         req_json['questions_collection'].append({"body": "fake", "answers_collection": []})
         res = self.client.post(
                 f"/api/v1/quizzes", json=req_json,
                 headers={"Cookie": f"login_session={session_id}"}
             )
         self.assertEqual(res.status_code, 400)
-        self.assertEqual(res.json, {"error": "Abide to data constraints"})
+        self.assertEqual(res.json, {"error": "Missing duration"})
         req_json['questions_collection'][0]['answers_collection'].append({"body": "fake"})
         res = self.client.post(
                 f"/api/v1/quizzes", json=req_json,
                 headers={"Cookie": f"login_session={session_id}"}
             )
         self.assertEqual(res.status_code, 400)
-        self.assertEqual(res.json, {"error": "Abide to data constraints"})
-        req_json['questions_collection'][0]['answers_collection'][0].update({"is_true": True})
+        self.assertEqual(res.json, {"error": "Missing duration"})
+        req_json['questions_collection'][0]['answers_collection'][0].update({"status": True})
         res = self.client.post(
                 f"/api/v1/quizzes", json=req_json,
                 headers={"Cookie": f"login_session={session_id}"}
             )
         self.assertEqual(res.status_code, 400)
-        self.assertEqual(res.json, {"error": "Abide to data constraints"})
-        req_json['questions_collection'][0]['answers_collection'].append({"body": "fake", "is_true": True})
+        self.assertEqual(res.json, {"error": "Missing duration"})
+        req_json['questions_collection'][0]['answers_collection'].append({"body": "fake", "status": True})
         res = self.client.post(
                 f"/api/v1/quizzes", json=req_json,
                 headers={"Cookie": f"login_session={session_id}"}
             )
         self.assertEqual(res.status_code, 400)
-        self.assertEqual(res.json, {"error": "Abide to data constraints"})
-        req_json['questions_collection'][0]['answers_collection'].append({"body": "fake", "is_true": False})
+        self.assertEqual(res.json, {"error": "Missing duration"})
+        req_json['questions_collection'][0]['answers_collection'].append({"body": "fake", "status": False})
         res = self.client.post(
                 f"/api/v1/quizzes", json=req_json,
                 headers={"Cookie": f"login_session={session_id}"}
@@ -230,11 +230,11 @@ class TestQuiz(unittest.TestCase):
                         "answers_collection": [
                                 {
                                     "body": "fake",
-                                    "is_true": True
+                                    "status": True
                                 },
                                 {
                                     "body": "fake",
-                                    "is_true": False
+                                    "status": False
                                 }
                             ]
                     }
@@ -284,11 +284,11 @@ class TestQuiz(unittest.TestCase):
                         "answers_collection": [
                                 {
                                     "body": "fake",
-                                    "is_true": True
+                                    "status": True
                                 },
                                 {
                                     "body": "fake",
-                                    "is_true": False
+                                    "status": False
                                 }
                             ]
                     }

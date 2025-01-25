@@ -16,89 +16,104 @@ def create_quiz():
     """
     if not request.is_json:
         abort(400, "Not JSON")
-    user = request.current_user
     title = request.json.get('title')
     description = request.json.get('description')
     difficulty = request.json.get('difficulty')
-    questions = request.json.get('questions_collection')
-    if not title or not description or not difficulty or not questions:
-        abort(400, "Missing data")
-    if type(questions) is not list:
-        abort(400, "Abide to data constraints")
+    duration = request.json.get('duration')
+    category = request.json.get('category')
+    questions = request.json.get('questions')
+    for dataname, datavalue in {
+                                    "title": title,
+                                    "description": description,
+                                    "difficulty": difficulty,
+                                    "category": category,
+                                    "questions": questions
+    }.items():
+        if not datavalue:
+            abort(400, f"Missing {dataname}")
+    for data in [title, description, difficulty, category, questions]:
+        if type(data) is not str and data != questions:
+            abort(400, f"<{data}> field is required to be a string.")
+        elif data == questions and type(data) is not list:
+            abort(400, f"<questions> field is required to be a list.")
     if not questions:
         abort(400, "At least one question is required")
+    temp_questions = question[:]
+    for question in temp_questions:
+        if type(question) is not dict:
+            questions.remove(question)
+    if not questions:
+        abort(400, "Provide at least one question in a valid format")
+    temp_questions = questions[:]
+    for question in temp_questions:
+        if "body" not in question or "answers" not in question:
+            questions.remove(question)
+    if not questions:
+        abort(400, "Provide at least on question with complete data")
+    temp_questions = questions[:]
+    for question in temp_questions:
+        if type(question.get("body")) is not str or len(question["body"]) <= 0:
+            questions.remove(question)
+    if not questions:
+        abort(400, "Proivde at least one question with a valid body")
+    temp_questions = questions[:]
+    temp_questions = questions[:]
+    for question in temp_questions:
+        if type(question.get("answers")) is not list or len(question["answers"]) < 2:
+            questions.remove(question)
+        else:
+            temp_answers = question["answers"][:]
+            for answer in temp_answers:
+                if type(answer) is not dict:
+                    question['answers'].remove(answer)
+                elif type(answer.get("body")) is not str or len(answer["body"]) == 0 or len(answer["body"]) > 100:
+                    question['answers'].remove(answer)
+                elif type(answer.get('status')) is not bool:
+                    question['answers'].remove(answer)
+            if len(question['answers']) < 2:
+                questions.remove(question)
+            elif len(list(filter(lambda answer: answer.status, question['answers']))) != 1:
+                questions.remove(question)
+    if not questions:
+        abort(400, "Provide at least one question with a valid answers collection")
+    quiz = Quiz(
+                title=title,
+                description=description,
+                duration=duration,
+                difficulty=difficult,
+                category=category
+    )
     for question in questions:
-        try:
-            if "body" in question and "answers_collection" in question\
-                and type(question['body']) is str and question['body']\
-                and type(question['answers_collection']) is list and len(question['answers_collection']) > 1:
-                break
-        except TypeError:
-            abort(400, "Abide to data constraints")
-    else:
-        abort(400, "Abide to data constraints")
-    quiz = Quiz(user_id=user.id, **(request.json))
-    try:
-        quiz.save()
-    except (DataError, IntegrityError):
-        abort(400, "Abide to data constraints")
-    added_questions = []
-    for question in questions:
-        try:
-            new_question = Question(**question, quiz_id=quiz.id)
-            new_question.save()
-            saved_answers = []
-            for answer in question['answers_collection']:
-                if "body" not in answer or "is_true" not in answer:
-                    pass
-                else:
-                    answer_object = Answer(**answer, question_id=new_question.id)
-                    answer_object.save()
-                    saved_answers.append(answer_object)
-            if len(saved_answers) > 1:
-                first_answer_state = saved_answers[0].is_true
-                different_answers = list(filter(lambda x: x.is_true != first_answer_state, saved_answers))
-                if different_answers:
-                    new_question.answers.extend(saved_answers)
-                    new_question.save()
-                    added_questions.append(new_question)
-                else:
-                    new_question.delete()
-        except (DataError, IntegrityError):
-            storage.close()
-            pass
-    if not added_questions:
-        quiz.delete()
-        abort(400, "Abide to data constraints")
-    quiz.questions.extend(added_questions)
+        q = Question(body=question['body'], quiz_id=quiz.id)
+        for answer in question['answers']:
+            a = Answer(body=answer['body'], status=answer['status'], question_id=q.id)
+            q.answers.add(a)
     quiz.save()
-    quiz_dict = quiz.to_dict()
-    quiz_dict['questions'] = quiz_dict['questions_collection']
-    quiz_dict.pop("questions_collection")
     return make_response(jsonify(quiz_dict), 201)
 
 @app_views.route("/quizzes", methods=['GET'], strict_slashes=False)
 def get_quizzes():
     """GET /api/v1/quizzes => Returns the quizzes
     """
-    cats = request.args.get("cats")
-    order_attribute = request.args.get("order_attribute")
-    order_type = request.args.get("order_type")
+    categories = request.args.get("categories")
+    attribute = request.args.get("attribute")
+    _type = request.args.get("type")
     after = request.args.get("after")
     if not after:
         after = "initial"
-    if not order_attribute or order_attribute not in ["added_at", "times_taken"]:
+    if not attribute or attribute not in ["added_at", "times_taken"]:
         order_attribute = "added_at"
-    if not order_type or order_type not in ['asc', 'desc']:
+    if not _type or _type not in ['asc', 'desc']:
         order_type = 'desc'
-    if cats:
-        result = storage.get_quizzes_with_cats(cats.split(','), order_attribute, order_type, after)
-        if result is None:
-            abort(400, "Abide to data constraints")
+    if categories:
+        result = storage.get_categorized_quizzes(
+                                                    categories.split(','),
+                                                    attribute,
+                                                    _type,
+                                                    after
+        )
         return jsonify([r.to_dict() for r in result])
-    result = storage.get_paged(Quiz, order_attribute, order_type, after)
-    if result is None:
-        abort(400, "Abide to data constraints")
+    result = storage.get_paged(Quiz, attribute, _type, after)
     return make_response(jsonify([r.to_dict() for r in result]), 200)
 
 @app_views.route("/quizzes/<quiz_id>", methods=['GET'], strict_slashes=False)
@@ -108,7 +123,7 @@ def get_quiz(quiz_id):
     quiz = storage.get(Quiz, quiz_id)
     if not quiz:
         abort(404)
-    return make_response(jsonify(quiz.to_dict()), 200)
+    return jsonify(quiz.to_dict())
 
 
 @app_views.route("/quizzes/<user_id>/liked", methods=['GET'], strict_slashes=False)
@@ -123,7 +138,6 @@ def get_users_liked_quizzes(user_id):
     if not user:
         abort(404)
     return jsonify([quiz.to_dict() for quiz in user.liked_quizzes])
-
 
 @app_views.route("/quizzes/<user_id>/taken", methods=['GET'], strict_slashes=False)
 def get_users_taken_quizzes(user_id):
@@ -168,8 +182,8 @@ def update_a_quiz(quiz_id):
     if not quiz:
         abort(404)
     if quiz.user_id != user.id:
-        abort(401)
-    allowed = ['title', 'description', 'duration', 'category_id', 'image_path', 'difficulty']
+        abort(403)
+    allowed = ['title', 'description', 'category']
     updated = 0
     filtered_attributes = {}
     for k, v in request.json.items():

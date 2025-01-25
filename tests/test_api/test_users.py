@@ -5,9 +5,11 @@ from api.v1.app import app
 from models import storage
 from models.users import User
 from uuid import uuid4
-
-
-unittest.TestLoader.sortTestMethodUsing = None
+from parameterized import parameterized
+from unittest.mock import patch
+from tests.test_api.fixtures import TEST_FIXTURE
+from sqlalchemy.exc import DataError
+from api.v1.auth.session_auth import SessionAuth
 
 
 class TestUser(unittest.TestCase):
@@ -32,30 +34,26 @@ class TestUser(unittest.TestCase):
         """
         error_404 = self.client.get("/none");
         self.assertEqual(error_404.status_code, 404)
-    
-    def test_new_user(self):
+        
+    @parameterized.expand(TEST_FIXTURE['POST'])
+    @patch.object(SessionAuth, 'create_session', return_value="session")
+    @patch.object(User, 'save')
+    @patch.object(User, 'to_dict')
+    def test_new_user(self, f_name, m_name, l_name, dob, email, pawd, json_res, status, patched_to_dict, patched_save, patched_session):
         """Test "POST /api/v1/users"
         """
+        patched_to_dict.return_value = json_res
+        patched_save.side_effect = [True, True, True, DataError, True]
         res = self.client.post("/api/v1/users", json={
-                "first_name": "ahmad",
-                "middle_name": "husain",
-                "last_name": "basheer",
-                "dob": "2005-03-05",
-                "email": f"{str(uuid4())}@fake.fake",
-                "password": "fakepass"
-            });
-        self.session_id = res.headers['Set-Cookie'].split(';')[0].split("=")[1]
-        self.assertEqual(res.status_code, 201)
-        user_email = res.json['email']
-        res = self.client.post("/api/v1/users", json={
-                "first_name": "ahmad",
-                "middle_name": "husain",
-                "last_name": "basheer",
-                "dob": "2005-03-05",
-                "email": user_email,
-                "password": "fakepass"
-            });
-        self.assertEqual(res.status_code, 409)
+                "first_name": f_name,
+                "middle_name": m_name,
+                "last_name": l_name,
+                "dob": dob,
+                "email": email,
+                "password": pawd
+        });
+        self.assertEqual(res.status_code, status)
+        self.assertEqual(res.json, json_res)
     
     def test_users(self):
         """Test "GET /api/v1/users"

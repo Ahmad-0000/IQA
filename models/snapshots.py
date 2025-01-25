@@ -10,13 +10,11 @@ class Snapshot(BaseModel, Base):
     """
     __tablename__ = "snapshots"
     user_id = Column(String(36), ForeignKey('users.id'), nullable=False)
-    quiz_id = Column(String(36), ForeignKey('quizzes.id'), nullable=False)
     score_id = Column(String(36), ForeignKey('scores.id'), nullable=False)
     answer_id = Column(String(36), nullable=True)
     question_id = Column(String(36), ForeignKey('questions.id'), nullable=False)
-    is_true = Column(Boolean, nullable=False)
+    status = Column(Boolean, nullable=False)
 
     user = relationship('User', back_populates='snapshots')
-    quiz = relationship('Quiz')
     question = relationship('Question')
-    score = relationship('Score')
+    score = relationship('Score', back_populates='snapshots')

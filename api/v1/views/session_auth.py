@@ -47,5 +47,8 @@ def logout():
     from api.v1.app import auth
     status = auth.destroy_session(request)
     if not status:
-        abort(404)
-    return jsonify({})
+        abort(400, "login first")
+    res = jsonify({})
+    cookie_name = getenv("SESSION_COOKIE_NAME")
+    res.set_cookie(cookie_name, "session_cookie", expires=datetime.utcnow() - timedelta(1))
+    return res 

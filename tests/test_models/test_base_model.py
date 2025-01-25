@@ -2,7 +2,8 @@
 Test BaseModel class and instances behavior
 """
 import unittest
-from datetime import datetime, date
+from unittest.mock import patch
+from datetime import datetime
 from uuid import uuid4
 from models.base_model import BaseModel
 
@@ -15,10 +16,20 @@ class TestBaseModel(unittest.TestCase):
         """
         self.bm = BaseModel()
 
-    def tearDown(self):
-        """Destroy previously initialized BaseModel
+    # New feature
+    def assertHasAttr(self, obj, attr):
+        """Test attribute presence
         """
-        del self.bm
+        result = hasattr(obj, attr)
+        self.assertTrue(result)
+
+    # New feature
+    def assertAlmostEqualDatetimes(self, datetime1, datetime2):
+        """Compare datetime objects for approximate equality
+        """
+        datetime1 = int(datetime1.timestamp())
+        datetime2 = int(datetime2.timestamp())
+        self.assertLess(abs(datetime1 - datetime2), 3)
 
     def test_default_initialization(self):
         """Test "id", "added_at" and "updated_at" attributes presence
@@ -38,7 +49,7 @@ class TestBaseModel(unittest.TestCase):
             'id': id,
             'added_at': added_at,
             'updated_at': updated_at
-            })
+        })
         self.assertEqual(self.bm.id, id)
         self.assertEqual(self.bm.added_at, added_at)
         self.assertEqual(self.bm.updated_at, updated_at)
@@ -50,24 +61,31 @@ class TestBaseModel(unittest.TestCase):
                 'id': self.bm.id,
                 'added_at': self.bm.added_at.isoformat(),
                 'updated_at': self.bm.updated_at.isoformat()
-            }
+        }
         self.assertEqual(self.bm.to_dict(), expected_dict)
 
-    def test_update_method(self):
-        """Test update method
+    @patch('models.base_model.BaseModel.to_dict', return_value='TO_DICT')
+    def test_str_representation(self, patched_to_dict):
+        """Test __str__ method return value
         """
-        from models.users import User
-        user = User(
-                        first_name="Unknown",
-                        middle_name="Unknown",
-                        last_name="Unknown",
-                        dob=date(2005, 3, 5),
-                        email=f"{str(uuid4())}@fake.fake",
-                        password="fake"
-                )
-        original_updated_at = user.updated_at
-        user.update(first_name="Ahmad")
-        user.save()
-        new_updated_at = user.updated_at
-        self.assertEqual(user.first_name, "Ahmad")
-        self.assertGreater(new_updated_at, original_updated_at)
+        expected_str = f'[BaseModel] ({self.bm.id}) TO_DICT'
+        real_str = self.bm.__str__()
+        self.assertEqual(real_str, expected_str)
+
+    @patch('models.storage.save')
+    def test_update_method(self, patched_save):
+        """Test the behavior of self.bm.update(**kwargs)
+        """
+        fake_added_at = datetime.utcnow()
+        new_data = {
+                    'id': '123456',
+                    'added_at': fake_added_at,
+                    'bouns_attribute': 'winner'
+        }
+        self.bm.update(**new_data)
+        updated_at = datetime.utcnow()
+        self.assertEqual(self.bm.id, '123456')
+        self.assertEqual(self.bm.added_at, fake_added_at)
+        self.assertHasAttr(self.bm, 'bouns_attribute')
+        self.assertEqual(self.bm.bouns_attribute, 'winner')
+        self.assertAlmostEqualDatetimes(self.bm.updated_at, updated_at)
