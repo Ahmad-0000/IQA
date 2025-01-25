@@ -66,13 +66,16 @@ class RedisStackCache():
             RedisStackCache.__client.ft(index_name).dropindex()
         except:
             pass
-        RedisStackCache.__client.ft(index_name).create_index(
-                schema,
-                definition=IndexDefinition(
-                    index_type=IndexType.JSON,
-                    prefix=['newest:quiz:']
-                )
-        )
+        try:
+            RedisStackCache.__client.ft(index_name).create_index(
+                    schema,
+                    definition=IndexDefinition(
+                        index_type=IndexType.JSON,
+                        prefix=['newest:quiz:']
+                    )
+            )
+        except:
+            pass
         index_name = "oldest"
         schema = (
             NumericField(
@@ -85,13 +88,16 @@ class RedisStackCache():
             RedisStackCache.__client.ft(index_name).dropindex()
         except:
             pass
-        RedisStackCache.__client.ft(index_name).create_index(
-            schema,
-            definition=IndexDefinition(
-                index_type=IndexType.JSON,
-                prefix=["oldest:quiz:"]
+        try:
+            RedisStackCache.__client.ft(index_name).create_index(
+                schema,
+                definition=IndexDefinition(
+                    index_type=IndexType.JSON,
+                    prefix=["oldest:quiz:"]
+                )
             )
-        )
+        except:
+            pass
         index_name = "popular"
         schema = (
             NumericField(
@@ -103,14 +109,17 @@ class RedisStackCache():
         try:
             RedisStackCache.__client.ft(index_name).dropindex()
         except:
-            pass 
-        RedisStackCache.__client.ft(index_name).create_index(
-            schema,
-            definition=IndexDefinition(
-                index_type=IndexType.JSON,
-                prefix=["popular:quiz:"]
+            pass
+        try:
+            RedisStackCache.__client.ft(index_name).create_index(
+                schema,
+                definition=IndexDefinition(
+                    index_type=IndexType.JSON,
+                    prefix=["popular:quiz:"]
+                )
             )
-        )
+        except:
+            pass
 
     def populate_quizzes_pool(self, _type):
         """Populate the recent or oldest quizzes pool with
