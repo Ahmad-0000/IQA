@@ -19,6 +19,8 @@ class SessionAuth():
         if method in included_methods:
             if (method, path) not in execluded_pathes:
                 return True
+        if path.startswith('/api/v1/quzzies/next/'):
+            return True
         return False
 
     def session_cookie(self, request):
