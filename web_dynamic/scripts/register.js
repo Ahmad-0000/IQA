@@ -1,6 +1,8 @@
 // Handle registeration
 
 const errorPage = document.querySelector("#error");
+const errorCode = document.querySelector("#error h1 span");
+const errorMessage = document.querySelector("#error p:first-of-type");
 const fName = document.querySelector("#f-name")
 const mName = document.querySelector("#m-name")
 const lName = document.querySelector("#l-name")
@@ -38,12 +40,10 @@ myForm.addEventListener('submit', (event) => {
   }
 });
 
-async function showErrorPage(response) {
+async function showErrorPage(res) {
   // Show the error page
-  const errorCode = document.querySelector("#error h1 span");
-  const errorMessage = document.querySelector("#error p:first-of-type");
   errorPage.style.display = "flex";
-  const data = await response.json();
-  errorCode.textContent = data.status;
-  errorMessage.textContent = data.body;
+  const data = await res.json();
+  errorCode.textContent = res.status;
+  errorMessage.textContent = data;
 }
