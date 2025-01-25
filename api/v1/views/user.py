@@ -73,6 +73,7 @@ def new_account():
     try:
         new_user.save()
     except DataError:
+        storage.rollback()
         abort(400, "Abide to data constraints")
     from api.v1.app import auth
     res = make_response(jsonify(new_user.to_dict()), 201)
