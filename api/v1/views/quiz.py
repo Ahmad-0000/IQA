@@ -1,5 +1,8 @@
 """Quiz view
 """
+import json
+from cache import cache_client
+from datetime import datetime
 from sqlalchemy.exc import DataError, IntegrityError
 from flask import make_response, jsonify, abort, request
 from api.v1.views import app_views
@@ -104,7 +107,7 @@ def get_quizzes():
     after = request.args.get("after")
     if not after:
         after = "initial"
-    if not attribute or attribute not in ["added_at", "times_taken"]:
+    if not attribute or attribute not in ["added_at", "repeats"]:
         order_attribute = "added_at"
     if not _type or _type not in ['asc', 'desc']:
         order_type = 'desc'
@@ -115,9 +118,33 @@ def get_quizzes():
                                                     _type,
                                                     after
         )
-        return jsonify([r.to_dict() for r in result])
-    result = storage.get_paged(Quiz, attribute, _type, after)
-    return make_response(jsonify([r.to_dict() for r in result]), 200)
+        return jsonify([quiz.to_dict() for quiz in result])
+    if not cache_client.get_pool_size('newest'):
+        cache_client.populate_quizzes_pool('newest')
+        cache_client.populate_quizzes_pool('oldest')
+        cache_client.populate_popular_pool()
+    if attribute == 'added_at':
+        if _type == 'desc':
+            result = cache_client.get_paged_newest(after, 20)
+        else:
+            result = cache_client.get_paged_oldest(after, 20)
+    else:
+        result = cache_client.get_paged_popular(after, 20)
+    docs = []
+    for doc in result.docs:
+        docs.append(json.loads(doc.json)['general_details'])
+    if docs and len(docs) != 20:
+        last_doc = docs[-1]
+        if attribute == 'added_at':
+            after = datetime.fromtimestamp(last_doc['added_t'])
+        else:
+            after = last_docs['repeats']
+        rest_docs = storage.get_paged(Quiz, attribute, _type, after=after, limit=20 - len(docs))
+        docs.extend(rest_docs)
+    for doc in docs:
+        if type(doc) is dict:
+            doc['added_at'] = datetime.fromtimestamp(doc['added_at']).isoformat()
+    return make_response(jsonify([quiz.to_dict() if type(quiz) is Quiz else quiz for quiz in docs]), 200)
 
 @app_views.route("/quizzes/<quiz_id>", methods=['GET'], strict_slashes=False)
 def get_quiz(quiz_id):
