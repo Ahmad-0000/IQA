@@ -35,7 +35,11 @@ def create_quiz():
         if type(data) is not str and data != questions:
             abort(400, f"<{data}> field is required to be a string.")
         elif data == questions and type(data) is not list:
-            abort(400, f"<questions> field is required to be a list.")
+            abort(400, "<questions> field is required to be a list.")
+    if duration and type(duration) != int:
+        abort(400, "<duration> field is required to be an integer.")
+    elif duration <= 0 or duration > 30:
+        abort(400, "<duration> is required to be > 0 and <= 30")
     if not questions:
         abort(400, "At least one question is required")
     temp_questions = question[:]
@@ -52,11 +56,10 @@ def create_quiz():
         abort(400, "Provide at least on question with complete data")
     temp_questions = questions[:]
     for question in temp_questions:
-        if type(question.get("body")) is not str or len(question["body"]) <= 0:
+        if type(question.get("body")) is not str or len(question["body"]) == 0:
             questions.remove(question)
     if not questions:
         abort(400, "Proivde at least one question with a valid body")
-    temp_questions = questions[:]
     temp_questions = questions[:]
     for question in temp_questions:
         if type(question.get("answers")) is not list or len(question["answers"]) < 2:
@@ -88,7 +91,7 @@ def create_quiz():
         for answer in question['answers']:
             a = Answer(body=answer['body'], status=answer['status'], question_id=q.id)
             q.answers.add(a)
-    quiz.save()
+    quiz.save() # the cascade occurs
     return make_response(jsonify(quiz_dict), 201)
 
 @app_views.route("/quizzes", methods=['GET'], strict_slashes=False)
