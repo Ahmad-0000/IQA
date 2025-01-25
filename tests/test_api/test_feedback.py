@@ -38,11 +38,11 @@ class TestAnswer(unittest.TestCase):
                         "answers_collection": [
                                 {
                                     "body": "fake",
-                                    "is_true": True
+                                    "status": True
                                 },
                                 {
                                     "body": "fake",
-                                    "is_true": False
+                                    "status": False
                                 }
                             ]
                     }
