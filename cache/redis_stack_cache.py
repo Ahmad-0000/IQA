@@ -344,6 +344,10 @@ class RedisStackCache():
             quiz = storage.get(Quiz, quiz_id)
         if not quiz:
             return 404
+        if type(quiz) is Quiz and quiz.user_id == user_id:
+            return 400
+        elif type(quiz) is dict and quiz['general_details']['user_id'] == user_id:
+            return 400
         if type(quiz) is dict:
             deadline =  int(
                             (
@@ -373,9 +377,9 @@ class RedisStackCache():
         }
         session_cookie = session_id + ':' + quiz_id 
         RedisStackCache.__client.json().set(session_cookie, "$", session)
-        return session_cookie
+        return (session_cookie, deadline)
 
-    def register_a_snapshot(self, session_cookie: str, question_id: str, answer_id: str):
+    def answer(self, session_cookie: str, question_id: str, answer_id: str):
         """Register a snapshot, which is a data about the answer
         a user choose for a particular question
         """
@@ -399,7 +403,7 @@ class RedisStackCache():
             return 409
         if RedisStackCache.__client.json().arrindex(f'ongoing:{quiz_id}', "$.correct_answers", answer_id)[0] != -1:
             status = True
-            questions_num = RedisStackCache.__client.json().get(f'ongoing:{quiz_id}', '$.questions_num')[0]
+            questions_num = RedisStackCache.__client.json().get(f'ongoing:{quiz_id}', '$.questions number')[0]
             RedisStackCache.__client.json().numincrby(session_cookie, "$.score", 100 / questions_num)
         else:
             status = False
@@ -434,4 +438,4 @@ class RedisStackCache():
         try:
             return ongoing_quiz['questions'][idx]
         except IndexError:
-            return (404, ongoing_quiz['questions_num'])
+            return (404, ongoing_quiz['questions number'])
