@@ -13,7 +13,15 @@ from models.users import User
 def show_all_users():
     """GET /users => Shows all users accounts
     """
-    users = storage.get_all(User)
+    _type = request.args.get('type')
+    after = request.args.get('after')
+    if not _type or _type not in ['asc', 'desc']:
+        _type = 'desc'
+    try:
+        after = datetime.fromisoformat(after)
+    except (TypeError, ValueError):
+        after = 'initial'
+    users = storage.get_paged(User, 'added_at', _type, after)
     return jsonify([user.to_dict() for user in users])
 
 @app_views.route("/users/<user_id>", methods=['GET'], strict_slashes=False)
@@ -24,12 +32,12 @@ def show_user(user_id):
     """
     current_user = request.__dict__.get('current_user')
     if user_id == 'me' and current_user:
-        user_account = storage.get(User, current_user.id)
+        return jsonify(current_user.to_dict())
     else:
-        user_account = storage.get(User, user_id)
-    if not user_account:
+        user = storage.get(User, user_id)
+    if not user:
         abort(404)
-    return jsonify(user_account.to_dict())
+    return jsonify(user.to_dict())
 
 
 @app_views.route("/users", methods=['POST'], strict_slashes=False)
@@ -44,26 +52,16 @@ def new_account():
     dob = request.json.get('dob')
     email = request.json.get('email')
     password = request.json.get('password')
-    if not first_name:
-        abort(400, f"Missing first name")
-    if not middle_name:
-        abort(400, f"Missing middle name")
-    if not last_name:
-        abort(400, f"Missing last name")
-    if not dob:
-        abort(400, f"Missing date of birth")
+    if not first_name or not middle_name or not last_name or not dob or not email or not password:
+        abort(400, "Missing data")
     try:
         dob = date.fromisoformat(dob)
     except ValueError:
         abort(400, "Use YYYY-MM-DD format for date of birth")
     if (date.today() - dob).days < 3650:
         abort(400, "You need to be at least 10 years old")
-    if not email:
-        abort(400, f"Missing email")
     if storage.get_filtered(User, {"email": email}):
         abort(409, f"User with email {request.json['email']} is present")
-    if not password:
-        abort(400, f"Missing password")
     new_user = User(
                     first_name=first_name,
                     middle_name=middle_name,
@@ -77,10 +75,10 @@ def new_account():
     except DataError:
         abort(400, "Abide to data constraints")
     from api.v1.app import auth
-    session_id = auth.create_session(new_user.id)
     res = make_response(jsonify(new_user.to_dict()), 201)
+    session_id = auth.create_session(new_user.id)
     cookie_name = getenv("SESSION_COOKIE_NAME")
-    res.set_cookie(cookie_name, session_id, expires=datetime.utcnow() + timedelta(10))
+    res.set_cookie(cookie_name, session_id, expires=datetime.utcnow() + timedelta(10)) # Change it to None
     return res
 
 
@@ -96,7 +94,7 @@ def update_account():
         if k not in allowed:
             pass
         else:
-            to_update.update({k: v})
+            to_update[k] = v
     if not to_update:
         abort(400, "Provide at least one value to update")
     same_data = 0
