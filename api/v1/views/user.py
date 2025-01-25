@@ -61,7 +61,7 @@ def new_account():
     if (date.today() - dob).days < 3650:
         abort(400, "You need to be at least 10 years old")
     if storage.get_filtered(User, {"email": email}):
-        abort(409, f"User with email {request.json['email']} is present")
+        return make_response(jsonify(f"User with email {request.json['email']} is present"), 409)
     new_user = User(
                     first_name=first_name,
                     middle_name=middle_name,
