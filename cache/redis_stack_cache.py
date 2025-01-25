@@ -84,7 +84,7 @@ class RedisStackCache():
         try:
             RedisStackCache.__client.ft(index_name).dropindex()
         except:
-            pass 
+            pass
         RedisStackCache.__client.ft(index_name).create_index(
             schema,
             definition=IndexDefinition(
@@ -95,7 +95,7 @@ class RedisStackCache():
         index_name = "popular"
         schema = (
             NumericField(
-                '$.general_details.times_taken',
+                '$.general_details.repeats',
                 as_name='repeats',
                 sortable=True
             )
@@ -123,7 +123,7 @@ class RedisStackCache():
             order = "desc"
         else:
             order = "asc"
-        if RedisStackCache.__client.get(f'{_type}_pool_size') is not None:
+        if RedisStackCache.__client.get(f'{_type}_pool_size'):
             return RedisStackCache._pool_size
         # Get the quizzes
         quizzes = storage.get_paged(Quiz, "added_at", order, "initial", RedisStackCache._pool_size)
@@ -155,10 +155,10 @@ class RedisStackCache():
         """Populate the popular quizzes pool
         """
         added = 0
-        if RedisStackCache.__client.get(f'popular_pool_size') is not None:
+        if RedisStackCache.__client.get(f'popular_pool_size'):
             return RedisStackCache._pool_size
         # Get the quizzes
-        quizzes = storage.get_paged(Quiz, "times_taken", "desc", "initial", RedisStackCache._pool_size)
+        quizzes = storage.get_paged(Quiz, "repeats", "desc", "initial", RedisStackCache._pool_size)
         # Put them in an appropriate JSON format
         prepared_quizzes = [quiz.to_a_cache_pool() for quiz in quizzes]
         # store the quizzes
@@ -269,9 +269,9 @@ class RedisStackCache():
             last_quiz = json.loads(last_quiz)
             alternate = storage.get_paged(
                                             Quiz,
-                                            "times_taken",
+                                            "repeats",
                                             "desc",
-                                            last_quiz['general_details']['times_taken'],
+                                            last_quiz['general_details']['repeats'],
                                             1
             )
             if alternate:
