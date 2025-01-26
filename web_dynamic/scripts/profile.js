@@ -104,7 +104,7 @@ updateForm.addEventListener('submit', function (event) {
 // Hide error page
 errorPage.children[0].addEventListener('click', () => {
     errorPage.style.display = "none";
-  })
+})
 
 fetch(`http://localhost:5001/api/v1/uploaded_quizzes?user_id=${userId}`, {
     method: 'GET'
@@ -128,3 +128,21 @@ fetch(`http://localhost:5001/api/v1/uploaded_quizzes?user_id=${userId}`, {
         `;
     }
 }, (error) => {});
+
+// Handle logout + delete account
+const logoutBtn = document.querySelector("#logout");
+const deleteBtn = document.querySelector("#delete-account");
+
+logoutBtn.addEventListener('click', function () {
+    fetch("http://localhost:5001/api/v1/logout", {
+        method: 'DELETE',
+        credentials: 'include'
+    }).then(res => {
+        if (res.ok) {
+            window.location = '/index.html';
+        } else {
+            showErrorPage(res);
+            throw new Error();
+        }
+    }).catch((error) => {});
+});
