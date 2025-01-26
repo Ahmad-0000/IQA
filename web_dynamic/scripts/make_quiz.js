@@ -86,7 +86,7 @@ myForm.addEventListener('submit', (event) => {
             const questionSummary = {body: '', answers: []};
             questionSummary.body = question.firstElementChild.firstElementChild.value;
             for (const answer of question.lastElementChild.children) {
-                questionSummary.answers.unshift({"body": answer.lastElementChild.value, "is_true": answer.firstElementChild.checked});
+                questionSummary.answers.unshift({"body": answer.lastElementChild.value, "status": answer.firstElementChild.checked});
             }
             requestData.questions.unshift(questionSummary);
         }
