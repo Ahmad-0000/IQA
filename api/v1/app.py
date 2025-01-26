@@ -65,3 +65,5 @@ def error403(error):
     """Handles status code 403
     """
     return make_response(jsonify({"error": "forbidden"}), 403)
+
+app.run(host='0.0.0.0')
