@@ -33,14 +33,22 @@
         </div>
         <!-- End Error page -->
         <!-- Edit personal info -->
-        <div id="first_name">
-            <input type="text" class="border rad-10 p-10 fs-18" required maxlength="20">
-            <button class="rad-6 c-white border fs-16 txt-bold">Update</button>
-        </div>
-        <div id="bio">
-            <textarea class="border rad-10 p-10 fs-18 required"></textarea>
-            <button class="rad-6 c-white border fs-16 txt-bold">Update</button>
-        </div>
+        <form id="update-personal-info" class="bg-white rad-6 border p-20">
+            <i class="top-right-corner"><i class="fa-solid fa-xmark"></i></i>
+            <label class="d-block">
+                First Name:
+                <input name="first_name" type="text" class="border rad-10 p-10 fs-18 d-block" maxlength="20">
+            </label>
+            <label class="d-block">
+                Bio:
+                <textarea name="bio" class="border rad-10 p-10 fs-18 required d-block" maxlength="100"></textarea>
+            </label>
+            <label class="d-block">
+                Password:
+                <input type="password" name="password" class="border rad-10 p-10 fs-18 d-block" maxlength="20">
+            </label>
+            <input type="submit" value="Update" class="rad-6 c-white border fs-16 txt-bold p-10 d-block">
+        </form>
         <!-- End personal info edition -->
         <!-- Start Effects -->
         <div id="quiz-overlay"></div>
@@ -101,11 +109,11 @@
                     <i class="fa-solid fa-plus c-blue rad-half bg-white p-abs border"></i>
                 </div>
                 <div class="personal-info w-fit fs-20 txt-c">
-                    <p></p>
+                    <p><snap class="update-trigger"></snap> </p>
                     <p>Birth Date: <span></span></p>
                     <p>Member since: <span></span></p>
                     <p>Number of quizzes: <span></span></p>
-                    <label class="d-block" id="bio-label" title="update bio">Bio:</label>
+                    <label class="update-trigger d-block" title="update bio">Bio:</label>
                     <textarea class="border rad-10 p-10"></textarea>
                 </div>
                 <div class="quizzes-info d-grid">
