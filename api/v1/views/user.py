@@ -1,5 +1,6 @@
 """User view
 """
+import bcrypt
 from os import getenv
 from datetime import datetime, date, timedelta
 from sqlalchemy.exc import DataError
@@ -56,7 +57,7 @@ def new_account():
     if (date.today() - dob).days < 3650:
         abort(400, "You need to be at least 10 years old")
     if storage.get_filtered(User, {"email": email}):
-        return make_response(jsonify(f"User with email {request.json['email']} is present"), 409)
+        return make_response(jsonify({"error": f"User with email {request.json['email']} is present"}), 409)
     new_user = User(
                     first_name=first_name,
                     middle_name=middle_name,
@@ -82,6 +83,7 @@ def new_account():
 def update_account():
     """PUT /users => update the current user's account
     """
+    print("Here")
     if not request.is_json:
         abort(400, "Not JSON")
     allowed = ["first_name", "bio", "password"]
@@ -93,15 +95,25 @@ def update_account():
             to_update[k] = v
     if not to_update:
         abort(400, "Provide at least one value to update")
+    to_update_copy = to_update.copy()
+    for k, v in to_update_copy.items():
+        if type(to_update[k]) is not str or not to_update[k]:
+            del to_update[k]
+    if not to_update:
+        abort(400, "Provide at least one value to update")
     same_data = 0
     for k, v in to_update.items():
-        if request.current_user.__dict__[k] == v:
+        if k == 'password':
+            if bcrypt.checkpw(bytes(v, "utf-8"), bytes(request.current_user.password, "utf-8")):
+                same_data += 1
+        elif request.current_user.__dict__[k] == v:
             same_data += 1
     if same_data == len(to_update):
         abort(400, "Provide at least one different value")
     try:
         request.current_user.update(**to_update)
     except DataError:
+        storage.rollback()
         abort(400, "Abide to data constraints")
     return jsonify(request.current_user.to_dict())
 
