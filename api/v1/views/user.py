@@ -134,6 +134,8 @@ def delete_account():
     if not bcrypt.checkpw(bytes(password, "utf8"), bytes(request.current_user.password, "utf8")):
         abort(403)
     request.current_user.delete()
+    from api.v1.app import Auth
+    auth.destroy_session(request)
     response = jsonify({})
     response.status_code = 204
     cookie_name = getenv("SESSION_COOKIE_NAME")
