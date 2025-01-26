@@ -4,7 +4,6 @@ const deleteQuestion = document.querySelector("#delete-question");
 let newAnswer = document.getElementsByClassName("newAnswer");
 let deleteAnswer = document.getElementsByClassName("deleteAnswer");
 const myForm = document.querySelector("form");
-const requestData = {questions: []};
 const errorPage = document.querySelector("#error");
 const errorCode = document.querySelector("#error div h1 span ")
 const errorMessage = document.querySelector("#error p:first-of-type");
@@ -75,7 +74,7 @@ function addDeleteAnswerEventHandler (item) {
 
 myForm.addEventListener('submit', (event) => {
     event.preventDefault();
-  
+    const requestData = [];
     if (myForm.checkValidity()) {
         const formData = new FormData(myForm);
         for (const pair of formData.entries()) {
