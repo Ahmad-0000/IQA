@@ -26,8 +26,7 @@ submit.addEventListener('click', function (event) {
             fetch('http://localhost:5001/api/v1/login', {
                 method: 'POST',
                 body: JSON.stringify(requestData),
-                headers: {'content-type': 'application/json'},
-                credentials: 'include'
+                headers: {'content-type': 'application/json'}
             }).then(res => {
                 if (res.ok) {
                     return res.json();
@@ -36,8 +35,14 @@ submit.addEventListener('click', function (event) {
                     throw new Error();
                 }
             }).then((data) => {
-                window.location = `/profile.html?user_id=~${data.id}`;
+                window.location = `/profile.html?user_id=${data.id}`;
             }, (error) => {});
         }
     }
+})
+
+
+// Hide error page
+errorPage.children[0].addEventListener('click', () => {
+  errorPage.style.display = "none";
 })
