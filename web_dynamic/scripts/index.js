@@ -402,3 +402,15 @@ more.addEventListener('click', () => {
 });
 
 // implement like and remove-like functionality
+document.addEventListener("click", function (event) {
+  if (event.target.classList.contains("like-icon")) {
+  if (event.target.classList.contains("liked")) {} else {
+  fetch("http://localhost:5001/api/v1/remove_like?quiz_id=${event.target.parentElement.parentElement.dataId}"), {method: "DELETE", credentials: "include"}).then(res => {
+  if (res.ok) {
+    // reduce the likes number + change color
+} else {
+    showErrorPage(res);
+}
+})
+}
+});
