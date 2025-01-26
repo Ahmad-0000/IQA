@@ -45,5 +45,5 @@ async function showErrorPage(res) {
   errorPage.style.display = "flex";
   const data = await res.json();
   errorCode.textContent = res.status;
-  errorMessage.textContent = data;
+  errorMessage.textContent = data.error;
 }
