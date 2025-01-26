@@ -146,3 +146,7 @@ logoutBtn.addEventListener('click', function () {
         }
     }).catch((error) => {});
 });
+
+deleteBtn.addEventListener('click', function () {
+    window.location = '/delete_account.html';
+})
