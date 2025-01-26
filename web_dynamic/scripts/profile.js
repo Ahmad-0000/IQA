@@ -101,6 +101,7 @@ updateForm.addEventListener('submit', function (event) {
     }
 });
 
+// Hide error page
 errorPage.children[0].addEventListener('click', () => {
     errorPage.style.display = "none";
   })

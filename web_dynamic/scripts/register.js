@@ -48,6 +48,7 @@ async function showErrorPage(res) {
   errorMessage.textContent = data.error;
 }
 
+// Hide error page
 errorPage.children[0].addEventListener('click', () => {
   errorPage.style.display = "none";
 })
