@@ -1,5 +1,7 @@
 // Populating profile page
 const errorPage = document.querySelector("#error");
+const errorCode = document.querySelector("#error h1 span");
+const errorMessage = document.querySelector("#error p:first-of-type");
 const url = new URL(location.href);
 const userId = url.searchParams.get("user_id");
 const namePlace = document.querySelector(".personal-info p:first-of-type");
@@ -13,13 +15,12 @@ let userData = undefined;
 
 // Handle error response
 async function showErrorPage(res) {
-    // Show the error page
-    errorPage.style.display = "flex";
-    const data = await res.json();
-    errorCode.textContent = res.status;
-    errorMessage.textContent = data;
-  }
-  
+  // Show the error page
+  errorPage.style.display = "flex";
+  const data = await res.json();
+  errorCode.textContent = res.status;
+  errorMessage.textContent = data.error;
+}
 
 for (const trigger of updateTriggers) {
     trigger.addEventListener('click', function () {
@@ -88,12 +89,14 @@ updateForm.addEventListener('submit', function (event) {
                     return res.json();
                 } else {
                     showErrorPage(res);
+		    throw new Error();
                 }
             }).then(data => {
+		    console.log(data)
                 userData = data;
-                namePlace.chidren[0].textContent = data.first_name;
+                namePlace.children[0].textContent = data.first_name;
                 bio.value = data.bio;
-            });
+            }, () => {});
         }
     }
 });
