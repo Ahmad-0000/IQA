@@ -100,3 +100,7 @@ updateForm.addEventListener('submit', function (event) {
         }
     }
 });
+
+errorPage.children[0].addEventListener('click', () => {
+    errorPage.style.display = "none";
+  })

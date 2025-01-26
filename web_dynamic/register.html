@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="stylesheets/framework.css">
     <link rel="stylesheet" href="stylesheets/register.css">
     <!-- End Stylesheets -->
+    <!-- Start Font Awesome Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <!-- End Font Awesome Library -->
     <!-- Start Scripts -->
     <script src="scripts/register.js" defer></script>
     <!-- End scripts -->
@@ -17,6 +20,7 @@
 <body>
     <!-- Start Error page -->
     <div id="error">
+        <i class="top-right-corner"><i class="fa-solid fa-xmark"></i></i>
         <div>
             <h1>Error <span>error code</span></h1>
             <p>Error text</p>
@@ -24,7 +28,7 @@
         </div>
     </div>
     <!-- End Error page -->
-    <form class="p-20 border rad-10" action="http://localhost:5001/api/v1/users">
+    <form class="p-20 border rad-10 bg-white" action="http://localhost:5001/api/v1/users">
         <div class="logo rad-half txt-bold">IQA</div>
         <div class="info">
             <label for="f-name">

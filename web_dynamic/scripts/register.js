@@ -47,3 +47,7 @@ async function showErrorPage(res) {
   errorCode.textContent = res.status;
   errorMessage.textContent = data.error;
 }
+
+errorPage.children[0].addEventListener('click', () => {
+  errorPage.style.display = "none";
+})
