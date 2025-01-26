@@ -31,10 +31,11 @@ def make_like():
     quiz.save()
     return make_response(jsonify(quiz.to_dict()), 201)
 
-@app_views.route("/quizzes/<quiz_id>/remove_like", methods=['DELETE'], strict_slashes=False)
-def remove_like(quiz_id):
+@app_views.route("/remove_like", methods=['DELETE'], strict_slashes=False)
+def remove_like():
     """Remove a like from a quiz
     """
+    quiz_id = request.args.get("quiz_id")
     if not quiz_id or type(quiz_id) is not str:
         abort(400, "Abide to data constraints")
     quiz = storage.get(Quiz, quiz_id)
