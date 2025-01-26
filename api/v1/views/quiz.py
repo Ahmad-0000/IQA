@@ -158,47 +158,29 @@ def get_quiz(quiz_id):
     return jsonify(quiz.to_dict())
 
 
-@app_views.route("/quizzes/<user_id>/liked", methods=['GET'], strict_slashes=False)
-def get_users_liked_quizzes(user_id):
+@app_views.route("/favorite_quizzes", methods=['GET'], strict_slashes=False)
+def get_users_liked_quizzes():
     """Get the user with id = user_id liked quizzes
     """
-    if "user_id" == "me":
-        if not request.current_user:
-            abort(401)
-        user_id = request.current_user.id
-    user = storage.get(User, user_id)
-    if not user:
-        abort(404)
-    return jsonify([quiz.to_dict() for quiz in user.liked_quizzes])
 
-@app_views.route("/quizzes/<user_id>/taken", methods=['GET'], strict_slashes=False)
+@app_views.route("/taken_quizzes", methods=['GET'], strict_slashes=False)
 def get_users_taken_quizzes(user_id):
     """Get the user with id = id taken quizzes
     """
-    if "user_id" == "me":
-        if not request.current_user:
-            abort(401)
-        user_id = request.current_user.id
-    user = storage.get(User, user_id)
-    if not user:
-        abort(404)
-    taken_ids = [socre.quiz_id for score in user.scores]
-    quizzes = [storage.get(Quiz, quiz_id) for quiz_id in taken_ids]
-    return jsonify([quiz.to_dict() if quiz else "Deleted" for quiz in quizzes])
     
 
-@app_views.route("/quizzes/<user_id>/uploaded", methods=['GET'], strict_slashes=False)
-def get_users_uploaded_quizzes(user_id):
+@app_views.route("/uploaded_quizzes", methods=['GET'], strict_slashes=False)
+def get_users_uploaded_quizzes():
     """Get the user with id = id uploaded quizzes
     """
-    if "user_id" == "me":
-        if not request.current_user:
-            abort(401)
-        user_id = request.current_user.id
+    user_id = request.args.get('user_id')
+    if not user_id:
+        abort(400, "Provide a user id as a query parameter")
     user = storage.get(User, user_id)
     if not user:
         abort(404)
-    return jsonify([quiz.to_dict() for quiz in user.quizzes])
+    response = [quiz.to_dict() for quiz in user.quizzes]
+    return jsonify(response)
 
 
 @app_views.route("/quizzes/<quiz_id>", methods=['PUT'], strict_slashes=False)
@@ -215,7 +197,7 @@ def update_a_quiz(quiz_id):
         abort(404)
     if quiz.user_id != user.id:
         abort(403)
-    allowed = ['title', 'description', 'category']
+    allowed = ['title', 'description']
     updated = 0
     filtered_attributes = {}
     for k, v in request.json.items():
