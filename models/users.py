@@ -53,3 +53,7 @@ class User(BaseModel, Base):
             cascade='all, delete, delete-orphan',
             back_populates='user'
     )
+
+    
+    login_sessions = relationship("Session", cascade='all, delete, delete-orphan',
+            back_populates='user')
