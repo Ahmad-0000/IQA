@@ -4,7 +4,7 @@ const deleteQuestion = document.querySelector("#delete-question");
 let newAnswer = document.getElementsByClassName("newAnswer");
 let deleteAnswer = document.getElementsByClassName("deleteAnswer");
 const myForm = document.querySelector("form");
-const requestData = {questions_collection: []};
+const requestData = {questions: []};
 const errorPage = document.querySelector("#error");
 const errorCode = document.querySelector("#error div h1 span ")
 let questionsNum = 1
@@ -81,12 +81,12 @@ myForm.addEventListener('submit', (event) => {
         }
         const questions = document.querySelectorAll("#questionsContainer > div");
         for (const question of questions) {
-            const questionSummary = {body: '', answers_collection: []};
+            const questionSummary = {body: '', answers: []};
             questionSummary.body = question.firstElementChild.firstElementChild.value;
             for (const answer of question.lastElementChild.children) {
-                questionSummary.answers_collection.unshift({"body": answer.lastElementChild.value, "is_true": answer.firstElementChild.checked});
+                questionSummary.answers.unshift({"body": answer.lastElementChild.value, "is_true": answer.firstElementChild.checked});
             }
-            requestData.questions_collection.unshift(questionSummary);
+            requestData.questions.unshift(questionSummary);
         }
     }
 
