@@ -15,3 +15,4 @@ class Score(BaseModel, Base):
 
     user = relationship('User', back_populates='scores')
     snapshots = relationship('Snapshot', back_populates='score')
+    quiz = relationship('Quiz')
