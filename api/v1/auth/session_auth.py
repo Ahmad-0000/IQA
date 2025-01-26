@@ -55,10 +55,10 @@ class SessionAuth():
     def destroy_session(self, request):
         """Destroys a session
         """
-        session = self.session_cookie(request)
-        if not session:
+        session_id = self.session_cookie(request)
+        if not session_id:
             return False
-        if session in SessionAuth.__user_id_by_session_id:
-            del SessionAuth.__user_id_by_session_id[session]
+        if session_id in SessionAuth.__user_id_by_session_id:
+            del SessionAuth.__user_id_by_session_id[session_id]
             return True
         return False
