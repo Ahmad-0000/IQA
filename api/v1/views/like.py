@@ -19,6 +19,13 @@ def make_like():
         abort(400, "You can't make a like to your own quiz")
     if request.current_user in quiz.fans_users:
         abort(400, "You've already made a like for this quiz")
+    taken = False
+    for score in request.current_user.scores:
+        if score.quiz == quiz:
+            taken = True
+            break
+    if not taken:
+        abort(400, "You didn't take this quiz")
     quiz.fans_users.append(request.current_user)
     quiz.likes_num += 1
     quiz.save()
