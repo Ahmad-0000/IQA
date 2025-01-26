@@ -98,55 +98,56 @@ h3 {
 }
 
 /* Edit personal info */
-#bio,
-#first_name {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    height: 100vh;
+form {
     position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 100;
-    background-color: white;
-}
-
-#bio textarea {
-    text-indent: 10px;
-    min-width: 300px;
-    min-height: 150px;
-    margin-bottom: 20px;
-}
-
-#first_name input {
-    width: 300px;
-    margin-bottom: 20px;
+    width: 90%;
+    z-index : -1;
+    max-height: 400px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
 }
 
 @media (min-width: 768px) {
-    #bio textarea,
-    #first_name input {
+    form {
         width: 500px;
     }
 }
 
-#bio textarea:focus,
-#first_name input:focus {
-    box-shadow: 0 0 5px var(--blue);
+form label {
+    width: 100%;
+    margin-bottom: 10px;
 }
 
-#bio button,
-#first_name button {
-    padding: 7px 10px;
-    color: var(--blue);
+form label * {
+    width: 100%;
+    margin-top: 10px;
+}
+
+form label *:focus {
+    box-shadow: 0px 0px 5px var(--blue);
+}
+
+form label textarea {
+    resize: none;
+    height: 100px;
+}
+
+form input[type='submit'] {
     cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: var(--blue);
 }
 
-#bio button:hover,
-#first_name button:hover {
-    color: white;
-    background-color: var(--blue);
+form input[type='submit']:hover {
+    background-color: white;
+    color: var(--blue);
+}
+
+.update-trigger:hover {
+    cursor: pointer;
+    color: var(--blue);
 }
 /* End personal info edition */
