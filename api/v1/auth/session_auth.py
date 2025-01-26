@@ -31,22 +31,13 @@ class SessionAuth():
             return None
         return request.cookies.get(cookie_name)
 
-    def user_id_for_session_id(self, session: str):
-        """Returns the user id for the session
-        """
-        if session is None:
-            return None
-        if type(session) is not str:
-            return None
-        return SessionAuth.__user_id_by_session_id.get(session)
-
     def current_user(self, request):
         """Get the account info based on the session id
         """
         session_id = self.session_cookie(request)
         if not session_id:
             return None
-        user_id = self.user_id_for_session_id(session_id)
+        user_id = SessionAuth.__user_id_by_session_id.get(session_id)
         if not user_id:
             return None
         return storage.get(User, user_id)
