@@ -4,6 +4,7 @@ from os import getenv
 from uuid import uuid4
 from models import storage
 from models.users import User
+from models.sessions import Session
 
 class SessionAuth():
     """Handles session authentication
@@ -37,10 +38,10 @@ class SessionAuth():
         session_id = self.session_cookie(request)
         if not session_id:
             return None
-        user_id = SessionAuth.__user_id_by_session_id.get(session_id)
-        if not user_id:
+        session = storage.get(Session, session_id)
+        if not session:
             return None
-        return storage.get(User, user_id)
+        return session.user
 
     def create_session(self, user_id):
         """Create a session
@@ -48,9 +49,9 @@ class SessionAuth():
         user = storage.get(User, user_id)
         if not user:
             return None
-        session_id = str(uuid4())
-        SessionAuth.__user_id_by_session_id[session_id] = user_id
-        return session_id
+        session = Session(user_id=user.id)
+        session.save()
+        return session.id
 
     def destroy_session(self, request):
         """Destroys a session
@@ -58,7 +59,8 @@ class SessionAuth():
         session_id = self.session_cookie(request)
         if not session_id:
             return False
-        if session_id in SessionAuth.__user_id_by_session_id:
-            del SessionAuth.__user_id_by_session_id[session_id]
+        session = storage.get(Session, session_id)
+        if session:
+            session.delete()
             return True
         return False
