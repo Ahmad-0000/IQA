@@ -5,10 +5,11 @@ from api.v1.views import app_views
 from models import storage
 from models.quizzes import Quiz
 
-@app_views.route("/quizzes/<quiz_id>/like", methods=['POST'], strict_slashes=False)
-def make_like(quiz_id):
+@app_views.route("/like", methods=['POST'], strict_slashes=False)
+def make_like():
     """Increases quizzes likes
     """
+    quiz_id = request.args.get("quiz_id")
     if not quiz_id or type(quiz_id) is not str:
         abort(400, "Abide to data constraints")
     quiz = storage.get(Quiz, quiz_id)
