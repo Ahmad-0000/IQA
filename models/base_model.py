@@ -89,9 +89,9 @@ class BaseModel():
         """
         from models import storage
         for k, v in kwargs.items():
-            if k == "password" and self.__class__.__name___ == "User":
+            if k == "password" and self.__class__.__name__ == "User":
                 password = bytes(v, "utf-8")
-                password = bcrypt.hashpw(v, bcrypt.gensalt())
+                password = bcrypt.hashpw(password, bcrypt.gensalt())
                 password = password.decode('utf-8')
                 setattr(self, k, password)
             else:
