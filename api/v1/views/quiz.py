@@ -251,7 +251,8 @@ def start_a_quiz():
     result = cache_client.start_a_quiz(quiz_id, request.current_user.id, session_id)
     if result == 404:
         abort(404)
-    res = jsonify({"status": "ok"})
+    first_question = cache_client.get_next_question(f"{session_id}:{quiz_id}", 0)
+    res = jsonify({"status": "ok", "first_question": first_question})
     cookie_name = getenv('IQA_QUIZ_SESSION_COOKIE')
     res.set_cookie(cookie_name, result[0], expires=datetime.fromtimestamp(result[1]))
     return res
