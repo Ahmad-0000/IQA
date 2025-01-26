@@ -9,13 +9,14 @@ const errorPage = document.querySelector("#error");
 const errorCode = document.querySelector("#error div h1 span ")
 let questionsNum = 1
 
-async function showErrorPage(response) {
+// Handle error response
+async function showErrorPage(res) {
     // Show the error page
     errorPage.style.display = "flex";
-    const data = await response.json();
-    errorCode.textContent = data.status;
-    errorMessage.textContent = data.body;
-  }
+    const data = await res.json();
+    errorCode.textContent = res.status;
+    errorMessage.textContent = data.error;
+}
 
 addNewAnswerEventHandler(newAnswer[0]);
 addDeleteAnswerEventHandler(deleteAnswer[0]);
