@@ -51,4 +51,5 @@ def logout():
     res = jsonify({})
     cookie_name = getenv("SESSION_COOKIE_NAME")
     res.set_cookie(cookie_name, "session_cookie", expires=datetime.utcnow() - timedelta(1))
+    res.status_code = 201
     return res 
