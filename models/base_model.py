@@ -89,6 +89,12 @@ class BaseModel():
         """
         from models import storage
         for k, v in kwargs.items():
-            setattr(self, k, v)
+            if k == "password" and self.__class__.__name___ == "User":
+                password = bytes(v, "utf-8")
+                password = bcrypt.hashpw(v, bcrypt.gensalt())
+                password = password.decode('utf-8')
+                setattr(self, k, password)
+            else:
+                setattr(self, k, v)
         self.updated_at = datetime.utcnow()
         storage.save()
