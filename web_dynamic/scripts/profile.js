@@ -111,11 +111,12 @@ fetch(`http://localhost:5001/api/v1/uploaded_quizzes?user_id=${userId}`, {
     if (res.ok) {
         return res.json();
     } else {
+        showErrorPage(res);
         throw new Error();
     }
 }).then(quizzes => {
     if (quizzes.length === 0) {
-        uploadedSection.innerHTML = `<p>No quizzes</p>`;
+        uploadedSection.innerHTML = `<p style="text-align: center;font-weight: bold;">No quizzes</p>`;
     }
     for (const quiz of quizzes) {
         uploadedSection.innerHTML += `
