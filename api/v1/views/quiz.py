@@ -240,10 +240,13 @@ def delete_quiz(quiz_id):
     quiz.delete()
     return make_response(jsonify({}), 204)
 
-@app_views.route("/quizzes/start/<quiz_id>", methods=['POST'], strict_slashes=False)
-def start_a_quiz(quiz_id):
+@app_views.route("/start_quiz", methods=['POST'], strict_slashes=False)
+def start_a_quiz():
     """Start a quiz session
     """
+    quiz_id = request.args.get("quiz_id")
+    if not quiz_id:
+        abort(404)
     session_id = str(uuid4())
     result = cache_client.start_a_quiz(quiz_id, request.current_user.id, session_id)
     if result == 404:
