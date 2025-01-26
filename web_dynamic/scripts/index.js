@@ -107,7 +107,7 @@ let after = "initial";
 let orderAttribute = "added_at";
 
 
-fetch(`http://localhost:5001/api/v1/quizzes?order_attribute=${orderAttribute}&order_type=${orderType}&after=${after}`).then((res) => {
+fetch(`http://localhost:5001/api/v1/quizzes?attribute=${orderAttribute}&type=${orderType}&after=${after}`).then((res) => {
         if (res.ok) {
             return res.json();
         } else {
