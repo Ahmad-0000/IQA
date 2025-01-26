@@ -7,6 +7,7 @@ const myForm = document.querySelector("form");
 const requestData = {questions: []};
 const errorPage = document.querySelector("#error");
 const errorCode = document.querySelector("#error div h1 span ")
+const errorMessage = document.querySelector("#error p:first-of-type");
 let questionsNum = 1
 
 // Handle error response
