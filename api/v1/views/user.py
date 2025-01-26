@@ -13,6 +13,16 @@ from models.users import User
 def show_all_users():
     """GET /users => Shows all users accounts
     """
+    user_id = request.args.get('user_id')
+    if user_id:
+        current_user = request.__dict__.get('current_user')
+        if user_id == 'me' and current_user:
+            return jsonify(current_user.to_dict())
+        else:
+            user = storage.get(User, user_id)
+        if not user:
+            abort(404)
+        return jsonify(user.to_dict())
     _type = request.args.get('type')
     after = request.args.get('after')
     if not _type or _type not in ['asc', 'desc']:
@@ -23,21 +33,6 @@ def show_all_users():
         after = 'initial'
     users = storage.get_paged(User, 'added_at', _type, after)
     return jsonify([user.to_dict() for user in users])
-
-@app_views.route("/users/<user_id>", methods=['GET'], strict_slashes=False)
-def show_user(user_id):
-    """GET /users/<user_id> => Shows user account of 
-                               user with id equal to
-                               "user_id"
-    """
-    current_user = request.__dict__.get('current_user')
-    if user_id == 'me' and current_user:
-        return jsonify(current_user.to_dict())
-    else:
-        user = storage.get(User, user_id)
-    if not user:
-        abort(404)
-    return jsonify(user.to_dict())
 
 
 @app_views.route("/users", methods=['POST'], strict_slashes=False)
