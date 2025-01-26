@@ -121,6 +121,18 @@ def update_account():
 def delete_account():
     """DELETE /users => Deletes the current user's account
     """
+    if not request.is_json:
+        abort(400, "Not JSON")
+    email = request.json.get("email")
+    if not email:
+        abort(400, "Missing email")
+    password = request.json.get("password")
+    if not password:
+        abort(400, "Missing password")
+    if request.current_user.email != email:
+        abort(403)
+    if not bcrypt.checkpw(bytes(password, "utf8"), bytes(request.current_user.password, "utf8")):
+        abort(403)
     request.current_user.delete()
     response = jsonify({})
     response.status_code = 204
