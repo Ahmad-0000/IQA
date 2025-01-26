@@ -35,7 +35,7 @@ myForm.addEventListener('submit', (event) => {
             showErrorPage(res);
           }
       }).then((data) => {
-          document.location = `/profile.html?user_id=${data.id}`;
+          window.location = `/profile.html?user_id=${data.id}`;
       });
   }
 });
