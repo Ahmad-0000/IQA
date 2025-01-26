@@ -83,7 +83,6 @@ def new_account():
 def update_account():
     """PUT /users => update the current user's account
     """
-    print("Here")
     if not request.is_json:
         abort(400, "Not JSON")
     allowed = ["first_name", "bio", "password"]
