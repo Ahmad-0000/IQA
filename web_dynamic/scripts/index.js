@@ -19,12 +19,12 @@ async function showErrorPage(res) {
     errorCode.textContent = res.status;
     errorMessage.textContent = data.error;
   }
-
-// Hide error page
-errorPage.children[0].addEventListener('click', () => {
+  
+  // Hide error page
+  errorPage.children[0].addEventListener('click', () => {
     errorPage.style.display = "none";
-})
-
+  })
+  
 modifiers.addEventListener('click', () => {
     if (categoriesPopover.style.display === "block") {
         categoriesPopover.style.display = "none";
@@ -90,12 +90,67 @@ cats.forEach((hoveredCat) => {
 let attribute = "added_at"; 
 let after = "initial";
 let type = "desc"; // Ordering type
-let searchCategories = [];
+let searchCategories = new Set();
 let url = "http://localhost:5001/api/v1/quizzes?attribute=added_at&type=desc&after=initial";
-let quizzesCache = [];
 let fresh = false;
+const searchBox = document.querySelector(".filters");
+const categoriesList = document.querySelectorAll("#categories i");
+const [dateToggler, orderToggler, popularityToggler, searchTrigger] = searchBox.children;
 
-async function getQuizzes () {
+for (const cat of categoriesList) {
+    cat.addEventListener("click", function () {
+        if (cat.classList.contains("checked")) {
+            cat.classList.remove("checked");
+            searchCategories.delete(cat.title)
+        } else {
+            cat.classList.add("checked");
+            searchCategories.add(cat.title);
+        }
+    })
+}
+
+searchTrigger.addEventListener('click', function () {
+    fresh = true;
+    const seachCategoriesArray = Array.from(searchCategories);
+    if (seachCategoriesArray.length !== 0) {
+        url = `http://localhost:5001/api/v1/quizzes?attribute=${attribute}&type=${type}&after=initial&categories=${seachCategoriesArray.join(',')}`;
+    } else {
+        url = `http://localhost:5001/api/v1/quizzes?attribute=${attribute}&type=${type}&after=initial`;
+    }
+    getQuizzes(url);
+})
+
+dateToggler.addEventListener('click', function () {
+    if (dateToggler.classList.contains("checked")) {
+        dateToggler.classList.remove("checked");
+    } else {
+        dateToggler.classList.add("checked");
+        popularityToggler.classList.remove("checked");
+        attribute = "added_at";
+    }
+});
+
+popularityToggler.addEventListener('click', function () {
+    if (popularityToggler.classList.contains("checked")) {
+        popularityToggler.classList.remove("checked");
+    } else {
+        popularityToggler.classList.add("checked");
+        dateToggler.classList.remove("checked");
+        attribute = "repeats";
+    }
+});
+
+orderToggler.addEventListener('click', function () {
+    if (orderToggler.classList.contains('down')) {
+        orderToggler.classList.remove('down');
+        type = "asc";
+    } else {
+        orderToggler.classList.add('down');
+        type = "desc";
+    }
+});
+
+async function getQuizzes (url) {
     fetch(url).then((res) => {
         if (res.ok) {
             return res.json();
@@ -123,7 +178,39 @@ async function getQuizzes () {
     }, (error) => {});
 }
 
-qetQuizzes();
+// Handle quiz details card
+const overlayLayer = document.getElementById("quiz-overlay");
+const quizDetails = document.getElementById("quiz-details");
+const quizDetailsCloser = document.getElementById('quiz-details-closer');
+
+document.addEventListener('click', function (event) {
+    if (event.target.classList.contains("quiz")) {
+        event.target.addEventListener('click', () => {
+            overlayLayer.style.display = "block";
+    
+            setTimeout(() => {
+                overlayLayer.style.filter = "blur(4px)";
+            }, 20);
+
+            quizDetails.style.display = "flex";
+            setTimeout(() => {
+                quizDetails.style.transform = "translate(-50%, -50%)";
+                quizDetails.style.opacity = "1";
+            }, 0);
+        });
+    }
+})
+
+quizDetailsCloser.addEventListener('click', () => {
+    overlayLayer.style.display = "none";
+    quizDetails.style.transform = "translate(-50%, 0)";
+    quizDetails.style.opacity = "0";
+    setTimeout(() => {
+        quizDetails.style.display = "none";
+    }, 500);
+});
+
+getQuizzes(url);
 // implement like and remove-like functionality
 // document.addEventListener("click", function (event) {
 //   if (event.target.classList.contains("like-icon")) {

@@ -110,7 +110,7 @@
     cursor: pointer;
 }
 
-#categories i[checked="true"] {
+#categories i.checked {
     color: var(--blue);
 }
 
@@ -327,12 +327,12 @@
 }
 
 
-.filters div[checked="true"] {
+.filters div.checked {
     background-color: var(--blue);
     color: white;
 }
 
-.filters [order-type="desc"] {
+.filters .down {
     transform: rotate(180deg);
 }
 
