@@ -400,3 +400,5 @@ more.addEventListener('click', () => {
 	});
   })
 });
+
+// implement like and remove-like functionality
