@@ -164,10 +164,19 @@ def get_users_liked_quizzes():
     """
 
 @app_views.route("/taken_quizzes", methods=['GET'], strict_slashes=False)
-def get_users_taken_quizzes(user_id):
+def get_users_taken_quizzes():
     """Get the user with id = id taken quizzes
     """
-    
+    user_id = request.args.get("user_id")
+    if not user_id:
+        abort(400, "Provide a user id as a query parameter")
+    user = storage.get(User, user_id)
+    if not user:
+        abort(404)
+    quizzes = {score.quiz for score in user.scores}
+    response = [quiz.to_dict() for quiz in quizzes]
+    return jsonify(response)
+
 
 @app_views.route("/uploaded_quizzes", methods=['GET'], strict_slashes=False)
 def get_users_uploaded_quizzes():
