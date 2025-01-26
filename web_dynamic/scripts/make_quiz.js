@@ -98,10 +98,10 @@ myForm.addEventListener('submit', (event) => {
         credentials : "include",
     }).then(res => {
         if (res.ok) {
-            return res.json();
+            document.location = "/index.html";
         } else {
             // Show error page
             showErrorPage(res);
         }
-    }).then(quiz => console.log(quiz))
+    });
   })
