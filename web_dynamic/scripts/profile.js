@@ -104,3 +104,25 @@ updateForm.addEventListener('submit', function (event) {
 errorPage.children[0].addEventListener('click', () => {
     errorPage.style.display = "none";
   })
+
+fetch(`http://localhost:5001/api/v1/uploaded_quizzes?user_id=${userId}`, {
+    method: 'GET'
+}).then(res => {
+    if (res.ok) {
+        return res.json();
+    } else {
+        throw new Error();
+    }
+}).then(quizzes => {
+    if (quizzes.length === 0) {
+        uploadedSection.innerHTML = `<p>No quizzes</p>`;
+    }
+    for (const quiz of quizzes) {
+        uploadedSection.innerHTML += `
+                    <div class="quiz">
+                        <h3>${quiz.title}</h3>
+                        <p>Last update at: <span>${quiz.updated_at}</span></p>
+                    </div>
+        `;
+    }
+}, (error) => {});
