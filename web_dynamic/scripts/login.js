@@ -24,7 +24,7 @@ submit.addEventListener('click', function (event) {
         for (const pair of formData.entries()) {
             requestData[pair[0]] = pair[1];
             fetch('http://localhost:5001/api/v1/login', {
-                method: 'P0ST',
+                method: 'POST',
                 body: JSON.stringify(requestData),
                 headers: {'content-type': 'application/json'},
                 credentials: 'include'
