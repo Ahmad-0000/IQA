@@ -54,7 +54,6 @@ class RedisStackCache():
         RedisStackCache.__client = redis.Redis(
                 host=host, port=port, db=db, decode_responses=True
         )
-        index_name = "newest"
         schema = (
             NumericField(
                 '$.general_details.added_at',
@@ -63,11 +62,11 @@ class RedisStackCache():
             )
         )
         try:
-            RedisStackCache.__client.ft(index_name).dropindex()
+            RedisStackCache.__client.ft("newest").dropindex()
         except:
             pass
         try:
-            RedisStackCache.__client.ft(index_name).create_index(
+            RedisStackCache.__client.ft("newest").create_index(
                     schema,
                     definition=IndexDefinition(
                         index_type=IndexType.JSON,
@@ -76,7 +75,6 @@ class RedisStackCache():
             )
         except:
             pass
-        index_name = "oldest"
         schema = (
             NumericField(
                 '$.general_details.added_at',
@@ -85,11 +83,11 @@ class RedisStackCache():
             )
         )
         try:
-            RedisStackCache.__client.ft(index_name).dropindex()
+            RedisStackCache.__client.ft("oldest").dropindex()
         except:
             pass
         try:
-            RedisStackCache.__client.ft(index_name).create_index(
+            RedisStackCache.__client.ft("oldest").create_index(
                 schema,
                 definition=IndexDefinition(
                     index_type=IndexType.JSON,
@@ -98,7 +96,6 @@ class RedisStackCache():
             )
         except:
             pass
-        index_name = "popular"
         schema = (
             NumericField(
                 '$.general_details.repeats',
@@ -107,11 +104,11 @@ class RedisStackCache():
             )
         )
         try:
-            RedisStackCache.__client.ft(index_name).dropindex()
+            RedisStackCache.__client.ft("popular").dropindex()
         except:
             pass
         try:
-            RedisStackCache.__client.ft(index_name).create_index(
+            RedisStackCache.__client.ft("popular").create_index(
                 schema,
                 definition=IndexDefinition(
                     index_type=IndexType.JSON,
