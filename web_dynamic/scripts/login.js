@@ -26,7 +26,8 @@ submit.addEventListener('click', function (event) {
             fetch('http://localhost:5001/api/v1/login', {
                 method: 'POST',
                 body: JSON.stringify(requestData),
-                headers: {'content-type': 'application/json'}
+                headers: {'content-type': 'application/json'},
+		credentials: 'include'
             }).then(res => {
                 if (res.ok) {
                     return res.json();
