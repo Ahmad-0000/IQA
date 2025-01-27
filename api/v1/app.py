@@ -67,5 +67,3 @@ def error403(error):
     """Handles "Forbidden" error
     """
     return make_response(jsonify({"error": "forbidden"}), 403)
-
-app.run(host='0.0.0.0') # To be removed
