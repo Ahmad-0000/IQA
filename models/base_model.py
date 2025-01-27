@@ -7,15 +7,12 @@ from sqlalchemy import Column, String, DateTime
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm.collections import InstrumentedList
 
-
-# Create Base class that all other models will inherit from
 class Base(DeclarativeBase):
-    """Base model class
+    """Base class that all other models will inherit from
     """
 
-
 class BaseModel():
-    """Main model that others will inherit from
+    """Main model that other classes will inherit from
     """
     # 3 important attributes all the objects will have
     id = Column(String(36), primary_key=True)
@@ -40,6 +37,7 @@ class BaseModel():
             if 'updated_at' not in kwargs:
                 self.updated_at = self.added_at
             if "password" in self.__dict__:
+                # Encrypt the user password before saving in the db
                 self.password = bytes(self.password, "utf-8")
                 self.password = bcrypt.hashpw(self.password, bcrypt.gensalt())
                 self.password = self.password.decode('utf-8')
@@ -51,7 +49,11 @@ class BaseModel():
     def __str__(self):
         """Customize __str__ output
         """
-        return '[{}] ({}) {}'.format(self.__class__.__name__, self.id, self.to_dict())
+        return '[{}] ({}) {}'.format(
+                                        self.__class__.__name__,
+                                        self.id,
+                                         self.to_dict()
+        )
 
     def to_dict(self):
         """Return dictionary representation of an object
@@ -60,8 +62,10 @@ class BaseModel():
         for k in self.__dict__:
             if k == '_sa_instance_state' or k == 'password':
                 pass
+            # Ignore not JSON serializable data
             elif type(self.__dict__[k]) is InstrumentedList:
                 pass
+            # Convert date types into a string representation
             elif k == "added_at" or k == "updated_at" or k == "dob":
                 dict_repr[k] = self.__dict__[k].isoformat()
             else:
@@ -89,6 +93,7 @@ class BaseModel():
         """
         from models import storage
         for k, v in kwargs.items():
+            # Encrypt passwords before updating them
             if k == "password" and self.__class__.__name__ == "User":
                 password = bytes(v, "utf-8")
                 password = bcrypt.hashpw(password, bcrypt.gensalt())
@@ -96,5 +101,6 @@ class BaseModel():
                 setattr(self, k, password)
             else:
                 setattr(self, k, v)
+        # Record last update time
         self.updated_at = datetime.utcnow()
         storage.save()
