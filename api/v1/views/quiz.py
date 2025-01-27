@@ -1,4 +1,4 @@
-"""Quiz view
+"""Quiz view to handle quizzes endpoints
 """
 import json
 from os import getenv
@@ -17,7 +17,42 @@ from models.answers import Answer
 
 @app_views.route("/quizzes", methods=['POST'], strict_slashes=False)
 def create_quiz():
-    """POST /api/v1/quizzes => Creates a quiz
+    """POST /api/v1/quizzes
+
+    AUTHENTICATION:
+        Required
+
+    DESCRIPTION:
+        Create a new quiz.
+
+    INPUT FORMAT:
+        * A json body with the following fields is needed:
+            {
+                "title": <string, 100 chars maximumly>,
+                "description": <string, 512 chars>,
+                "duration": <intiger, 5 <= duration >= 30, in minutes>,
+                "difficulty": <enum: Easy, Medium, or Difficult>,
+                "category": <string, 20 chars maximumly>,
+                "questions": [
+                    {
+                        "body": <string, no limit>
+                        "answers": [
+                            {"body": <string, 100 chars maximumly>, "status": bool},
+                            {"body": <string, 100 chars maximumly>, "status": bool},
+                            ...
+                        ]
+                    },
+                    ...
+                ]
+            }
+    NOTES:
+        At least one question is required, and for each question, at least 2 answers
+        are required, only one of them is true.
+
+    RESPONSE:
+        A JSON string representing basic quiz info (No questions and answers info).
+    
+    SUCCESS STATUS CODE: 201
     """
     if not request.is_json:
         abort(400, "Not JSON")
@@ -41,13 +76,15 @@ def create_quiz():
             abort(400, f"<{data}> field is required to be a string.")
         elif data == questions and type(data) is not list:
             abort(400, "<questions> field is required to be a list.")
-    if duration and type(duration) != int:
-        abort(400, "<duration> field is required to be an integer.")
-    elif duration <= 0 or duration > 30:
+    try:
+        duration = int(duration)
+    except (TypeError, ValueError):
+        abort(400, "<duration> field is required to be an integer.") 
+    if duration <= 0 or duration > 30:
         abort(400, "<duration> is required to be > 0 and <= 30")
     if not questions:
         abort(400, "At least one question is required")
-    temp_questions = question[:]
+    temp_questions = questions[:]
     for question in temp_questions:
         if type(question) is not dict:
             questions.remove(question)
@@ -80,7 +117,7 @@ def create_quiz():
                     question['answers'].remove(answer)
             if len(question['answers']) < 2:
                 questions.remove(question)
-            elif len(list(filter(lambda answer: answer.status, question['answers']))) != 1:
+            elif len(list(filter(lambda answer: answer.get('status'), question['answers']))) != 1:
                 questions.remove(question)
     if not questions:
         abort(400, "Provide at least one question with a valid answers collection")
@@ -88,20 +125,42 @@ def create_quiz():
                 title=title,
                 description=description,
                 duration=duration,
-                difficulty=difficult,
-                category=category
+                difficulty=difficulty,
+                category=category,
+                user_id=request.current_user.id
     )
+    quiz.save()
     for question in questions:
         q = Question(body=question['body'], quiz_id=quiz.id)
+        q.save()
         for answer in question['answers']:
             a = Answer(body=answer['body'], status=answer['status'], question_id=q.id)
-            q.answers.add(a)
-    quiz.save() # the cascade occurs
-    return make_response(jsonify(quiz_dict), 201)
+            a.save()
+    return make_response(jsonify(quiz.to_dict()), 201)
 
 @app_views.route("/quizzes", methods=['GET'], strict_slashes=False)
 def get_quizzes():
-    """GET /api/v1/quizzes => Returns the quizzes
+    """GET /api/v1/quizzes
+
+    AUTHENTICATION:
+        Not required
+
+    DESCRIPTION:
+        Get quizzes with filters and paginations
+    
+    URL paramters:
+        type: "asc" or "desc"
+        attribute: "added_at" or "repeats"
+        after: "added_at" value or "repeats" value or "initial"
+        categoires: category1,category2,...
+
+    INPUT FORMAT:
+        Not needed
+
+    RESPONSE:
+        A JSON structure representing basic quizzes info (No questions and answers info).
+    
+    SUCCESS STATUS CODE: 200
     """
     categories = request.args.get("categories")
     attribute = request.args.get("attribute")
@@ -113,12 +172,22 @@ def get_quizzes():
         attribute = "added_at"
     if not _type or _type not in ['asc', 'desc']:
         order_type = 'desc'
+    if attribute == "added_at":
+        try:
+            datetime.fromisoformat(after)
+        except:
+            abort(400, "<after> is needed to be in a valid iso format")
+    else:
+        try:
+            after = int(after)
+        except:
+            abort(400, "<after> is needed to be a number")
     if categories:
         result = storage.get_categorized_quizzes(
                                                     categories.split(','),
                                                     attribute,
                                                     _type,
-                                                    after
+                                                    (datetime.fromisoformat(after) if attribute == "added_at" else after)
         )
         return jsonify([quiz.to_dict() for quiz in result])
     if not cache_client.get_pool_size('newest'):
@@ -150,17 +219,47 @@ def get_quizzes():
 
 @app_views.route("/quizzes/<quiz_id>", methods=['GET'], strict_slashes=False)
 def get_quiz(quiz_id):
-    """GET /api/v1/quizzes/<quiz_id> => get the quiz with id "quiz_id"
+    """GET /api/v1/quizzes/<quiz_id>
+
+    AUTHENTICATION:
+        Not required
+
+    DESCRIPTION:
+        Get a quiz info
+
+    RESPONSE:
+        A JSON structure representing basic quiz info (No questions and answers info).
+    
+    SUCCESS STATUS CODE: 200
+
     """
     quiz = storage.get(Quiz, quiz_id)
     if not quiz:
-        abort(404)
+        aboruser_id=<user_id>]
+    (404)
     return jsonify(quiz.to_dict())
 
 
 @app_views.route("/favorite_quizzes", methods=['GET'], strict_slashes=False)
 def get_users_liked_quizzes():
-    """Get the user with id = user_id liked quizzes
+    """GET /api/v1/favorite_quizzes?user_id=<user_id>
+
+    AUTHENTICATION:
+        Not required
+
+    DESCRIPTION:
+        GET a specific user's favorite quizzes info
+    
+    URL paramters:
+        user_id: a user's id
+
+    INPUT FORMAT:
+        Not needed
+
+    RESPONSE:
+        A JSON structure representing basic quizzes info (No questions and answers info).
+    
+    SUCCESS STATUS CODE: 200
     """
     user_id = request.args.get("user_id")
     if not user_id:
@@ -173,7 +272,24 @@ def get_users_liked_quizzes():
 
 @app_views.route("/taken_quizzes", methods=['GET'], strict_slashes=False)
 def get_users_taken_quizzes():
-    """Get the user with id = id taken quizzes
+    """GET /api/v1/taken_quizzes?user_id=<user_id>
+
+    AUTHENTICATION:
+        Not required
+
+    DESCRIPTION:
+        GET a specific user's taken quizzes info
+    
+    URL paramters:
+        user_id: a user's id
+
+    INPUT FORMAT:
+        Not needed
+
+    RESPONSE:
+        A JSON structure representing basic quizzes info (No questions and answers info).
+    
+    SUCCESS STATUS CODE: 200
     """
     user_id = request.args.get("user_id")
     if not user_id:
@@ -188,7 +304,24 @@ def get_users_taken_quizzes():
 
 @app_views.route("/uploaded_quizzes", methods=['GET'], strict_slashes=False)
 def get_users_uploaded_quizzes():
-    """Get the user with id = id uploaded quizzes
+    """GET /api/v1/uploaded_quizzes?user_id=<user_id>
+
+    AUTHENTICATION:
+        Not required
+
+    DESCRIPTION:
+        GET a specific user's uploaded quizzes info
+    
+    URL paramters:
+        user_id: a user's id
+
+    INPUT FORMAT:
+        Not needed
+
+    RESPONSE:
+        A JSON structure representing basic quizzes info (No questions and answers info).
+    
+    SUCCESS STATUS CODE: 200
     """
     user_id = request.args.get('user_id')
     if not user_id:
@@ -202,9 +335,28 @@ def get_users_uploaded_quizzes():
 
 @app_views.route("/quizzes/<quiz_id>", methods=['PUT'], strict_slashes=False)
 def update_a_quiz(quiz_id):
-    """PUT /quizzes/<quiz_id> => Updates the quiz with id
-                                                 "quiz_id" of user with id
-                                                 "user_id"
+    """PUT /api/v1/quizzes/<quiz_id>
+
+    AUTHENTICATION:
+        Required
+
+    DESCRIPTION:
+        Update a quiz
+    
+    URL paramters:
+        user_id: a user's id
+
+    INPUT FORMAT:
+        At least one field is required:
+        {
+            'title': <same as in POST>,
+            'description': <same in POST>
+        }
+
+    RESPONSE:
+        A JSON structure representing basic quizzes info (No questions and answers info).
+    
+    SUCCESS STATUS CODE: 200
     """
     if not request.is_json:
         abort(400, "Not JSON")
@@ -230,7 +382,21 @@ def update_a_quiz(quiz_id):
 
 @app_views.route("/quizzes/<quiz_id>", methods=['DELETE'], strict_slashes=False)
 def delete_quiz(quiz_id):
-    """DELETE /quizzes/<quiz_id> => deletes a quiz
+    """DELETE /api/v1/quizzes/<quiz_id>
+
+    AUTHENTICATION 
+        Required
+
+    DESCRIPTION:
+        Delete a quiz
+
+    INPUT FORMAT:
+        Not needed
+
+    RESPONSE:
+        Empty
+    
+    SUCCESS STATUS CODE: 204
     """
     quiz = storage.get(Quiz, quiz_id)
     if not quiz:
@@ -242,7 +408,18 @@ def delete_quiz(quiz_id):
 
 @app_views.route("/start_quiz", methods=['POST'], strict_slashes=False)
 def start_a_quiz():
-    """Start a quiz session
+    """POST /api/v1/start_quiz?quiz_id=<quiz_id>
+
+    AUTHENTICATION 
+        Required
+
+    DESCRIPTION:
+        Start a quiz session
+
+    RESPONSE:
+        A json represents the first question
+    
+    SUCCESS STATUS CODE: 200  
     """
     quiz_id = request.args.get("quiz_id")
     if not quiz_id:
@@ -259,7 +436,23 @@ def start_a_quiz():
 
 @app_views.route("/quizzes/next/<idx>", methods=['GET'], strict_slashes=False)
 def get_next_question(idx):
-    """Get the next question from the quiz session based on idx
+    """GET /api/v1/quizzes/next/<idx>
+
+    AUTHENTICATION 
+        Required
+
+    DESCRIPTION:
+        Gets the next's quizzes question
+
+    INPUT FORMAT:
+        Not needed
+
+    RESPONSE:
+        A json represents the next question
+    
+    SUCCESS STATUS CODE: 200
+
+    NOTE: to finish, send -1 as <idx>
     """
     cookie_name = getenv('IQA_QUIZ_SESSION_COOKIE')
     session_cookie = request.cookies.get(cookie_name)
@@ -277,7 +470,22 @@ def get_next_question(idx):
 
 @app_views.route("/quizzes/answer/<question_id>", methods=['POST'], strict_slashes=False)
 def answer_a_question(question_id):
-    """Answer a question in a quiz session
+    """POST /api/quizzes/answer/<question_id>
+
+    AUTHENTICATION 
+        Required
+
+    DESCRIPTION:
+        Answer the question with id <question_id>
+
+    INPUT FORMAT:
+        Not needed
+
+    RESPONSE:
+        A json represents the status
+    
+    SUCCESS STATUS CODE: 200
+
     """
     if not request.is_json:
         abort(400, "Not JSON")
