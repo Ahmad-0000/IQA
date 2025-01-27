@@ -1,4 +1,4 @@
-"""Session authentication
+"""Session authentication mechanism implementation is here
 """
 from os import getenv
 from uuid import uuid4
@@ -25,7 +25,8 @@ class SessionAuth():
         return False
 
     def session_cookie(self, request):
-        """Returns the session cookie if present
+        """Returns the session cookie value if present, otherwise
+        return <None>.
         """
         cookie_name = getenv("SESSION_COOKIE_NAME")
         if not cookie_name:
@@ -33,7 +34,7 @@ class SessionAuth():
         return request.cookies.get(cookie_name)
 
     def current_user(self, request):
-        """Get the account info based on the session id
+        """Get the user object based on the session id
         """
         session_id = self.session_cookie(request)
         if not session_id:
@@ -44,7 +45,7 @@ class SessionAuth():
         return session.user
 
     def create_session(self, user_id):
-        """Create a session
+        """Create a login session id for authenticating users
         """
         user = storage.get(User, user_id)
         if not user:
@@ -54,7 +55,8 @@ class SessionAuth():
         return session.id
 
     def destroy_session(self, request):
-        """Destroys a session
+        """Destroys a session. Used in cases of logout and
+        account deletion.
         """
         session_id = self.session_cookie(request)
         if not session_id:

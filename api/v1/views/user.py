@@ -224,3 +224,30 @@ def delete_account():
     cookie_name = getenv("SESSION_COOKIE_NAME")
     response.set_cookie(cookie_name, "", expires=datetime.utcnow() - timedelta(1))
     return response
+
+@app_views.route('/scores', methods=['GET'], strict_slashes=False)
+def get_scores():
+    """GET /api/v1/scores?user_id=<user_id>
+
+    AUTHENTICATION 
+        Not
+
+    DESCRIPTION:
+        Restore socres of a user
+
+    INPUT FORMAT:
+        Not needed
+
+    RESPONSE:
+        A json represents the scores
+    
+    SUCCESS STATUS CODE: 200
+    """
+    user_id = request.args.get('user_id')
+    if not user_id:
+        abort(400, "Missing user_id")
+    user = storage.get(User, user_id)
+    if not user:
+        abort(404)
+    response = [score.to_dict() for score in user.scores]
+    return jsonify(response)

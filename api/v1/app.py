@@ -16,7 +16,9 @@ from api.v1.auth.session_auth import SessionAuth
 
 app = Flask(__name__)
 app.register_blueprint(app_views, url_prefix="/api/v1")
+# Create the authentication object for managing authentication
 auth = SessionAuth()
+# Handle CORS policies for Front-End side
 CORS(app, supports_credentials=True, origins="http://localhost:8080")
 
 @app.before_request
@@ -37,33 +39,33 @@ def handle_credentials():
 
 @app.teardown_appcontext
 def refresh(exception):
-    """Refresh database connection after each
+    """Refresh database connection after each so-called "request"
     """
     storage.close()
 
 @app.errorhandler(404)
 def error404(error):
-    """Hanlde status code 404
+    """Hanlde "Not Found" error
     """
     return make_response(jsonify({"error" : "Not found"}), 404)
 
 @app.errorhandler(400)
 def error400(error):
-    """Handle status code 400
+    """Handle "Bad Request" error
     """
     return make_response(jsonify({"error": error.description}), 400)
 
 @app.errorhandler(401)
 def error401(error):
-    """Handles status code 401
+    """Handles "unauthorized" error
     """
     return make_response(jsonify({"error": "unauthorized"}), 401)
 
 
 @app.errorhandler(403)
 def error403(error):
-    """Handles status code 403
+    """Handles "Forbidden" error
     """
     return make_response(jsonify({"error": "forbidden"}), 403)
 
-app.run(host='0.0.0.0')
+app.run(host='0.0.0.0') # To be removed

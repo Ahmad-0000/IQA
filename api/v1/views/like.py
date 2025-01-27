@@ -7,7 +7,21 @@ from models.quizzes import Quiz
 
 @app_views.route("/like", methods=['POST'], strict_slashes=False)
 def make_like():
-    """Increases quizzes likes
+    """POST /api/v1/like?quiz_id=<quiz_id>
+
+    AUTHENTICATION 
+        Required
+
+    DESCRIPTION:
+        Like a quiz with id <quiz_id>
+
+    INPUT FORMAT:
+        Not needed
+
+    RESPONSE:
+        A json represents the liked quiz
+    
+    SUCCESS STATUS CODE: 201
     """
     quiz_id = request.args.get("quiz_id")
     if not quiz_id or type(quiz_id) is not str:
@@ -33,7 +47,21 @@ def make_like():
 
 @app_views.route("/remove_like", methods=['DELETE'], strict_slashes=False)
 def remove_like():
-    """Remove a like from a quiz
+    """DELETE /api/v1/remove_like?quiz_id=<quiz_id>
+
+    AUTHENTICATION 
+        Required
+
+    DESCRIPTION:
+        Remove a like from the quiz with id <quiz_id>
+
+    INPUT FORMAT:
+        Not needed
+
+    RESPONSE:
+        A json represents the quizzes
+    
+    SUCCESS STATUS CODE: 200
     """
     quiz_id = request.args.get("quiz_id")
     if not quiz_id or type(quiz_id) is not str:
