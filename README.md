@@ -1,6 +1,6 @@
 > [!NOTE]
 > This project is a backend project, meaning that what matters the most is data storage, API, cache
-> and testing. The directories inside [/enhancemnts](/enhancements) are for future integration and are not
+> and testing. The directories inside [/enhancements](/enhancements) are for future integration and are not
 > considered at the core of the project yet. After all, I AM A BACKEND STUDENT.
 
 # IQA - Interactive Quiz Application 
@@ -95,7 +95,7 @@ $ python3 create_tables.py
 > to avoid race conditions between them to create the tables.
 
 You can also use **Chrome** version 126.0.6478.126 (Official Build) (64-bit) to see some of the pages I want to integrate with
-the api in the folder [/enhancements/web_static](/enhancement/web_static).
+the api in the folder [/enhancements/web_static](/enhancements/web_static).
 
 ### Lastly, run gunicorn server and enjoy :)
 
