@@ -1,4 +1,4 @@
-"""User view
+"""User view to handle user's endpoints
 """
 import bcrypt
 from os import getenv
@@ -12,7 +12,24 @@ from models.users import User
 
 @app_views.route("/users", methods=['GET'], strict_slashes=False)
 def show_all_users():
-    """GET /users => Shows all users accounts
+    """GET /api/v1/users[?user_id=<user_id>]
+
+    AUTHENTICATION:
+        Not required
+
+    DESCRIPTION:
+        Get all the user's account info in JSON format.
+    If the optional <user_id> parameter is present, 
+    only the associated user's info will be returned if
+    any.
+
+    INPUT FORMAT:
+        No input is needed.
+
+    RESPONSE:
+        A JSON representation of the user account.
+
+    SUCCESS STATUS CODE: 200
     """
     user_id = request.args.get('user_id')
     if user_id:
@@ -38,7 +55,38 @@ def show_all_users():
 
 @app_views.route("/users", methods=['POST'], strict_slashes=False)
 def new_account():
-    """POST /users => Creates a new user account
+    """POST /api/v1/users
+
+    AUTHENTICATION:
+        Not required
+
+    DESCRIPTION:
+        Create a new user account and login session.
+
+    INPUT FORMAT:
+        * A json body with the following fields is needed:
+            {
+                "first_name": <first_name>,
+                "middle_name": <middle_name>,
+                "last_name": <last_name>,
+                "email": <email>,
+                "password": <password>,
+                "dob": <date of birth, in ISO format "YYYY-MM-DD">
+            }
+        * Data constraints:
+            first_name: A maximimuly 20 characters length string
+            middle_name: A maximimuly 20 characters length string
+            last_name: A maximimuly 20 characters length string
+            email: A maximumly 50 characters length email
+            password: A string.
+        * Optional:
+            You can also include the following field:
+                "bio":  A maximimuly 300 characters length string
+
+    RESPONSE:
+        A JSON string representing the user's account info
+    
+    SUCCESS STATUS CODE: 201
     """
     if not request.is_json:
         abort(400, "Not a JSON")
@@ -81,7 +129,28 @@ def new_account():
 
 @app_views.route("/users", methods=["PUT"], strict_slashes=False)
 def update_account():
-    """PUT /users => update the current user's account
+    """PUT /api/v1/users?user_id=<user_id>
+
+    DESCRIPTION:
+        Update a user's account
+
+    INPUT FORMAT:
+        * A json body with at least one of the following fields:
+            {
+                "first_name": <first_name>,
+                "password" : <password>,
+                "bio": <bio>
+            }
+
+        * Data constraints:
+            first_name: A maximimuly 20 characters length string
+            password: A string.
+            bio: A maximimuly 300 characters length string
+
+    RESPONSE:
+        A JSON string with the updated quiz info
+
+    SUCCESS STATUS CODE: 200
     """
     if not request.is_json:
         abort(400, "Not JSON")
@@ -118,7 +187,22 @@ def update_account():
 
 @app_views.route("/users", methods=['DELETE'], strict_slashes=False)
 def delete_account():
-    """DELETE /users => Deletes the current user's account
+    """DELETE /api/v1/users
+
+    AUTHENTICATION:
+        Required.
+
+    DESCRIPTION:
+        Delete a user's account.
+
+    INPUT FORMAT:
+        * No input is needed, the user accound will be extracted
+        with the login info
+    
+    RESPONSE:
+        Empty
+
+    SUCCESS STATUS CODE: 204
     """
     if not request.is_json:
         abort(400, "Not JSON")
