@@ -5,11 +5,21 @@ from sqlalchemy import Table, Column, Integer, String, Date, ForeignKey
 from sqlalchemy.orm import relationship, Mapped
 from typing import List
 
-
+# An association table to track likes
 quizzes_likes = Table(
                 'quizzes_likes', Base.metadata,
-                Column('user_id', String(36), ForeignKey('users.id'), primary_key=True),
-                Column('quiz_id', String(36), ForeignKey('quizzes.id'), primary_key=True)
+                Column(
+                        'user_id',
+                        String(36),
+                        ForeignKey('users.id'),
+                        primary_key=True
+                ),
+                Column(
+                        'quiz_id',
+                        String(36),
+                        ForeignKey('quizzes.id'),
+                        primary_key=True
+                )
 )
 
 
@@ -29,25 +39,30 @@ class User(BaseModel, Base):
     quizzes_taken = Column(Integer, nullable=True, default=0)
     quizzes_made = Column(Integer, nullable=True, default=0)
 
+   # Facilitate retrival of a user's uploaded quizzes
     quizzes = relationship(
                     'Quiz', 
                     cascade='all, delete, delete-orphan',
                     back_populates='user'
     )
+    # Facilitate retrival of a user's uploaded feedbacks
     feedbacks = relationship(
                     'FeedBack', 
                     cascade='all, delete, delete-orphan',
                     back_populates='user'
     )
+    # Facilitate retrival of a user's scores
     scores = relationship(
             'Score',
             cascade='all, delete, delete-orphan',
             back_populates='user'
     )
+    # Facilitate retrival of a user's liked quizzes
     liked_quizzes: Mapped[List['Quiz']] = relationship(
                                                 secondary=quizzes_likes,
                                                 back_populates='fans_users'
     )
+    # Facilitate retrival of a user's history of taken quizzes
     snapshots = relationship(
             'Snapshot',
             cascade='all, delete, delete-orphan',
