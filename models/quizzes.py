@@ -42,7 +42,7 @@ class Quiz(BaseModel, Base):
         """
         prepared_quiz = {}
         prepared_quiz['general_details'] = self.to_dict()
-        prepared_quiz['general_details']['questions_num'] = len(self.questions)
+        prepared_quiz['general_details']['questions number'] = len(self.questions)
         prepared_quiz['general_details']['added_at'] = int(
                                 datetime.fromisoformat(
                                     prepared_quiz['general_details']['added_at']
@@ -73,11 +73,11 @@ class Quiz(BaseModel, Base):
                             'body': answer.body,
                         }
                 )
-                if answer.is_true:
+                if answer.status:
                     correct_answers.append(answer.id)
         prepared_quiz = {
                             "references": 1,
-                            "questions_num": len(self.questions),
+                            "questions number": len(self.questions),
                             "questions": questions,
                             "question_ids": question_ids,
                             "correct_answers": correct_answers

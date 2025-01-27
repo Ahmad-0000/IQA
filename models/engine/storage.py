@@ -12,6 +12,7 @@ from models.answers import Answer
 from models.feedbacks import FeedBack
 from models.scores import Score
 from models.snapshots import Snapshot
+from models.sessions import Session
 
 
 class Storage():
@@ -19,7 +20,7 @@ class Storage():
     """
     __engine = None
     __session = None
-    classes = [User, Quiz, Question, Answer, FeedBack, Snapshot, Score]
+    classes = [User, Quiz, Question, Answer, FeedBack, Snapshot, Session, Score]
 
     def __init__(self):
         """Initialize storage object
@@ -123,11 +124,12 @@ class Storage():
                             "user_id"
                         ],
                 Question: ["quiz_id"],
-                Answer: ["is_true", "question_id"],
+                Answer: ["status", "question_id"],
                 FeedBack: ["user_id", "quiz_id"],
                 Snapshot: ['user_id', 'quiz_id',
                            'question_id', 'answer_id',
-                           'score_id', 'is_true']
+                           'score_id', 'status'],
+                Session: ['user_id']
         }
         if cls not in Storage.classes[:-1]:
             return []
@@ -188,3 +190,8 @@ class Storage():
                     rest += per_category - len(sub_result)
             result.extend(sub_result)
         return result
+
+    def rollback(self):
+        """Rollback when an error happens
+        """
+        Storage.__session.rollback()

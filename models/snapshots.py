@@ -13,7 +13,7 @@ class Snapshot(BaseModel, Base):
     score_id = Column(String(36), ForeignKey('scores.id'), nullable=False)
     answer_id = Column(String(36), nullable=True)
     question_id = Column(String(36), ForeignKey('questions.id'), nullable=False)
-    is_true = Column(Boolean, nullable=False)
+    status = Column(Boolean, nullable=False)
 
     user = relationship('User', back_populates='snapshots')
     question = relationship('Question')

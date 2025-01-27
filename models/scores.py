@@ -15,3 +15,16 @@ class Score(BaseModel, Base):
 
     user = relationship('User', back_populates='scores')
     snapshots = relationship('Snapshot', back_populates='score')
+    quiz = relationship('Quiz')
+
+    def to_dict(self):
+        """Score  repr
+        """
+        return {
+            'score': self.score,
+            'user_id': self.user_id,
+            'quiz_id': self.quiz_id,
+            'added_at': self.added
+        }
+
+

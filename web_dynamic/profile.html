@@ -18,19 +18,38 @@
     <!-- Start Scripts -->
     <script src="scripts/header.js" defer></script>
     <script src="scripts/quizCard.js" defer></script>
+    <script src="scripts/profile.js" defer></script>
     <!-- End Scripts -->
     <title>Ahmad Basheer</title>
 </head>
     <body>
+        <!-- Start Error page -->
+        <div id="error">
+            <i class="top-right-corner"><i class="fa-solid fa-xmark"></i></i>
+            <div>
+                <h1>Error <span>error code</span></h1>
+                <p>Error text</p>
+                <p>For more info visit <a href="/about.html">Link</a></p>
+            </div>
+        </div>
+        <!-- End Error page -->
         <!-- Edit personal info -->
-        <div id="first_name">
-            <input type="text" class="border rad-10 p-10 fs-18" required maxlength="20">
-            <button class="rad-6 c-white border fs-16 txt-bold">Update</button>
-        </div>
-        <div id="bio">
-            <textarea class="border rad-10 p-10 fs-18 required"></textarea>
-            <button class="rad-6 c-white border fs-16 txt-bold">Update</button>
-        </div>
+        <form id="update-personal-info" class="bg-white rad-6 border p-20">
+            <i class="top-right-corner"><i class="fa-solid fa-xmark"></i></i>
+            <label class="d-block">
+                First Name:
+                <input name="first_name" type="text" class="border rad-10 p-10 fs-18 d-block" maxlength="20">
+            </label>
+            <label class="d-block">
+                Bio:
+                <textarea name="bio" class="border rad-10 p-10 fs-18 required d-block" maxlength="100"></textarea>
+            </label>
+            <label class="d-block">
+                Password:
+                <input type="password" name="password" class="border rad-10 p-10 fs-18 d-block" maxlength="20">
+            </label>
+            <input type="submit" value="Update" class="rad-6 c-white border fs-16 txt-bold p-10 d-block">
+        </form>
         <!-- End personal info edition -->
         <!-- Start Effects -->
         <div id="quiz-overlay"></div>
@@ -87,15 +106,19 @@
             <!-- End Header -->
             <!-- Start Main Section -->
             <main class="container bg-white p-20 rad-6">
+                <div class="auth w-fit">
+                    <div class="w-fit p-10 border" id="logout">Logout</div><!--
+                 --><div class="w-fit p-10 border" id="delete-account">Delete Account</div>
+                </div>
                 <div class="img rad-half broder p-relative">
                     <i class="fa-solid fa-plus c-blue rad-half bg-white p-abs border"></i>
                 </div>
                 <div class="personal-info w-fit fs-20 txt-c">
-                    <p>Ahmad Husain Basheer</p>
-                    <p>Birth Date: <span>2005/3/5</span></p>
-                    <p>Member since: <span>The beginning</span></p>
-                    <p>Number of quizzes: <span>number</span></p>
-                    <label class="d-block" id="bio-label">Bio:</label>
+                    <p><snap class="update-trigger"></snap> </p>
+                    <p>Birth Date: <span></span></p>
+                    <p>Member since: <span></span></p>
+                    <p>Number of quizzes: <span></span></p>
+                    <label class="update-trigger d-block" title="update bio">Bio:</label>
                     <textarea class="border rad-10 p-10"></textarea>
                 </div>
                 <div class="quizzes-info d-grid">
@@ -106,118 +129,18 @@
                                 <h3>Title</h3>
                                 <p>Lastly taken at: <span>Date</span></p>
                             </div>
-                            <div class="quiz">
-                                <h3>Title</h3>
-                                <p>Lastly taken at: <span>Date</span></p>
-                            </div>
-                            <div class="quiz">
-                                <h3>Title</h3>
-                                <p>Lastly taken at: <span>Date</span></p>
-                            </div>
-                            <div class="quiz">
-                                <h3>Title</h3>
-                                <p>Lastly taken at: <span>Date</span></p>
-                            </div>
-                            <div class="quiz">
-                                <h3>Title</h3>
-                                <p>Lastly taken at: <span>Date</span></p>
-                            </div>
-                            <div class="quiz">
-                                <h3>Title</h3>
-                                <p>Lastly taken at: <span>Date</span></p>
-                            </div>
-                            <div class="quiz">
-                                <h3>Title</h3>
-                                <p>Lastly taken at: <span>Date</span></p>
-                            </div>
-                            <div class="quiz">
-                                <h3>Title</h3>
-                                <p>Lastly taken at: <span>Date</span></p>
-                            </div>
-                            <div class="quiz">
-                                <h3>Title</h3>
-                                <p>Lastly taken at: <span>Date</span></p>
-                            </div>
                             <button class="c-blue fs-16 border rad-6">More</button>
                         </div>
                     </div>
                     <div>
                         <h2 class="txt-c c-gray">Uploaded</h2>
                         <div class="uploaded border rad-10"> 
-                            <div class="quiz">
-                                <h3>Title</h3>
-                                <p>Last update at: <span>Date</span></p>
-                            </div>
-                            <div class="quiz">
-                                <h3>Title</h3>
-                                <p>Last update at: <span>Date</span></p>
-                            </div>
-                            <div class="quiz">
-                                <h3>Title</h3>
-                                <p>Last update at: <span>Date</span></p>
-                            </div>
-                            <div class="quiz">
-                                <h3>Title</h3>
-                                <p>Last update at: <span>Date</span></p>
-                            </div>
-                            <div class="quiz">
-                                <h3>Title</h3>
-                                <p>Last update at: <span>Date</span></p>
-                            </div>
-                            <div class="quiz">
-                                <h3>Title</h3>
-                                <p>Last update at: <span>Date</span></p>
-                            </div>
-                            <div class="quiz">
-                                <h3>Title</h3>
-                                <p>Last update at: <span>Date</span></p>
-                            </div>
-                            <div class="quiz">
-                                <h3>Title</h3>
-                                <p>Last update at: <span>Date</span></p>
-                            </div>
-                            <div class="quiz">
-                                <h3>Title</h3>
-                                <p>Last update at: <span>Date</span></p>
-                            </div>
-                            <button class="c-blue fs-16 border rad-6">More</button>
+                                
                         </div>
                     </div>
                     <div>
                         <h2 class="txt-c c-gray">Favorites</h2>
                         <div class="favorites border rad-10">
-                        <div class="quiz">
-                            <h3>Title</h3>
-                            <p>Lastly taken at: <span>Date</span></p>
-                        </div>
-                        <div class="quiz">
-                            <h3>Title</h3>
-                            <p>Lastly taken at: <span>Date</span></p>
-                        </div>
-                        <div class="quiz">
-                            <h3>Title</h3>
-                            <p>Lastly taken at: <span>Date</span></p>
-                        </div>
-                        <div class="quiz">
-                            <h3>Title</h3>
-                            <p>Lastly taken at: <span>Date</span></p>
-                        </div>
-                        <div class="quiz">
-                            <h3>Title</h3>
-                            <p>Lastly taken at: <span>Date</span></p>
-                        </div>
-                        <div class="quiz">
-                            <h3>Title</h3>
-                            <p>Lastly taken at: <span>Date</span></p>
-                        </div>
-                        <div class="quiz">
-                            <h3>Title</h3>
-                            <p>Lastly taken at: <span>Date</span></p>
-                        </div>
-                        <div class="quiz">
-                            <h3>Title</h3>
-                            <p>Lastly taken at: <span>Date</span></p>
-                        </div>
                         <div class="quiz">
                             <h3>Title</h3>
                             <p>Lastly taken at: <span>Date</span></p>

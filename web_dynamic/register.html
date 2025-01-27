@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <!-- Start Style sheets -->
+    <link rel="stylesheet" href="stylesheets/global.css">
+    <link rel="stylesheet" href="stylesheets/framework.css">
+    <link rel="stylesheet" href="stylesheets/register.css">
+    <!-- End Stylesheets -->
+    <!-- Start Font Awesome Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <!-- End Font Awesome Library -->
+    <!-- Start Scripts -->
+    <script src="scripts/register.js" defer></script>
+    <!-- End scripts -->
+</head>
+<body>
+    <!-- Start Error page -->
+    <div id="error">
+        <i class="top-right-corner"><i class="fa-solid fa-xmark"></i></i>
+        <div>
+            <h1>Error <span>error code</span></h1>
+            <p>Error text</p>
+            <p>For more info visit <a href="/about.html">Link</a></p>
+        </div>
+    </div>
+    <!-- End Error page -->
+    <form class="p-20 border rad-10 bg-white" action="http://localhost:5001/api/v1/users">
+        <div class="logo rad-half txt-bold">IQA</div>
+        <div class="info">
+            <label for="f-name">
+                First Name:
+                <input id="f-name" type="text" maxlength="20" required name="first_name">
+            </label>
+            <label for="m-name">
+                Middle Name:
+                <input id="m-name" type="text" maxlength="20" required name="middle_name">
+            </label>
+            <label for="l-name">
+                Last Name:
+                <input id="l-name" type="text" maxlength="20" required name="last_name">
+            </label>
+            <label for="email">
+                Email:
+                <input id="email" type="email" maxlength="50" required name="email">
+            </label>
+            <label for="password">
+                Password:
+                <input type="password" id="password" maxlength="15" required name="password">
+            </label>
+            <label for="dob">
+                Birth Date:
+                <input id="dob" type="date" required name="dob">
+            </label>
+            <label for="agree">
+                <input type="checkbox" name="terms" id="agree" required> I agree to the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a>
+            </label>
+    	    <input type="submit" id="submit" value="Register"></input>
+        </div>
+    </form>
+</body>
+</html>
